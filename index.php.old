@@ -1,0 +1,136 @@
+<?php
+    /*
+    error_reporting( E_ALL );
+    //*/
+    /*
+    error_reporting( E_NOTICE );
+    //*/
+    /*
+    error_reporting( E_STRICT );
+    //*/
+
+    if ( !isset($_SERVER['REMOTE_ADDR']) || ($_SERVER['REMOTE_ADDR'] == "") ) {
+        header("Not Found", true, 404);
+        exit;
+    }
+
+    // Get server variables
+    $server    = $_SERVER['SERVER_NAME'];
+    $host      = $_SERVER['HTTP_HOST'];
+    $q_ip      = $_SERVER['REMOTE_ADDR'];
+    $path_info = $_SERVER['PATH_INFO'];
+    $path      = $_SERVER['SCRIPT_NAME'];
+    $ua        = $_SERVER['HTTP_USER_AGENT'];
+    $langstr   = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
+    $req       = $_SERVER['REQUEST_URI'];
+
+    include 'includes/log.inc';
+    if ( file_exists( "log_ips") ) {
+        logDebug("Got a request from {$_SERVER['REMOTE_ADDR']}");
+    }
+
+    /* TIMING */
+    $start_time = gettimeofday( true );
+
+    /*
+    foreach ($_SERVER as $key => $val) {
+        echo "<!-- $key = $val -->\n";
+    }
+    //*/
+
+    $base      = substr($path, 0, strrpos($path,'/')+1);
+    $servedURL = "http://$host/$req";
+
+    $tagEnd = strpos($langstr, ',');
+    $subTagEnd = strpos($langstr, ';');
+    if($tagEnd === false) {
+        $langstr = substr($langstr,0,$subTagEnd);
+    }
+    else {
+        $langstr  = substr($langstr,0,$tagEnd);
+        $language = substr($langstr,0,2);
+        $country  = substr($langstr,3,2);
+        $country  = strtoupper($country);
+        //$langstr = "$language-$country";
+        $langstr  = "$language";
+    }
+
+    include 'includes/UserAgent.inc';
+    $user_agent = new UserAgent( $_SERVER );
+    $browser_class = $user_agent->getBrowserClassification();
+    if ( $browser_class == "mobile" ) {
+        $specialized = "";
+        $mobile_type = $user_agent->detectMobileType($specialized);
+        echo "<?xml version=\"1.0\"?>";
+    }
+
+    logDebug("Accept: ".$_SERVER['HTTP_ACCEPT']);
+    logDebug("User Agent: ".$_SERVER['HTTP_USER_AGENT']);
+
+    // Get CGI parms
+    //$plus = $CGI ['plus'];
+
+    //$query = preg_replace("/\"|(%22)/","&quot;",$query);
+
+    /* TIMING */
+    $end_time = gettimeofday( true );
+    $total_time = $end_time - $start_time;
+
+    $station_string = ": All"
+
+?>
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>Data Quality Analyzer<?echo $station_string?></title>
+        <!-- The following is a must for Google Chrome, otherwise it caches AJAX requests! -->
+        <meta http-equiv="pragma" content="no-cache" />
+
+        <link rel="stylesheet" type="text/css" href="css/dataq.css" />
+        <link rel="stylesheet" type="text/css" href="css/ui-lightness/jquery-ui.custom.css" />
+        <link rel="icon" href="favicon.ico" type="image/x-icon" />
+        <link rel="shortcut icon" href="favicon.ico" />
+        <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+
+        <script type="text/javascript" src="js/jquery.min.js"></script>
+        <script type="text/javascript" src="js/jquery-ui-min.js"></script>
+        <script type="text/javascript" src="js/jquery.jstore-all-min.js"></script>
+        <script type="text/javascript" src="js/jquery.timers.js"></script>
+        <script type="text/javascript" src="js/jquery.base64.js"></script>
+        <script type="text/javascript" src="js/jquery.tablesorter.min.js"></script>
+        <script type="text/javascript" src="js/dataq.js"></script>
+    </head>
+<body>
+<div id="main">
+<?
+    //$db = new SQLite3("metrics.db");
+    $query = "
+        SELECT Station.network,
+               Station.name,
+               Sensor.location,
+               Channel.name,
+               Channel.derived,
+               Metrics.year,
+               Metrics.month,
+               Metrics.day,
+               Metrics.category,
+               Metrics.key,
+               Metrics.value
+        FROM Metrics
+        INNER JOIN Channel
+            ON Channel.id = Metrics.channel_id
+        INNER JOIN Sensor
+            ON Sensor.id = Channel.sensor_id
+        INNER JOIN Station
+            ON Station.id = Sensor.station_id
+        WHERE year=:year AND month=:month
+    ";
+    //$statement->bindValue(':year',  year,  SQLITE3_INTEGER);
+    //$statement->bindValue(':month', month, SQLITE3_INTEGER);
+
+    //$general_metrics = $statement->execute();
+    echo "<b>index.php took $total_time seconds to complete everything</b>\n";
+?>
+</div>
+</body>
+<html>
