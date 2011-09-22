@@ -4,6 +4,7 @@ var st_location = undefined;
 var st_channel  = undefined;
 var col_1_title = "";
 var col_2_title = "";
+var col_3_title = "";
 var place = ""
 var gen_plots = false;
 var channel_plot = false;
@@ -40,6 +41,9 @@ function jstore_onload()
     $("#control-toggle").click(function(){
         toggle_controls();
     });
+    $("#apply-weights").click(function(){
+        load_data();
+    });
     $(window).hashchange(function(){
         load_data();
     });
@@ -63,20 +67,22 @@ function toggle_controls()
 // Check the status of stations
 function load_data()
 {
+    show_progress();
     // Summary of All Stations
-    "/"
+    "metrics.py?cmd=ALL"
     // Summary of One Station (Each Channel)
-    "/station/[NN_]SSSSS/"
+    "metrics.py?cmd=STATION"
     // Station Plots
-    "/plots/[NN_]SSSSS/"
+    "metrics.py?cmd=PLOT-STATION"
     // Channel Plots
-    "/plots/[NN_]SSSSS/[LL-]CCC/"
+    "metrics.py?cmd=PLOT-CHANNEL"
     st_network  = undefined;
     st_station  = undefined;
     st_location = undefined;
     st_channel  = undefined;
     col_1_title = "";
     col_2_title = "";
+    col_3_title = "";
     place = ""
     gen_plots = false;
     channel_plot = false;
@@ -86,6 +92,7 @@ function load_data()
     if (command == "") {
         col_1_title = "Network"
         col_2_title = "Station"
+        col_3_title = ""
     }
     else {
         var parts = command.split("-");
@@ -96,7 +103,7 @@ function load_data()
         }
 
         place = parts[0];
-        if (parts[0] == "station") {
+        if (parts[0] == "STATION") {
             if (parts.length != 3) {
                 $('#main').append('<h1>Page Load Error!</h1>');
                 $('#main').append('<h2>Invalid Command.</h2>');
@@ -104,10 +111,11 @@ function load_data()
             }
             col_1_title = "Location"
             col_2_title = "Channel"
+            col_3_title = "Rate"
             st_network = parts[1];
             st_station = parts[2];
         }
-        else if (parts[0] == "plot") {
+        else if (parts[0] == "PLOT") {
             if (parts.length < 4) {
                 $('#main').append('<h1>Page Load Error!</h1>');
                 $('#main').append('<h2>Invalid Command.</h2>');
@@ -117,14 +125,14 @@ function load_data()
             place = parts[0]+ '-' +parts[1];
             st_network = parts[2];
             st_station = parts[3];
-            if (parts[1] == "station") {
+            if (parts[1] == "STATION") {
                 if (parts.length != 4) {
                     $('#main').append('<h1>Page Load Error!</h1>');
                     $('#main').append('<h2>Invalid Command.</h2>');
                     return;
                 }
             }
-            else if (parts[1] == "channel") {
+            else if (parts[1] == "CHANNEL") {
                 if (parts.length != 6) {
                     $('#main').append('<h1>Page Load Error!</h1>');
                     $('#main').append('<h2>Invalid Command.</h2>');
@@ -150,7 +158,7 @@ function load_data()
     $('#main > h2').remove();
     $('#metrics').remove();
     if (command == "") {
-        $.get($('#data-url').val(), {cache:"false"}, function(data, status, request){
+        $.get($('#data-url').val()+'?cmd=ALL', {cache:"false"}, function(data, status, request){
             load(data, status, request);
         }); 
     } 
@@ -170,6 +178,7 @@ function load_controls()
         values: [0,101],
         min: 0,
         max: 101,
+        step: 0.1,
         start: function(event, ui) {
             return slide_start(event, ui);
         },
@@ -187,6 +196,14 @@ function load_controls()
 
 function log(text) {
     $("#log").val(text);
+}
+
+function show_progress() {
+    $("#progress").show();
+}
+
+function hide_progress() {
+    $("#progress").hide();
 }
 
 var slider_total;
@@ -213,11 +230,11 @@ function slide_stop(event, ui) {
         var value = $(this).slider("values")[0];
         $(this).slider("values", 1, max);
         $(this).slider("values", 0, value);
-        var label_id = "#label-" + $(this).attr("id").split("-")[1]
+        var label_id = "#label-" + $(this).attr("id").split("-")[1];
         var label = $(label_id);
-        label.text(label.text().split(" ")[0]+ " " +value+ "%")
+        label.text(label.text().substr(0, label.text().lastIndexOf(" ")) + " " +value.toFixed(1)+ "%");
     });
-    $("#slider-remaining").text((100 - slider_total) + "%");
+    $("#slider-remaining").text((100 - slider_total).toFixed(1) + "%");
     return true;
 }
 
@@ -236,16 +253,17 @@ function slide_event(event, ui) {
 // Load the data
 function load(data, status, request)
 {
+    hide_progress();
 
     var rows = data.split('\n')//.sort(row_sort);
 
 // === Display Plots ===========================================
     if (gen_plots) {
         if (channel_plot) {
-            $('#main').append('<h1>Station Metric Plotting not Implemented!</h1>');
+            $('#main').append('<h1>Channel Metric Plotting not Implemented!</h1>');
         }
         else {
-            $('#main').append('<h1>Channel Metric Plotting not Implemented!</h1>');
+            $('#main').append('<h1>Station Metric Plotting not Implemented!</h1>');
         }
         return;
     }
@@ -257,9 +275,22 @@ function load(data, status, request)
         <tr>\
             <th>' +col_1_title+ '</th>\
             <th>' +col_2_title+ '</th>\
+            <th>' +col_3_title+ '</th>\
             <th>Availability</th>\
             <th>Gap Count</th>\
             <th>Reversals</th>\
+            <th>C 4-8</th>\
+            <th>C 18-22</th>\
+            <th>C 90-110</th>\
+            <th>C 200-500</th>\
+            <th>N 4-8</th>\
+            <th>N 18-22</th>\
+            <th>N 90-110</th>\
+            <th>N 200-500</th>\
+            <th>PD 4-8</th>\
+            <th>PD 18-22</th>\
+            <th>PD 90-110</th>\
+            <th>PD 200-500</th>\
             <th>Aggregate</th>\
             <th></th>\
         </tr>\
@@ -284,12 +315,16 @@ function load(data, status, request)
 
     for (var i in rows) {
         // Skip this row if it is empty.
-        if ((rows[i] == undefined) || (rows[i].trim() == '')) {
+        if ((rows[i] == undefined) || (rows[i].trim() == '') || (rows[i].trim() == 'None')) {
             //alert("skipping index " + i);
             continue;
         }
 
         var items = rows[i].split(",");
+        if (items == undefined) {
+            continue;
+        }
+
         var line_id = items[0] + '-' + items[1]
         $('#metrics-body').append('<tr class="metrics" id="' + line_id + '"></tr>');
         var row = $('#'+line_id);
@@ -297,18 +332,37 @@ function load(data, status, request)
         var display_id = 'display-' + line_id;
         var plot_id = 'plot-' + line_id;
 
-        var aggregate = 0;
+        var aggregate = 1.0;
         var link = items[1];
         if (place == "") {
-            link = '<a id="' +display_id+ '" href="#station-' +items[0]+ '-' + items[1]+ '">' +items[1]+ '</a>';
+            link = '<a id="' +display_id+ '" href="#STATION-' +items[0]+ '-' + items[1]+ '">' +items[1]+ '</a>';
         }
         for (var j in items) {
-            if (j == 1) {
-                row.append('<td>' + link + '</td>');
+            if (j == 0) {
+                value = items[j];
+                if ((value == undefined) || (value.trim() == "")) {
+                    value = "--";
+                }
+                row.append('<td>' +value+ '</td>');
+            }
+            else if (j == 1) {
+                row.append('<td>' +link+ '</td>');
+            }
+            else if ((j == 2) && (col_3_title == "")) {
+                row.append('<td></td>');
             }
             else {
-                row.append('<td>' + items[j] + '</td>');
+                value = items[j];
+                if ((value == undefined) || (value == "NaN")) {
+                    row.append('<td></td>');
+                } else {
+                    row.append('<td>' +(value * 1.0).toFixed(2)+ '</td>');
+                    if (j != 2) {
+                        aggregate += (value * 1.0);
+                    }
+                }
             }
+            /*
             var weight = weights[j];
             if (weight[0]) {
                 if (weight[1] == "mul") {
@@ -336,25 +390,34 @@ function load(data, status, request)
                     aggregate *= items[j] * weight[3];
                 }
             }
+            */
         }
-        row.append('<td>' + (aggregate / weight_total).toFixed(2) + '</td>');
+        //row.append('<td>' + (aggregate / weight_total).toFixed(2) + '</td>');
+        row.append('<td>' + aggregate.toFixed(2) + '</td>');
         var cmd_hash = ""
         if (place == "") {
-            cmd_hash = "plot-station-" +items[0]+ "-" +items[1];
+            cmd_hash = "PLOT-STATION-" +items[0]+ "-" +items[1];
         }
         else {
-            cmd_hash = "plot-channel-" +st_network+ "-" +st_station+ "-" +items[0]+ "-" +items[1];
+            cmd_hash = "PLOT-CHANNEL-" +st_network+ "-" +st_station+ "-" +items[0]+ "-" +items[1];
         }
         row.append('<td><a id="' +plot_id+ '" href="#'+cmd_hash+'">Plot</a></td>');
     }
 
-    $("#metrics").tablesorter({
-        headers: {
-            6: {
-                sorter: false
+    if (col_3_title == "") {
+        $("#metrics").tablesorter({
+            headers: {
+                 2: { sorter: false},
+                19: { sorter: false }
             }
-        }
-    });
+        });
+    } else {
+        $("#metrics").tablesorter({
+            headers: {
+                19: { sorter: false }
+            }
+        });
+    }
 }
 
 function nthroot(x, n) {

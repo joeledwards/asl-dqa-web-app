@@ -5,50 +5,60 @@
     <!-- The following is a must for Google Chrome, otherwise it caches AJAX requests! -->
     <meta http-equiv="pragma" content="no-cache" />
 
-    <link rel="stylesheet" type="text/css" href="/qcwork/massposweb/dataq/css/dataq.css" />
-    <link rel="stylesheet" type="text/css" href="/qcwork/massposweb/dataq/css/ui-lightness/jquery-ui.custom.css" />
-    <link rel="stylesheet" type="text/css" href="/qcwork/massposweb/dataq/css/tablesorter/themes/usgs/style.css" />
-    <link rel="stylesheet" type="text/css" href="/qcwork/massposweb/dataq/css/jquery.jqplot.min.css" />
-    <link rel="icon" href="/qcwork/massposweb/dataq/favicon.ico" type="image/x-icon" />
-    <link rel="shortcut icon" href="/qcwork/massposweb/dataq/favicon.ico" />
-    <link rel="apple-touch-icon" href="/qcwork/massposweb/dataq/images/apple-touch-icon.png" />
+    <link rel="stylesheet" type="text/css" href="/dataq/station_health/css/dataq.css" />
+    <link rel="stylesheet" type="text/css" href="/dataq/station_health/css/ui-lightness/jquery-ui.custom.css" />
+    <link rel="stylesheet" type="text/css" href="/dataq/station_health/css/tablesorter/themes/usgs/style.css" />
+    <link rel="stylesheet" type="text/css" href="/dataq/station_health/css/jquery.jqplot.min.css" />
+    <link rel="icon" href="/dataq/station_health/favicon.ico" type="image/x-icon" />
+    <link rel="shortcut icon" href="/dataq/station_health/favicon.ico" />
+    <link rel="apple-touch-icon" href="/dataq/station_health/images/apple-touch-icon.png" />
 
-    <script type="text/javascript" src="/qcwork/massposweb/dataq/js/jquery.min.js"></script>
-    <script type="text/javascript" src="/qcwork/massposweb/dataq/js/jquery-ui-min.js"></script>
-    <script type="text/javascript" src="/qcwork/massposweb/dataq/js/jquery.jstore-all-min.js"></script>
-    <script type="text/javascript" src="/qcwork/massposweb/dataq/js/jquery.timers.js"></script>
-    <script type="text/javascript" src="/qcwork/massposweb/dataq/js/jquery.base64.js"></script>
-    <script type="text/javascript" src="/qcwork/massposweb/dataq/js/jquery.tablesorter.min.js"></script>
-    <script type="text/javascript" src="/qcwork/massposweb/dataq/js/jquery.hashchange.min.js"></script>
-    <script type="text/javascript" src="/qcwork/massposweb/dataq/js/excanvas.min.js"></script>
-    <script type="text/javascript" src="/qcwork/massposweb/dataq/js/jquery.jqplot.min.js"></script>
-    <script type="text/javascript" src="/qcwork/massposweb/dataq/js/plugins/jqplot.dateAxisRenderer.min.js"></script>
-    <script type="text/javascript" src="/qcwork/massposweb/dataq/js/plugins/jqplot.cursor.min.js"></script>
-    <script type="text/javascript" src="/qcwork/massposweb/dataq/js/dataq.js"></script>
+    <script type="text/javascript" src="/dataq/station_health/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/dataq/station_health/js/jquery-ui-min.js"></script>
+    <script type="text/javascript" src="/dataq/station_health/js/jquery.jstore-all-min.js"></script>
+    <script type="text/javascript" src="/dataq/station_health/js/jquery.timers.js"></script>
+    <script type="text/javascript" src="/dataq/station_health/js/jquery.base64.js"></script>
+    <!--script type="text/javascript" src="/dataq/station_health/js/jquery.tablesorter.min.js"></script-->
+    <script type="text/javascript" src="/dataq/station_health/js/jquery.tablesorter.js"></script>
+    <script type="text/javascript" src="/dataq/station_health/js/jquery.hashchange.min.js"></script>
+    <script type="text/javascript" src="/dataq/station_health/js/excanvas.min.js"></script>
+    <script type="text/javascript" src="/dataq/station_health/js/jquery.jqplot.min.js"></script>
+    <script type="text/javascript" src="/dataq/station_health/js/plugins/jqplot.dateAxisRenderer.min.js"></script>
+    <script type="text/javascript" src="/dataq/station_health/js/plugins/jqplot.cursor.min.js"></script>
+    <script type="text/javascript" src="/dataq/station_health/js/dataq.js"></script>
 </head>
 <body>
-    <input id="data-url"  type="hidden" value="data.txt" />
+    <input id="data-url"  type="hidden" value="/cgi-bin/metrics.py" />
     <input id="engine-up" type="hidden" value="FALSE" />
     <div id="main">
         <div id="controls">
             <div id="control-edit">
-                <div id="label-availability">Availability 0%</div>
+                <div class="label" id="label-availability">Availability 0.0%</div>
                 <div class="slider" id="slider-availability"></div>
-                </br>
-                <div id="label-gaps">Gaps 0%</div>
+                <div class="label" id="label-gaps">Gaps 0.0%</div>
                 <div class="slider" id="slider-gaps"></div>
-                </br>
-                <div id="label-reversals">Reversals 0%</div>
+                <div class="label" id="label-reversals">Reversals 0.0%</div>
                 <div class="slider" id="slider-reversals"></div>
-                </br>
-                <div>
+                <div class="label" id="label-coherence">Coherence 0.0%</div>
+                <div class="slider" id="slider-coherence"></div>
+                <div class="label" id="label-noise">Noise 0.0%</div>
+                <div class="slider" id="slider-noise"></div>
+                <div class="label" id="label-powerdifference">Power Difference 0.0%</div>
+                <div class="slider" id="slider-powerdifference"></div>
+                <div class="remaining">
                     <span>Remaining:</span>
-                    <span id="slider-remaining">100%</span>
+                    <span id="slider-remaining">100.0%</span>
+                </div>
+                <div class="apply">
+                    <button id="apply-weights"/>Apply Weights</button>
                 </div>
             </div>
             <div id="control-display">
                 <button id="control-toggle"/>Show Controls</button>
                 <input id="log" type="text" value="" size="40"/>
+                <div id="progress">
+                    <img src="/dataq/station_health/images/progress.gif">
+                </div>
             </div>
         </div>
         <div id="table">

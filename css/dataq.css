@@ -5,6 +5,11 @@ html, body {
     padding: 0;
 }
 
+div#progress {
+    float: right;
+    padding-top: 0.15em;
+}
+
 div#controls {
     position: fixed;
     background-color: #CCC;
@@ -22,7 +27,7 @@ div#control-edit {
     padding-top: 20px;
     padding-left: 20px;
     padding-bottom: 20px;
-    width: 50%;
+    width: 85%;
 }
 
 div#control-display {
@@ -30,6 +35,13 @@ div#control-display {
     padding-top: 5px;
     padding-left: 5px;
     padding-bottom: 5px;
+}
+
+div.remaining {
+    padding-top: 10px;
+}
+div.remaining span {
+    font-weight: bold;
 }
 
 div#main {
@@ -44,5 +56,10 @@ div#table {
     top: 5em;
     padding-left: 0.5em;
     padding-right: 0.5em;
+}
+
+div.label {
+    padding-top: 8px;
+    padding-bottom: 2px;
 }
 
