@@ -35,10 +35,10 @@ table.tablesorter thead tr .headerSortDown {
 table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSortUp {
 background-color: #88BB88;
 }
-table.tablesorter tbody tr:nth-child(odd) {
+table.tablesorter tbody tr {
     background-color: #FFF;
 }
-table.tablesorter tbody tr:nth-child(even) {
+table.tablesorter tbody tr.odd {
     background-color: #EEE;
 }
 table.tablesorter tbody tr td a {

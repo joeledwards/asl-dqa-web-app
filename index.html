@@ -41,10 +41,10 @@
                 <div class="slider" id="slider-reversals"></div>
                 <div class="label" id="label-coherence">Coherence 0.0%</div>
                 <div class="slider" id="slider-coherence"></div>
-                <div class="label" id="label-noise">Noise 0.0%</div>
-                <div class="slider" id="slider-noise"></div>
                 <div class="label" id="label-powerdifference">Power Difference 0.0%</div>
                 <div class="slider" id="slider-powerdifference"></div>
+                <div class="label" id="label-noise">Noise 0.0%</div>
+                <div class="slider" id="slider-noise"></div>
                 <div class="remaining">
                     <span>Remaining:</span>
                     <span id="slider-remaining">100.0%</span>
@@ -54,8 +54,60 @@
                 </div>
             </div>
             <div id="control-display">
+                <div id="home"><a href="#"><img alt="Back to &quot;Home&quot; view of all stations." src="/dataq/station_health/images/home-24.png"/></a></div>
                 <button id="control-toggle"/>Show Controls</button>
-                <input id="log" type="text" value="" size="40"/>
+                <button id="clear-filters">Clear Filters</button>
+                <!--input id="log" type="text" value="" size="40"/-->
+                <input id="filter-network"  class="filter" type="text" alt="Network"  value="" size="10"/>
+                <input id="filter-station"  class="filter" type="text" alt="Station"  value="" size="10"/>
+                <input id="filter-location" class="filter" type="text" alt="Location" value="" size="10"/>
+                <input id="filter-channel"  class="filter" type="text" alt="Channel"  value="" size="10"/>
+                <select class="subset" id="filter-subset">
+                    <option value="ALL">All</option>
+                    <optgroup label="Networks">
+                        <option value="CU">CU</option>
+                        <option value="GT">GT</option>
+                        <option value="IC">IC</option>
+                        <option value="IU">IU</option>
+                        <option value="IW">IW</option>
+                        <option value="US">US</option>
+                        <option value="XX">XX</option>
+                    </optgroup>
+                    <optgroup label="Groups">
+                        <option value="ANSS">ANSS</option>
+                        <option value="CDSN">CDSN</option>
+                        <option value="GCI">CTBTO GCI</option>
+                        <option value="GSRAS">GSRAS</option>
+                        <option value="MPINT">MP Intergral</option>
+                        <option value="PTWC">PTWC</option>
+                    </optgroup>
+                    <optgroup label="Countries">
+                        <option value="CHINA">China</option>
+                        <option value="RUSSIA">Russia</option>
+                        <option value="USA">USA</option>
+                    </optgroup>
+                    <optgroup label="Geographical">
+                        <option value="AFRICA">Africa</option>
+                        <option value="ANTARCTIC">Antarctica</option>
+                        <option value="ASIA">Asia</option>
+                        <option value="ATLANTIC">Atlantic</option>
+                        <option value="AUSTRALIA">Australia</option>
+                        <option value="CARIBBEAN">Caribbean</option>
+                        <option value="CAMERICA">Central America</option>
+                        <option value="EUROPE">Europe</option>
+                        <option value="NAMERICA">North America</option>
+                        <option value="PACIFIC">Pacific</option>
+                        <option value="SAMERICA">South America</option>
+                    </optgroup>
+                </select>
+                <input class="subset-data" type="hidden" name="SUBSET_ANSS"       value="" />
+                <input class="subset-data" type="hidden" name="SUBSET_CARIBBEAN"  value="" />
+                <input class="subset-data" type="hidden" name="SUBSET_CHINA"      value="" />
+                <input class="subset-data" type="hidden" name="SUBSET_CTBTO"      value="" />
+                <input class="subset-data" type="hidden" name="SUBSET_CTBTO_GCI"  value="" />
+                <input class="subset-data" type="hidden" name="SUBSET_PTWC"       value="" />
+                <input class="subset-data" type="hidden" name="SUBSET_RUSSIA"     value="" />
+                <input class="subset-data" type="hidden" name="SUBSET_USA"        value="" />
                 <div id="progress">
                     <img src="/dataq/station_health/images/progress.gif">
                 </div>

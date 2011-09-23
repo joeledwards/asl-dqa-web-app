@@ -6,9 +6,208 @@ var col_1_title = "";
 var col_2_title = "";
 var col_3_title = "";
 var place = ""
+var show_all = false;
 var gen_plots = false;
 var channel_plot = false;
 var controls_hidden = true;
+var row_index = 0;
+
+var filters = {
+    'filter-network'  : null,
+    'filter-station'  : null,
+    'filter-location' : null,
+    'filter-channel'  : null};
+
+var subsets = {
+    'CU_ANWB' : ['ALL', 'GSN', 'CU', 'CARIBBEAN', 'MPINT'],
+    'CU_BBGH' : ['ALL', 'GSN', 'CU', 'CARIBBEAN', 'MPINT'], 
+    'CU_BCIP' : ['ALL', 'GSN', 'CU', 'CARIBBEAN', 'MPINT', 'CAMERICA'], 
+    'CU_GRGR' : ['ALL', 'GSN', 'CU', 'CARIBBEAN', 'MPINT'], 
+    'CU_GRTK' : ['ALL', 'GSN', 'CU', 'CARIBBEAN', 'MPINT'], 
+    'CU_GTBY' : ['ALL', 'GSN', 'CU', 'CARIBBEAN', 'MPINT'], 
+    'CU_MTDJ' : ['ALL', 'GSN', 'CU', 'CARIBBEAN', 'MPINT'], 
+    'CU_SDDR' : ['ALL', 'GSN', 'CU', 'CARIBBEAN', 'MPINT'], 
+    'CU_TGUH' : ['ALL', 'GSN', 'CU', 'CARIBBEAN', 'MPINT', 'CAMERICA'],
+    'IC_BJT'  : ['ALL', 'GSN', 'IC', 'CDSN', 'CHINA', 'ASIA'],
+    'IC_ENH'  : ['ALL', 'GSN', 'IC', 'CDSN', 'CHINA', 'ASIA'],
+    'IC_HIA'  : ['ALL', 'GSN', 'IC', 'CDSN', 'CHINA', 'ASIA'],
+    'IC_KMI'  : ['ALL', 'GSN', 'IC', 'CDSN', 'CHINA', 'ASIA'],
+    'IC_LSA'  : ['ALL', 'GSN', 'IC', 'CDSN', 'CHINA', 'ASIA'],
+    'IC_MDJ'  : ['ALL', 'GSN', 'IC', 'CDSN', 'CHINA', 'ASIA'],
+    'IC_QIZ'  : ['ALL', 'GSN', 'IC', 'CDSN', 'CHINA', 'ASIA'],
+    'IC_SSE'  : ['ALL', 'GSN', 'IC', 'CDSN', 'CHINA', 'ASIA'],
+    'IC_WMQ'  : ['ALL', 'GSN', 'IC', 'CDSN', 'CHINA', 'ASIA'],
+    'IC_XAN'  : ['ALL', 'GSN', 'IC', 'CDSN', 'CHINA', 'ASIA'],
+    'IU_ADK'  : ['ALL', 'GSN', 'IU', 'ADK'], 
+    'IU_AFI'  : ['ALL', 'GSN', 'IU', 'PTWC', 'PACIFIC'],
+    'IU_ANMO' : ['ALL', 'GSN', 'IU', 'USA', 'NAMERICA'],
+    'IU_ANTO' : ['ALL', 'GSN', 'IU', 'EUROPE'],
+    'IU_BBSR' : ['ALL', 'GSN', 'IU', 'ATLANTIC'],
+    'IU_BILL' : ['ALL', 'GSN', 'IU', 'GSRAS', 'RUSSIA', 'ASIA'],
+    'IU_CASY' : ['ALL', 'GSN', 'IU', 'ANTARCTIC'],
+    'IU_CCM'  : ['ALL', 'GSN', 'IU', 'ANSS', 'USA', 'NAMERICA'],
+    'IU_CHTO' : ['ALL', 'GSN', 'IU', 'ASIA'],
+    'IU_COLA' : ['ALL', 'GSN', 'IU', 'USA', 'NAMERICA'],
+    'IU_COR'  : ['ALL', 'GSN', 'IU', 'ANSS', 'USA', 'NAMERICA'],
+    'IU_CTAO' : ['ALL', 'GSN', 'IU', 'AUSTRALIA'],
+    'IU_DAV'  : ['ALL', 'GSN', 'IU', 'GCI'],
+    'IU_DWPF' : ['ALL', 'GSN', 'IU', 'ANSS', 'USA', 'NAMERICA'],
+    'IU_FUNA' : ['ALL', 'GSN', 'IU', 'PTWC', 'PACIFIC'],
+    'IU_FURI' : ['ALL', 'GSN', 'IU', 'AFRICA'],
+    'IU_GRFO' : ['ALL', 'GSN', 'IU', 'EUROPE'],
+    'IU_GNI'  : ['ALL', 'GSN', 'IU', 'GCI', 'ASIA'],
+    'IU_GUMO' : ['ALL', 'GSN', 'IU', 'PACIFIC'],
+    'IU_HKT'  : ['ALL', 'GSN', 'IU', 'ANSS', 'USA', 'NAMERICA'],
+    'IU_HNR'  : ['ALL', 'GSN', 'IU', 'GCI'],
+    'IU_HRV'  : ['ALL', 'GSN', 'IU', 'USA', 'NAMERICA'],
+    'IU_INCN' : ['ALL', 'GSN', 'IU', 'ASIA'],
+    'IU_JOHN' : ['ALL', 'GSN', 'IU', 'PTWC', 'PACIFIC'],
+    'IU_KBL'  : ['ALL', 'GSN', 'IU', 'ASIA'],
+    'IU_KBS'  : ['ALL', 'GSN', 'IU'],
+    'IU_KEV'  : ['ALL', 'GSN', 'IU', 'EUROPE'],
+    'IU_KIEV' : ['ALL', 'GSN', 'IU', 'EUROPE'],
+    'IU_KIP'  : ['ALL', 'GSN', 'IU', 'PTWC', 'USA', 'PACIFIC'],
+    'IU_KMBO' : ['ALL', 'GSN', 'IU', 'GCI', 'AFRICA'],
+    'IU_KNTN' : ['ALL', 'GSN', 'IU', 'PTWC', 'PACIFIC'],
+    'IU_KONO' : ['ALL', 'GSN', 'IU', 'EUROPE'],
+    'IU_KOWA' : ['ALL', 'GSN', 'IU', 'AFRICA'],
+    'IU_LCO'  : ['ALL', 'GSN', 'IU', 'SAMERICA'],
+    'IU_LSZ'  : ['ALL', 'GSN', 'IU', 'GCI', 'AFRICA'],
+    'IU_LVC'  : ['ALL', 'GSN', 'IU', 'GCI', 'SAMERICA'],
+    'IU_MA2'  : ['ALL', 'GSN', 'IU', 'GSRAS', 'RUSSIA', 'ASIA'],
+    'IU_MACI' : ['ALL', 'GSN', 'IU', 'AFRICA'],
+    'IU_MAJO' : ['ALL', 'GSN', 'IU', 'ASIA'],
+    'IU_MAKZ' : ['ALL', 'GSN', 'IU', 'ASIA'],
+    'IU_MBWA' : ['ALL', 'GSN', 'IU', 'AUSTRALIA'],
+    'IU_MIDW' : ['ALL', 'GSN', 'IU', 'PTWC', 'PACIFIC'],
+    'IU_MSKU' : ['ALL', 'GSN', 'IU', 'GCI', 'AFRICA'],
+    'IU_NWAO' : ['ALL', 'GSN', 'IU', 'AUSTRALIA'],
+    'IU_OTAV' : ['ALL', 'GSN', 'IU', 'SAMERICA', 'MPINT'],
+    'IU_PAB'  : ['ALL', 'GSN', 'IU', 'EUROPE'],
+    'IU_PAYG' : ['ALL', 'GSN', 'IU', 'PACIFIC', 'MPINT'],
+    'IU_PET'  : ['ALL', 'GSN', 'IU', 'GSRAS', 'RUSSIA', 'ASIA'],
+    'IU_PMG'  : ['ALL', 'GSN', 'IU', 'PTWC'],
+    'IU_PMSA' : ['ALL', 'GSN', 'IU', 'ANTARCTIC'],
+    'IU_POHA' : ['ALL', 'GSN', 'IU', 'PTWC', 'USA', 'PACIFIC'],
+    'IU_PTCN' : ['ALL', 'GSN', 'IU', 'PACIFIC'],
+    'IU_PTGA' : ['ALL', 'GSN', 'IU', 'GCI', 'SAMERICA'],
+    'IU_QSPA' : ['ALL', 'GSN', 'IU', 'ANTARCTIC'],
+    'IU_RAO'  : ['ALL', 'GSN', 'IU', 'GCI', 'PACIFIC'],
+    'IU_RAR'  : ['ALL', 'GSN', 'IU', 'GCI', 'PACIFIC'],
+    'IU_RCBR' : ['ALL', 'GSN', 'IU', 'GCI', 'SAMERICA'],
+    'IU_RSSD' : ['ALL', 'GSN', 'IU', 'ANSS', 'USA', 'NAMERICA'],
+    'IU_SAML' : ['ALL', 'GSN', 'IU', 'SAMERICA', 'MPINT'],
+    'IU_SBA'  : ['ALL', 'GSN', 'IU', 'ANTARCTIC'],
+    'IU_SDV'  : ['ALL', 'GSN', 'IU', 'GCI', 'SAMERICA'],
+    'IU_SFJD' : ['ALL', 'GSN', 'IU', 'GCI'],
+    'IU_SJG'  : ['ALL', 'GSN', 'IU', 'CARIBBEAN'],
+    'IU_SLBS' : ['ALL', 'GSN', 'IU', 'CAMERICA', 'MPINT'],
+    'IU_SNZO' : ['ALL', 'GSN', 'IU'],
+    'IU_SSPA' : ['ALL', 'GSN', 'IU', 'ANSS', 'USA', 'NAMERICA'],
+    'IU_TARA' : ['ALL', 'GSN', 'IU', 'PTWC', 'PACIFIC'],
+    'IU_TATO' : ['ALL', 'GSN', 'IU', 'ASIA'],
+    'IU_TEIG' : ['ALL', 'GSN', 'IU', 'GCI', 'CAMERICA'],
+    'IU_TIXI' : ['ALL', 'GSN', 'IU', 'GSRAS', 'RUSSIA', 'ASIA'],
+    'IU_TRIS' : ['ALL', 'GSN', 'IU', 'GCI', 'ATLANTIC'],
+    'IU_TRQA' : ['ALL', 'GSN', 'IU', 'SAMERICA', 'MPINT'],
+    'IU_TSUM' : ['ALL', 'GSN', 'IU', 'GCI', 'AFRICA'],
+    'IU_TUC'  : ['ALL', 'GSN', 'IU', 'USA', 'NAMERICA'],
+    'IU_ULN'  : ['ALL', 'GSN', 'IU', 'ASIA'],
+    'IU_WAKE' : ['ALL', 'GSN', 'IU', 'PTWC', 'PACIFIC'],
+    'IU_WCI'  : ['ALL', 'GSN', 'IU', 'ANSS', 'USA', 'NAMERICA'],
+    'IU_WVT'  : ['ALL', 'GSN', 'IU', 'ANSS', 'USA', 'NAMERICA'],
+    'IU_XMAS' : ['ALL', 'GSN', 'IU', 'PTWC', 'PACIFIC'],
+    'IU_YAK'  : ['ALL', 'GSN', 'IU', 'GSRAS', 'RUSSIA', 'ASIA'],
+    'IU_YSS'  : ['ALL', 'GSN', 'IU', 'GSRAS', 'RUSSIA', 'ASIA'],
+    'GT_BOSA' : ['ALL', 'GT'],
+    'GT_CPUP' : ['ALL', 'GT'],
+    'GT_DBIC' : ['ALL', 'GT'],
+    'GT_LBTB' : ['ALL', 'GT'],
+    'GT_LPAZ' : ['ALL', 'GT'],
+    'GT_PLCA' : ['ALL', 'GT'],
+    'GT_VNDA' : ['ALL', 'GT'],
+    'IW_DLMT' : ['ALL', 'IW'],
+    'IW_FLWY' : ['ALL', 'IW'],
+    'IW_FXWY' : ['ALL', 'IW'],
+    'IW_IMW'  : ['ALL', 'IW'],
+    'IW_LOHW' : ['ALL', 'IW'],
+    'IW_MFID' : ['ALL', 'IW'],
+    'IW_MOOW' : ['ALL', 'IW'],
+    'IW_PHWY' : ['ALL', 'IW'],
+    'IW_PLID' : ['ALL', 'IW'],
+    'IW_REDW' : ['ALL', 'IW'],
+    'IW_RWWY' : ['ALL', 'IW'],
+    'IW_SMCO' : ['ALL', 'IW'],
+    'IW_SNOW' : ['ALL', 'IW'],
+    'IW_TPAW' : ['ALL', 'IW'],
+    'US_AAM'  : ['ALL', 'US'],
+    'US_ACSO' : ['ALL', 'US'],
+    'US_AGMN' : ['ALL', 'US'],
+    'US_AMTX' : ['ALL', 'US'],
+    'US_BINY' : ['ALL', 'US'],
+    'US_BLA'  : ['ALL', 'US'],
+    'US_BMO'  : ['ALL', 'US'],
+    'US_BOZ'  : ['ALL', 'US'],
+    'US_BRAL' : ['ALL', 'US'],
+    'US_BW06' : ['ALL', 'US'],
+    'US_CBKS' : ['ALL', 'US'],
+    'US_CBN'  : ['ALL', 'US'],
+    'US_CNNC' : ['ALL', 'US'],
+    'US_COWI' : ['ALL', 'US'],
+    'US_DGMT' : ['ALL', 'US'],
+    'US_DUG'  : ['ALL', 'US'],
+    'US_ECSD' : ['ALL', 'US'],
+    'US_EGAK' : ['ALL', 'US'],
+    'US_EGMT' : ['ALL', 'US'],
+    'US_ERPA' : ['ALL', 'US'],
+    'US_EYMN' : ['ALL', 'US'],
+    'US_GLMI' : ['ALL', 'US'],
+    'US_GOGA' : ['ALL', 'US'],
+    'US_HAWA' : ['ALL', 'US'],
+    'US_HDIL' : ['ALL', 'US'],
+    'US_HLID' : ['ALL', 'US'],
+    'US_ISCO' : ['ALL', 'US'],
+    'US_JCT'  : ['ALL', 'US'],
+    'US_JFWS' : ['ALL', 'US'],
+    'US_KSU1' : ['ALL', 'US'],
+    'US_KVTX' : ['ALL', 'US'],
+    'US_LAO'  : ['ALL', 'US'],
+    'US_LBNH' : ['ALL', 'US'],
+    'US_LONY' : ['ALL', 'US'],
+    'US_LRAL' : ['ALL', 'US'],
+    'US_MCWV' : ['ALL', 'US'],
+    'US_MIAR' : ['ALL', 'US'],
+    'US_MNTX' : ['ALL', 'US'],
+    'US_MSO'  : ['ALL', 'US'],
+    'US_MVCO' : ['ALL', 'US'],
+    'US_NATX' : ['ALL', 'US'],
+    'US_NEW'  : ['ALL', 'US'],
+    'US_NHSC' : ['ALL', 'US'],
+    'US_NLWA' : ['ALL', 'US'],
+    'US_OGNE' : ['ALL', 'US'],
+    'US_OXF'  : ['ALL', 'US'],
+    'US_PKME' : ['ALL', 'US'],
+    'US_RLMT' : ['ALL', 'US'],
+    'US_SCIA' : ['ALL', 'US'],
+    'US_SDCO' : ['ALL', 'US'],
+    'US_TPNV' : ['ALL', 'US'],
+    'US_TZTN' : ['ALL', 'US'],
+    'US_VBMS' : ['ALL', 'US'],
+    'US_WMOK' : ['ALL', 'US'],
+    'US_WRAK' : ['ALL', 'US'],
+    'US_WUAZ' : ['ALL', 'US'],
+    'US_WVOR' : ['ALL', 'US'],
+    'XX_ANMX' : ['ALL', 'XX'],
+    'XX_ASPX' : ['ALL', 'XX'],
+    'XX_CMGX' : ['ALL', 'XX'],
+    'XX_FBA2' : ['ALL', 'XX'],
+    'XX_ST1X' : ['ALL', 'XX'],
+    'XX_ST2X' : ['ALL', 'XX'],
+    'XX_TST1' : ['ALL', 'XX'],
+    'XX_TST2' : ['ALL', 'XX'],
+    'XX_TST3' : ['ALL', 'XX']
+    };
+
 
 // Setup event bindings
 $(document).ready(function() {
@@ -37,12 +236,38 @@ function jstore_onload()
     } catch (e) {
         alert("Wow, a little behind the times are we?! Please update your web browser.");
     }
+    $.tablesorter.addWidget({
+        id: "callback",
+        format: function (table) {
+            filter();
+        }
+    });
+
     $("#control-edit").slideUp(1.0);
     $("#control-toggle").click(function(){
         toggle_controls();
     });
     $("#apply-weights").click(function(){
         load_data();
+    });
+    $("#clear-filters").click(function(event){
+        clear_filters();
+    });
+    text_restore('filter');
+    $("input.filter").blur(function(){
+        input_blur($(this));
+    });
+    $("input.filter").focus(function(){
+        input_focus($(this));
+    });
+    $("input.filter").bind('keyup', null, function(){
+        update_filter($(this));
+    });
+    $("input.filter").map(function(element, index){
+        input_blur($(this));
+    });
+    $('#filter-subset').change(function(event) {
+        subset_changed();
     });
     $(window).hashchange(function(){
         load_data();
@@ -90,11 +315,18 @@ function load_data()
     var command = window.location.hash.replace("#", "");
 
     if (command == "") {
+        show_all = true;
         col_1_title = "Network"
         col_2_title = "Station"
         col_3_title = ""
+        $('#filter-subset').show()
+        $('#filter-network').show()
+        $('#filter-station').show()
+        $('#filter-location').hide()
+        $('#filter-channel').hide()
     }
     else {
+        show_all = false;
         var parts = command.split("-");
         if ((parts.length < 3) || (parts.length > 6)) {
             $('#main').append('<h1>Page Load Error!</h1>');
@@ -114,6 +346,11 @@ function load_data()
             col_3_title = "Rate"
             st_network = parts[1];
             st_station = parts[2];
+            $('#filter-subset').hide()
+            $('#filter-network').hide()
+            $('#filter-station').hide()
+            $('#filter-location').show()
+            $('#filter-channel').show()
         }
         else if (parts[0] == "PLOT") {
             if (parts.length < 4) {
@@ -146,6 +383,11 @@ function load_data()
                 $('#main').append('<h2>Invalid Command.</h2>');
                 return;
             }
+            $('#filter-subset').hide()
+            $('#filter-network').hide()
+            $('#filter-station').hide()
+            $('#filter-location').hide()
+            $('#filter-channel').hide()
         }
         else {
             $('#main').append('<h1>Page Load Error!</h1>');
@@ -160,11 +402,13 @@ function load_data()
     if (command == "") {
         $.get($('#data-url').val()+'?cmd=ALL', {cache:"false"}, function(data, status, request){
             load(data, status, request);
+            filter();
         }); 
     } 
     else {
         $.get($('#data-url').val()+'?cmd='+command, {cache:"false"}, function(data, status, request){
             load(data, status, request);
+            filter();
         }); 
     }
 
@@ -250,6 +494,7 @@ function slide_event(event, ui) {
     slide_stop(event, ui);
 }
 
+
 // Load the data
 function load(data, status, request)
 {
@@ -273,25 +518,25 @@ function load(data, status, request)
         <table id="metrics" class="tablesorter">\
         <thead>\
         <tr>\
-            <th>' +col_1_title+ '</th>\
-            <th>' +col_2_title+ '</th>\
-            <th>' +col_3_title+ '</th>\
-            <th>Availability</th>\
-            <th>Gap Count</th>\
-            <th>Reversals</th>\
-            <th>C 4-8</th>\
-            <th>C 18-22</th>\
-            <th>C 90-110</th>\
-            <th>C 200-500</th>\
-            <th>N 4-8</th>\
-            <th>N 18-22</th>\
-            <th>N 90-110</th>\
-            <th>N 200-500</th>\
-            <th>PD 4-8</th>\
-            <th>PD 18-22</th>\
-            <th>PD 90-110</th>\
-            <th>PD 200-500</th>\
-            <th>Aggregate</th>\
+            <th><span>' +col_1_title+ '</span></th>\
+            <th><span>' +col_2_title+ '</span></th>\
+            <th><span>' +col_3_title+ '</span></th>\
+            <th><span>Availability</span></th>\
+            <th><span>Gap Count</span></th>\
+            <th><span>Reversals</span></th>\
+            <th><span>C 4-8</span></th>\
+            <th><span>C 18-22</span></th>\
+            <th><span>C 90-110</span></th>\
+            <th><span>C 200-500</span></th>\
+            <th><span>PD 4-8</span></th>\
+            <th><span>PD 18-22</span></th>\
+            <th><span>PD 90-110</span></th>\
+            <th><span>PD 200-500</span></th>\
+            <th><span>N 4-8</span></th>\
+            <th><span>N 18-22</span></th>\
+            <th><span>N 90-110</span></th>\
+            <th><span>N 200-500</span></th>\
+            <th><span>Aggregate</span></th>\
             <th></th>\
         </tr>\
         </thead>\
@@ -393,7 +638,15 @@ function load(data, status, request)
             */
         }
         //row.append('<td>' + (aggregate / weight_total).toFixed(2) + '</td>');
-        row.append('<td>' + aggregate.toFixed(2) + '</td>');
+        aggregate *= 1.0;
+        aggregate_class = "level1";
+        if (aggregate < 0.0) {
+            aggregate_class = "level3";
+        } 
+        else if (aggregate < 110.0) {
+            aggregate_class = "level2";
+        }
+        row.append('<td class="' +aggregate_class+ '">' + aggregate.toFixed(2) + '</td>');
         var cmd_hash = ""
         if (place == "") {
             cmd_hash = "PLOT-STATION-" +items[0]+ "-" +items[1];
@@ -409,13 +662,15 @@ function load(data, status, request)
             headers: {
                  2: { sorter: false},
                 19: { sorter: false }
-            }
+            },
+            widgets: ["callback"]
         });
     } else {
         $("#metrics").tablesorter({
             headers: {
                 19: { sorter: false }
-            }
+            },
+            widgets: ["callback"]
         });
     }
 }
@@ -626,5 +881,149 @@ function set_prototypes()
         var onejan = new Date(this.getFullYear(),0,1);
         return Math.ceil((this - onejan) / 86400000);
     };
+}
+
+
+/************************
+ ***** FILTER LOGIC *****
+ ************************/
+
+function subset_changed() {
+    filter();
+}
+
+function clear_filters() {
+    $('#filter-subset').val('ALL');
+    $("input.filter").map(function(element, index){
+        $(this).val('');
+        input_blur($(this));
+        update_filter($(this));
+    });
+}
+
+function update_filter(item)
+{
+    id = item.attr('id');
+    var text = $('#'+id).attr('value');
+    var alt  = $('#'+id).attr('alt');
+    var value = '';
+    if ((text === null) || (text === undefined) || (text.trim().length < 1) || (text == alt)) {
+        value = 'NOTHING';
+    } else {
+        value = $.base64Encode(text);
+    }
+    $.jStore.set(id, value);
+    if ((text === undefined) || (text === null) || (text === '') || (text == alt)) {
+        filters[id] = null;
+    } else {
+        filters[id] = new RegExp(text, 'i');
+    }
+    filter();
+}
+
+function filter()
+{
+    row_index = 0;
+    $('tr.metrics').map(function(element, index){
+        apply_filters($(this), value);
+    });
+}
+
+function apply_filters(item, value)
+{
+    var parts = item.attr('id').split('-');
+    if (show_all && ((filters['filter-network'] != undefined) && (!filters['filter-network'].test(parts[0])))) {
+        item.hide();
+    }
+    else if (show_all && ((filters['filter-station'] != undefined) && (!filters['filter-station'].test(parts[1])))) {
+        item.hide();
+    }
+    else if (!show_all && ((filters['filter-location'] != undefined) && (!filters['filter-location'].test(parts[0])))) {
+        item.hide();
+    }
+    else if (!show_all && ((filters['filter-channel'] != undefined) && (!filters['filter-channel'].test(parts[1])))) {
+        item.hide();
+    }
+    else if (show_all && ((subsets[parts[0] +'_'+ parts[1]].indexOf($('#filter-subset').val())) == -1)) {
+        item.hide();
+    }
+    else {
+        item.show();
+        if (row_index % 2) {
+            item.addClass('odd');
+        } else {
+            item.removeClass('odd');
+        }
+        row_index++;
+    }
+}
+
+function input_blur(item)
+{
+    if ((item.attr('value') == '') || (item.attr('value') == item.attr('alt'))) {
+        item.attr('value', item.attr('alt'));
+        item.addClass('watermark');
+    }
+}
+
+function input_focus(item)
+{
+    if (item.attr('value') == item.attr('alt')) {
+        item.attr('value', '');
+        item.removeClass('watermark');
+    }
+}
+
+function radio_toggle(item)
+{
+    //$('#debug').append('<pre>toggle</pre>');
+    $.jStore.set(item.attr('name'), item.val());
+    filter()
+}
+
+function checkbox_toggle(id)
+{
+    if ($('#'+id).attr('checked') == true) {
+        $.jStore.set(id, 'TRUE');
+    } else {
+        $.jStore.set(id, 'FALSE');
+    }
+}
+
+function text_restore(class)
+{
+    $('input.'+class).map(function(element, index){
+        var text = $.jStore.get($(this).attr('id'));
+        if ((text == 'NOTHING') || (text === null) || (text === undefined)) {
+            $(this).val('');
+        } else {
+            $(this).val($.base64Decode(text));
+        }
+        update_filter($(this));
+    });
+    return;
+}
+
+function radio_restore(name)
+{
+    var value = $.jStore.get(name);
+    if (value == undefined) {
+        value = 0;
+    }
+    //$('input[name='+name+']', $('input[value='+value+']')).attr('checked', true);
+    $('input[name='+name+']').map(function(){
+        if ($(this).val() == value) {
+            $(this).attr('checked', true);
+        }
+    });
+}
+
+function checkbox_restore(id)
+{
+    var checked = false;
+    if ($.jStore.get(id) == 'TRUE') {
+        checked = true;
+    }
+    $('#'+id).attr('checked', checked);
 }
 
