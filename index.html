@@ -28,11 +28,12 @@
     <script type="text/javascript" src="/dataq/station_health/js/dataq.js"></script>
 </head>
 <body>
-    <input id="data-url"  type="hidden" value="/cgi-bin/metrics.py" />
-    <input id="engine-up" type="hidden" value="FALSE" />
+    <input id="data-url"    type="hidden" value="/cgi-bin/metrics.py" />
+    <input id="engine-up"   type="hidden" value="FALSE" />
+    <input id="table-ready" type="hidden" value="FALSE" />
     <div id="main">
         <div id="controls">
-            <div id="control-edit">
+            <div id="control-table">
                 <div class="label" id="label-availability">Availability 0.0%</div>
                 <div class="slider" id="slider-availability"></div>
                 <div class="label" id="label-gaps">Gaps 0.0%</div>
@@ -108,6 +109,13 @@
                 <input class="subset-data" type="hidden" name="SUBSET_PTWC"       value="" />
                 <input class="subset-data" type="hidden" name="SUBSET_RUSSIA"     value="" />
                 <input class="subset-data" type="hidden" name="SUBSET_USA"        value="" />
+                <div id="displaying">
+                    &nbsp;
+                    <!--span class="display-title">Displaying:</span-->
+                    <span class="display-month">--</span>
+                    <span class="display-info">(--)</span>
+                    &nbsp;
+                </div>
                 <div id="progress">
                     <img src="/dataq/station_health/images/progress.gif">
                 </div>

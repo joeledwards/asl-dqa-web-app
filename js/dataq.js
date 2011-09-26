@@ -5,12 +5,41 @@ var st_channel  = undefined;
 var col_1_title = "";
 var col_2_title = "";
 var col_3_title = "";
-var place = ""
-var show_all = false;
+var place = "";
+var show_all = true;
 var gen_plots = false;
 var channel_plot = false;
 var controls_hidden = true;
 var row_index = 0;
+var selected_year = 2011;
+var selected_month = 8;
+
+var month_map = {
+     1 : "January",
+     2 : "February",
+     3 : "March",
+     4 : "April",
+     5 : "May",
+     6 : "June",
+     7 : "July",
+     8 : "August",
+     9 : "September",
+    10 : "October",
+    11 : "November",
+    12 : "December",
+    "January"   :  1,
+    "February"  :  2,
+    "March"     :  3,
+    "April"     :  4,
+    "May"       :  5,
+    "June"      :  6,
+    "July"      :  7,
+    "August"    :  8,
+    "September" :  9,
+    "October"   : 10,
+    "November"  : 11,
+    "December"  : 12
+}
 
 var filters = {
     'filter-network'  : null,
@@ -243,7 +272,7 @@ function jstore_onload()
         }
     });
 
-    $("#control-edit").slideUp(1.0);
+    $("#control-table").slideUp(1.0);
     $("#control-toggle").click(function(){
         toggle_controls();
     });
@@ -270,20 +299,88 @@ function jstore_onload()
         subset_changed();
     });
     $(window).hashchange(function(){
-        load_data();
+        load_data(); // Load data fro the new context
     });
+    load_controls();
+    init_table();
     $(window).hashchange(); // force load of data on initial page load
+}
+
+function init_table() {
+    if ($('#table-ready').val() == "FALSE") {
+        $('#table').append('\
+            <table id="metrics" class="tablesorter">\
+            <thead>\
+            <tr>\
+                <th><span id="col_1_header"></span></th>\
+                <th><span id="col_2_header"></span></th>\
+                <th><span id="col_3_header"></span></th>\
+                <th><span>Availability</span></th>\
+                <th><span>Gap Count</span></th>\
+                <th><span>Reversals</span></th>\
+                <th><span>C 4-8</span></th>\
+                <th><span>C 18-22</span></th>\
+                <th><span>C 90-110</span></th>\
+                <th><span>C 200-500</span></th>\
+                <th><span>PD 4-8</span></th>\
+                <th><span>PD 18-22</span></th>\
+                <th><span>PD 90-110</span></th>\
+                <th><span>PD 200-500</span></th>\
+                <th><span>N 4-8</span></th>\
+                <th><span>N 18-22</span></th>\
+                <th><span>N 90-110</span></th>\
+                <th><span>N 200-500</span></th>\
+                <th><span>Aggregate</span></th>\
+                <th></th>\
+            </tr>\
+            </thead>\
+            <tbody id="metrics-body">\
+            <tr id="type-map-row">\
+                <td>--</td>\
+                <td>--</td>\
+                <td>0.0</td>\
+                <td>0.0</td>\
+                <td>0.0</td>\
+                <td>0.0</td>\
+                <td>0.0</td>\
+                <td>0.0</td>\
+                <td>0.0</td>\
+                <td>0.0</td>\
+                <td>0.0</td>\
+                <td>0.0</td>\
+                <td>0.0</td>\
+                <td>0.0</td>\
+                <td>0.0</td>\
+                <td>0.0</td>\
+                <td>0.0</td>\
+                <td>0.0</td>\
+                <td>0.0</td>\
+                <td><a href="#">.</a></td>\
+            </tr>\
+            </tbody>\
+            </table>');
+
+        $("#type-map-row").hide();
+        $("#metrics").tablesorter({
+            headers: {
+                19: { sorter: false }
+            },
+            widgets: ["callback"]
+        });
+
+        $('#table-ready').val("TRUE");
+    }
 }
 
 function toggle_controls()
 {
     if (controls_hidden) {
-        $("#control-edit").slideDown(500);
+        $("#control-table").slideDown(500);
         controls_hidden = false;
         $("#control-toggle").text("Hide Controls");
     }
     else {
-        $("#control-edit").slideUp(500);
+        $("#control-table").slideUp(500);
         controls_hidden = true;
         $("#control-toggle").text("Show Controls");
     }
@@ -292,6 +389,9 @@ function toggle_controls()
 // Check the status of stations
 function load_data()
 {
+    store_table_controls(); // Store controls from last context before updating
+    $('#apply-weights').attr('disabled', 'disabled');
+    $('#table').hide();
     show_progress();
     // Summary of All Stations
     "metrics.py?cmd=ALL"
@@ -319,11 +419,13 @@ function load_data()
         col_1_title = "Network"
         col_2_title = "Station"
         col_3_title = ""
-        $('#filter-subset').show()
-        $('#filter-network').show()
-        $('#filter-station').show()
-        $('#filter-location').hide()
-        $('#filter-channel').hide()
+        $('#filter-subset').show();
+        $('#filter-network').show();
+        $('#filter-station').show();
+        $('#filter-location').hide();
+        $('#filter-channel').hide();
+        $('#displaying > span.display-info').text("");
+        load_table_controls();
     }
     else {
         show_all = false;
@@ -341,16 +443,18 @@ function load_data()
                 $('#main').append('<h2>Invalid Command.</h2>');
                 return;
             }
-            col_1_title = "Location"
-            col_2_title = "Channel"
-            col_3_title = "Rate"
+            col_1_title = "Location";
+            col_2_title = "Channel";
+            col_3_title = "Rate";
             st_network = parts[1];
             st_station = parts[2];
-            $('#filter-subset').hide()
-            $('#filter-network').hide()
-            $('#filter-station').hide()
-            $('#filter-location').show()
-            $('#filter-channel').show()
+            $('#filter-subset').hide();
+            $('#filter-network').hide();
+            $('#filter-station').hide();
+            $('#filter-location').show();
+            $('#filter-channel').show();
+            $('#displaying > span.display-info').text(" (" +st_network+ "_" +st_station + ")");
+            load_table_controls();
         }
         else if (parts[0] == "PLOT") {
             if (parts.length < 4) {
@@ -368,6 +472,7 @@ function load_data()
                     $('#main').append('<h2>Invalid Command.</h2>');
                     return;
                 }
+                $('#displaying > span.display-info').text(" (" +st_network+ "_" +st_station+ ")");
             }
             else if (parts[1] == "CHANNEL") {
                 if (parts.length != 6) {
@@ -377,17 +482,18 @@ function load_data()
                 }
                 st_location = parts[4];
                 st_channel  = parts[5];
+                $('#displaying > span.display-info').text(" (" +st_network+ "_" +st_station+ " " +st_location+ "-" +st_channel+ ")");
             }
             else {
                 $('#main').append('<h1>Page Load Error!</h1>');
                 $('#main').append('<h2>Invalid Command.</h2>');
                 return;
             }
-            $('#filter-subset').hide()
-            $('#filter-network').hide()
-            $('#filter-station').hide()
-            $('#filter-location').hide()
-            $('#filter-channel').hide()
+            $('#filter-subset').hide();
+            $('#filter-network').hide();
+            $('#filter-station').hide();
+            $('#filter-location').hide();
+            $('#filter-channel').hide();
         }
         else {
             $('#main').append('<h1>Page Load Error!</h1>');
@@ -395,10 +501,15 @@ function load_data()
             return;
         }
     }
+    $('#displaying > span.display-month').text(month_map[selected_month]+ " " +selected_year);
 
-    $('#main > h1').remove();
-    $('#main > h2').remove();
-    $('#metrics').remove();
+    $('#col_1_header').text(col_1_title);
+    $('#col_2_header').text(col_2_title);
+    $('#col_3_header').text(col_3_title);
+
+    $('#main h1').remove();
+    $('#main h2').remove();
+    $('#table table tbody tr.metrics').remove();
     if (command == "") {
         $.get($('#data-url').val()+'?cmd=ALL', {cache:"false"}, function(data, status, request){
             load(data, status, request);
@@ -411,13 +522,56 @@ function load_data()
             filter();
         }); 
     }
+}
 
-    load_controls();
+var control_map = { "ALL" : {
+                      "slider-availability"     : [0,101],
+                      "slider-gaps"             : [0,101],
+                      "slider-reversals"        : [0,101],
+                      "slider-coherence"        : [0,101],
+                      "slider-powerdifference"  : [0,101],
+                      "slider-noise"            : [0,101]},
+                    "STATION" : {
+                      "slider-availability"     : [0,101],
+                      "slider-gaps"             : [0,101],
+                      "slider-reversals"        : [0,101],
+                      "slider-coherence"        : [0,101],
+                      "slider-powerdifference"  : [0,101],
+                      "slider-noise"            : [0,101]}
+               };
+
+function store_table_controls()
+{
+    $("#control-table div.slider").each( function () {
+        if (show_all) {
+            //log("ALL-" +$(this).attr('id'));
+            control_map["ALL"][$(this).attr('id')] = $(this).slider("values");
+        }
+        else {
+            //log("STATION-" +$(this).attr('id'));
+            control_map["STATION"][$(this).attr('id')] = $(this).slider("values");
+        }
+    });
+}
+
+function load_table_controls()
+{
+    $("#control-table div.slider").each( function () {
+        if (show_all) {
+            //log("ALL-" +$(this).attr('id'));
+            $(this).slider("values", control_map["ALL"][$(this).id])
+        }
+        else {
+            //log("STATION-" +$(this).attr('id'));
+            $(this).slider("values", control_map["STATION"][$(this).id])
+        }
+    });
+    slide_stop(undefined, undefined);
 }
 
 function load_controls()
 {
-    $("div.slider").slider({
+    $("#control-table div.slider").slider({
         range: true,
         values: [0,101],
         min: 0,
@@ -459,14 +613,14 @@ function slide_change(event, ui) {
 
 function slide_stop(event, ui) {
     slider_total = 0;
-    $("div.slider").each(function () {
+    $("#control-table div.slider").each(function () {
         slider_total += $(this).slider("values")[0];
     });
     if (slider_total > 100) {
         return false;
     }
     
-    $("div.slider").each(function() {
+    $("#control-table div.slider").each(function() {
         var max = 101 - slider_total + $(this).slider("values")[0];
         if (slider_total == 0) {
             max = 101;
@@ -498,8 +652,6 @@ function slide_event(event, ui) {
 // Load the data
 function load(data, status, request)
 {
-    hide_progress();
-
     var rows = data.split('\n')//.sort(row_sort);
 
 // === Display Plots ===========================================
@@ -510,46 +662,18 @@ function load(data, status, request)
         else {
             $('#main').append('<h1>Station Metric Plotting not Implemented!</h1>');
         }
+        hide_progress();
+        $('#apply-weights').removeAttr('disabled');
         return;
     }
 
 // === Display Metrics =========================================
-    $('#table').append('\
-        <table id="metrics" class="tablesorter">\
-        <thead>\
-        <tr>\
-            <th><span>' +col_1_title+ '</span></th>\
-            <th><span>' +col_2_title+ '</span></th>\
-            <th><span>' +col_3_title+ '</span></th>\
-            <th><span>Availability</span></th>\
-            <th><span>Gap Count</span></th>\
-            <th><span>Reversals</span></th>\
-            <th><span>C 4-8</span></th>\
-            <th><span>C 18-22</span></th>\
-            <th><span>C 90-110</span></th>\
-            <th><span>C 200-500</span></th>\
-            <th><span>PD 4-8</span></th>\
-            <th><span>PD 18-22</span></th>\
-            <th><span>PD 90-110</span></th>\
-            <th><span>PD 200-500</span></th>\
-            <th><span>N 4-8</span></th>\
-            <th><span>N 18-22</span></th>\
-            <th><span>N 90-110</span></th>\
-            <th><span>N 200-500</span></th>\
-            <th><span>Aggregate</span></th>\
-            <th></th>\
-        </tr>\
-        </thead>\
-        <tbody id="metrics-body">\
-        </tbody>\
-        </table>');
-
     var weights = [
         [false, "",     0, 0],
         [false, "",     0, 0],
-        [true,  "mul",  1, 500],
-        [true,  "div",  1, 100],
-        [true,  "div",  1, 25]];
+        [true,  "mul",  1, 100.0 / $("#slider-availability").slider("values")[0]],
+        [true,  "mul",  1, 100.0 / $("#slider-gaps").slider("values")[0]],
+        [true,  "mul",  1, 100.0 / $("#slider-reversals").slider("values")[0]]];
 
     var weight_total = 1;
     for (var i in weights) {
@@ -656,23 +780,14 @@ function load(data, status, request)
         }
         row.append('<td><a id="' +plot_id+ '" href="#'+cmd_hash+'">Plot</a></td>');
     }
-
-    if (col_3_title == "") {
-        $("#metrics").tablesorter({
-            headers: {
-                 2: { sorter: false},
-                19: { sorter: false }
-            },
-            widgets: ["callback"]
-        });
-    } else {
-        $("#metrics").tablesorter({
-            headers: {
-                19: { sorter: false }
-            },
-            widgets: ["callback"]
-        });
-    }
+    // Clean up our column header styles as tablesorter will not.
+    // Only we know that the tabe data has been replaced.
+    $("#metrics thead th").removeClass("headerSortUp");
+    $("#metrics thead th").removeClass("headerSortDown");
+    $("#metrics").trigger("update");
+    hide_progress();
+    $('#table').show();
+    $('#apply-weights').removeAttr('disabled');
 }
 
 function nthroot(x, n) {
@@ -990,9 +1105,9 @@ function checkbox_toggle(id)
     }
 }
 
-function text_restore(class)
+function text_restore(class_name)
 {
-    $('input.'+class).map(function(element, index){
+    $('input.'+class_name).map(function(element, index){
         var text = $.jStore.get($(this).attr('id'));
         if ((text == 'NOTHING') || (text === null) || (text === undefined)) {
             $(this).val('');
