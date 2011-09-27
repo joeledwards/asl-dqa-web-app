@@ -8,6 +8,7 @@ var col_3_title = "";
 var place = "";
 var show_all = true;
 var gen_plots = false;
+var plots = undefined;
 var channel_plot = false;
 var controls_hidden = true;
 var row_index = 0;
@@ -392,6 +393,8 @@ function load_data()
     store_table_controls(); // Store controls from last context before updating
     $('#apply-weights').attr('disabled', 'disabled');
     $('#table').hide();
+    $('#plots').hide();
+    $('#up').hide();
     show_progress();
     // Summary of All Stations
     "metrics.py?cmd=ALL"
@@ -467,6 +470,8 @@ function load_data()
             st_network = parts[2];
             st_station = parts[3];
             if (parts[1] == "STATION") {
+                $('#up').attr('href', '#');
+                $('#up').show();
                 if (parts.length != 4) {
                     $('#main').append('<h1>Page Load Error!</h1>');
                     $('#main').append('<h2>Invalid Command.</h2>');
@@ -475,6 +480,8 @@ function load_data()
                 $('#displaying > span.display-info').text(" (" +st_network+ "_" +st_station+ ")");
             }
             else if (parts[1] == "CHANNEL") {
+                $('#up a').attr('href', '#STATION-'+st_network+'-'+st_station);
+                $('#up').show();
                 if (parts.length != 6) {
                     $('#main').append('<h1>Page Load Error!</h1>');
                     $('#main').append('<h2>Invalid Command.</h2>');
@@ -648,6 +655,10 @@ function slide_event(event, ui) {
     slide_stop(event, ui);
 }
 
+function capitalize(str)
+{
+    return str.charAt(0).toUpperCase() + str.slice(1);
+}
 
 // Load the data
 function load(data, status, request)
@@ -656,12 +667,88 @@ function load(data, status, request)
 
 // === Display Plots ===========================================
     if (gen_plots) {
-        if (channel_plot) {
-            $('#main').append('<h1>Channel Metric Plotting not Implemented!</h1>');
+        $('#plots').show();
+        var groups = {};
+        var first_time = undefined;
+        var last_time  = undefined;
+        var low_value  = undefined;
+        var high_value = undefined;
+        for (var i in rows) {
+            if (rows[i].trim() == "") {
+                continue;
+            }
+            var parts = rows[i].split(',');
+            var title = capitalize(new String(parts[0]))+ ": " +capitalize(new String(parts[1]));
+            var timestamp = zeroPad(parts[2],4)+ "-" +zeroPad(parts[3],2)+ "-" +zeroPad(parts[4],2)+ " 12:00:00";
+            last_time = timestamp;
+            if (first_time == undefined) {
+                first_time = timestamp;
+            }
+            //var timestamp = "%04d/%02d/%02d".sprintf(parts[2], parts[3], parts[4]);
+            if (groups[title] == undefined) {
+                groups[title] = {
+                    "data"  : new Array(),
+                    "index" : 0
+                };
+            }
+
+            var val = parts[5];
+            if (low_value == undefined) {
+                val = low_value;
+            }
+            else if (low_value > val) {
+                low_value = val;
+            }
+            if (high_value == undefined) {
+                val = high_value;
+            }
+            else if (high_value < val) {
+                high_value = val;
+            }
+            index = groups[title]["index"];
+            groups[title]["index"] = index + 1;
+            groups[title]["data"][index] = Array(timestamp,val);
         }
-        else {
-            $('#main').append('<h1>Station Metric Plotting not Implemented!</h1>');
+        $("#plots div").remove();
+        var j = 0;
+        plots = {};
+        for (var title in groups) { 
+            j++;
+            var container_id = "plot-" +j+ "-container";
+            var plot_id      = "plot-" +j;
+            var button_id    = "plot-" +j+ "-button";
+            $("#plots").append('<div id="' +container_id+ '"/></div>');
+            $("#"+container_id).append('<div class="plot" id="' +plot_id+ '"/></div>');
+            $("#"+container_id).append('<button class="zoom" id="' +button_id+ '">Zoom Out</button>');
+            $("#"+button_id).val(plot_id);
+            plots[plot_id] = $.jqplot(plot_id, [groups[title]["data"]], {
+                title: title,
+                cursor:{
+                    show: true,
+                    zoom: true,
+                    showTooltip: false
+                },
+                axesDefaults: {
+                    labelRenderer: $.jqplot.CanvasAxisLabelRenderer
+                },
+                axes: {
+                    xaxis: {
+                        renderer: $.jqplot.DateAxisRenderer,
+                        min: first_time,
+                        max: last_time
+                    },
+                    yaxis: {
+                        min: low_value,
+                        max: high_value
+                    }
+                }
+            });
+            log("Plot-" +j+ " Values: " +groups[title]["data"]);
+            $("#"+button_id).click(function () {
+                plots[$(this).val()].resetZoom();
+            });
         }
+
         hide_progress();
         $('#apply-weights').removeAttr('disabled');
         return;
@@ -998,6 +1085,14 @@ function set_prototypes()
     };
 }
 
+function zeroPad(number, length) 
+{
+    var str = number + "";
+    while (str.length < length) {
+        str = "0" + str;
+    }
+    return str;
+}
 
 /************************
  ***** FILTER LOGIC *****
