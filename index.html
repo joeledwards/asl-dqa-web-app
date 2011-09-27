@@ -13,7 +13,11 @@
     <link rel="shortcut icon" href="/dataq/station_health/favicon.ico" />
     <link rel="apple-touch-icon" href="/dataq/station_health/images/apple-touch-icon.png" />
 
-    <!--
+    <!--[if lt IE 9]>
+        <script language="javascript" type="text/javascript" src="excanvas.js"></script>
+    <![endif]-->
+
+    <!-- Minified Libs for Production -->
     <script type="text/javascript" src="/dataq/station_health/js/jquery.min.js"></script>
     <script type="text/javascript" src="/dataq/station_health/js/jquery-ui-min.js"></script>
     <script type="text/javascript" src="/dataq/station_health/js/jquery.jstore-all-min.js"></script>
@@ -21,15 +25,17 @@
     <script type="text/javascript" src="/dataq/station_health/js/jquery.base64.js"></script>
     <script type="text/javascript" src="/dataq/station_health/js/jquery.tablesorter.min.js"></script>
     <script type="text/javascript" src="/dataq/station_health/js/jquery.hashchange.min.js"></script>
-    <script type="text/javascript" src="/dataq/station_health/js/excanvas.min.js"></script>
     <script type="text/javascript" src="/dataq/station_health/js/jquery.jqplot.min.js"></script>
     <script type="text/javascript" src="/dataq/station_health/js/plugins/jqplot.cursor.min.js"></script>
     <script type="text/javascript" src="/dataq/station_health/js/plugins/jqplot.canvasTextRenderer.min.js"></script>
     <script type="text/javascript" src="/dataq/station_health/js/plugins/jqplot.canvasAxisLabelRenderer.min.js"></script>
     <script type="text/javascript" src="/dataq/station_health/js/plugins/jqplot.categoryAxisRenderer.min.js"></script>
     <script type="text/javascript" src="/dataq/station_health/js/plugins/jqplot.dateAxisRenderer.min.js"></script>
-    <script type="text/javascript" src="/dataq/station_health/js/plugins/jqplot.pointLabels.min.js"></script>
-    -->
+    <script type="text/javascript" src="/dataq/station_health/js/plugins/jqplot.highlighter.min.js"></script>
+    <script type="text/javascript" src="/dataq/station_health/js/jquery.fixedheadertable.min.js"></script>
+    <script type="text/javascript" src="/dataq/station_health/js/dataq.js"></script>
+    <!-- -->
+    <!-- Source Libs for Debugging - ->
     <script type="text/javascript" src="/dataq/station_health/js/jquery.js"></script>
     <script type="text/javascript" src="/dataq/station_health/js/jquery-ui-min.js"></script>
     <script type="text/javascript" src="/dataq/station_health/js/jquery.jstore-all-min.js"></script>
@@ -37,18 +43,16 @@
     <script type="text/javascript" src="/dataq/station_health/js/jquery.base64.js"></script>
     <script type="text/javascript" src="/dataq/station_health/js/jquery.tablesorter.js"></script>
     <script type="text/javascript" src="/dataq/station_health/js/jquery.hashchange.min.js"></script>
-    <script type="text/javascript" src="/dataq/station_health/js/excanvas.min.js"></script>
-    <!--[if lt IE 9]>
-        <script language="javascript" type="text/javascript" src="excanvas.js"></script>
-    <![endif]-->
     <script type="text/javascript" src="/dataq/station_health/js/jquery.jqplot.js"></script>
     <script type="text/javascript" src="/dataq/station_health/js/plugins/jqplot.cursor.js"></script>
     <script type="text/javascript" src="/dataq/station_health/js/plugins/jqplot.canvasTextRenderer.js"></script>
     <script type="text/javascript" src="/dataq/station_health/js/plugins/jqplot.canvasAxisLabelRenderer.js"></script>
     <script type="text/javascript" src="/dataq/station_health/js/plugins/jqplot.categoryAxisRenderer.js"></script>
     <script type="text/javascript" src="/dataq/station_health/js/plugins/jqplot.dateAxisRenderer.js"></script>
-    <script type="text/javascript" src="/dataq/station_health/js/plugins/jqplot.pointLabels.js"></script>
+    <script type="text/javascript" src="/dataq/station_health/js/plugins/jqplot.highlighter.js"></script>
+    <script type="text/javascript" src="/dataq/station_health/js/jquery.fixedheadertable.js"></script>
     <script type="text/javascript" src="/dataq/station_health/js/dataq.js"></script>
+    <!- - -->
 </head>
 <body>
     <input id="data-url"    type="hidden" value="/cgi-bin/metrics.py" />
@@ -82,7 +86,7 @@
                 <div id="up"><a href="#"><img alt="Exit plot view." src="/dataq/station_health/images/up-24.png"/></a></div>
                 <button id="control-toggle"/>Show Controls</button>
                 <button id="clear-filters">Clear Filters</button>
-                <input id="log" type="text" value="" size="40"/>
+                <!--input id="log" type="text" value="" size="40"/-->
                 <input id="filter-network"  class="filter" type="text" alt="Network"  value="" size="10"/>
                 <input id="filter-station"  class="filter" type="text" alt="Station"  value="" size="10"/>
                 <input id="filter-location" class="filter" type="text" alt="Location" value="" size="10"/>

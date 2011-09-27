@@ -272,6 +272,18 @@ function jstore_onload()
             filter();
         }
     });
+    /* Doesn't play well with all the "magic" we are doing already
+    $.tablesorter.addParser({
+        id: "metrics",
+        is: function(s) {
+            return false;
+        },
+        format: function (s) {
+
+        },
+        type: 'hybrid'
+    });
+    */
 
     $("#control-table").slideUp(1.0);
     $("#control-toggle").click(function(){
@@ -313,25 +325,33 @@ function init_table() {
             <table id="metrics" class="tablesorter">\
             <thead>\
             <tr>\
-                <th><span id="col_1_header"></span></th>\
-                <th><span id="col_2_header"></span></th>\
-                <th><span id="col_3_header"></span></th>\
-                <th><span>Availability</span></th>\
-                <th><span>Gap Count</span></th>\
-                <th><span>Reversals</span></th>\
-                <th><span>C 4-8</span></th>\
-                <th><span>C 18-22</span></th>\
-                <th><span>C 90-110</span></th>\
-                <th><span>C 200-500</span></th>\
-                <th><span>PD 4-8</span></th>\
-                <th><span>PD 18-22</span></th>\
-                <th><span>PD 90-110</span></th>\
-                <th><span>PD 200-500</span></th>\
-                <th><span>N 4-8</span></th>\
-                <th><span>N 18-22</span></th>\
-                <th><span>N 90-110</span></th>\
-                <th><span>N 200-500</span></th>\
-                <th><span>Aggregate</span></th>\
+                <th class="cat" colspan="3">Identity</th>\
+                <th class="cat" colspan="3">State-of-Health</th>\
+                <th class="cat" colspan="4">Coherence</th>\
+                <th class="cat" colspan="4">Power Difference</th>\
+                <th class="cat" colspan="4">Noise</th>\
+                <th class="cat" colspan="2">Summary</th>\
+            </tr>\
+            <tr>\
+                <th class="sub"><span id="col_1_header"></span></th>\
+                <th class="sub"><span id="col_2_header"></span></th>\
+                <th class="sub"><span id="col_3_header"></span></th>\
+                <th class="sub"><span>Availability</span></th>\
+                <th class="sub"><span>Gap Count</span></th>\
+                <th class="sub"><span>Reversals</span></th>\
+                <th class="sub"><span>4-8</span></th>\
+                <th class="sub"><span>18-22</span></th>\
+                <th class="sub"><span>90-110</span></th>\
+                <th class="sub"><span>200-500</span></th>\
+                <th class="sub"><span>4-8</span></th>\
+                <th class="sub"><span>18-22</span></th>\
+                <th class="sub"><span>90-110</span></th>\
+                <th class="sub"><span>200-500</span></th>\
+                <th class="sub"><span>4-8</span></th>\
+                <th class="sub"><span>18-22</span></th>\
+                <th class="sub"><span>90-110</span></th>\
+                <th class="sub"><span>200-500</span></th>\
+                <th class="sub"><span>Aggregate</span></th>\
                 <th></th>\
             </tr>\
             </thead>\
@@ -368,6 +388,13 @@ function init_table() {
             },
             widgets: ["callback"]
         });
+        /*
+        $("#metrics").fixedHeaderTable({
+            footer: false,
+            cloneHeadToFoot: false,
+            fixedColumn: false
+        });
+        */
 
         $('#table-ready').val("TRUE");
     }
@@ -433,7 +460,7 @@ function load_data()
     else {
         show_all = false;
         var parts = command.split("-");
-        if ((parts.length < 3) || (parts.length > 6)) {
+        if (parts.length < 3) {
             $('#main').append('<h1>Page Load Error!</h1>');
             $('#main').append('<h2>Invalid Command.</h2>');
             return;
@@ -482,13 +509,19 @@ function load_data()
             else if (parts[1] == "CHANNEL") {
                 $('#up a').attr('href', '#STATION-'+st_network+'-'+st_station);
                 $('#up').show();
-                if (parts.length != 6) {
+                if (parts.length == 6) {
+                    st_location = parts[4];
+                    st_channel  = parts[5];
+                }
+                else if ((parts[4] == "") && (parts[5] == "") && (parts[6] == "")) {
+                    st_location = "--";
+                    st_channel  = parts[7];
+                }
+                else {
                     $('#main').append('<h1>Page Load Error!</h1>');
                     $('#main').append('<h2>Invalid Command.</h2>');
                     return;
                 }
-                st_location = parts[4];
-                st_channel  = parts[5];
                 $('#displaying > span.display-info').text(" (" +st_network+ "_" +st_station+ " " +st_location+ "-" +st_channel+ ")");
             }
             else {
@@ -687,27 +720,32 @@ function load(data, status, request)
             //var timestamp = "%04d/%02d/%02d".sprintf(parts[2], parts[3], parts[4]);
             if (groups[title] == undefined) {
                 groups[title] = {
-                    "data"  : new Array(),
-                    "index" : 0
+                    "data"  : [],
+                    "start" : undefined,
+                    "end"   : undefined,
+                    "min"   : undefined,
+                    "max"   : undefined
                 };
             }
 
-            var val = parts[5];
+            var value = parts[5] * 1.0;
             if (low_value == undefined) {
-                val = low_value;
+                low_value = value;
             }
-            else if (low_value > val) {
-                low_value = val;
+            else if (low_value > value) {
+                low_value = value;
             }
             if (high_value == undefined) {
-                val = high_value;
+                high_value = value
             }
-            else if (high_value < val) {
-                high_value = val;
+            else if (high_value < value) {
+                high_value = value;
             }
-            index = groups[title]["index"];
-            groups[title]["index"] = index + 1;
-            groups[title]["data"][index] = Array(timestamp,val);
+            groups[title]["data"].push([timestamp,value])
+            groups[title]["start"] = first_time;
+            groups[title]["end"] = last_time;
+            groups[title]["min"] = low_value;
+            groups[title]["max"] = high_value;
         }
         $("#plots div").remove();
         var j = 0;
@@ -721,6 +759,14 @@ function load(data, status, request)
             $("#"+container_id).append('<div class="plot" id="' +plot_id+ '"/></div>');
             $("#"+container_id).append('<button class="zoom" id="' +button_id+ '">Zoom Out</button>');
             $("#"+button_id).val(plot_id);
+            var min = groups[title]["min"]; 
+            var max = groups[title]["max"];
+            var disp_min = min - ((max - min) / 10)
+            var disp_max = max + ((max - min) / 10)
+            if (min == max) {
+                disp_min = min - 1.0;
+                disp_max = max + 1.0;
+            } 
             plots[plot_id] = $.jqplot(plot_id, [groups[title]["data"]], {
                 title: title,
                 cursor:{
@@ -728,22 +774,29 @@ function load(data, status, request)
                     zoom: true,
                     showTooltip: false
                 },
+                /*
                 axesDefaults: {
                     labelRenderer: $.jqplot.CanvasAxisLabelRenderer
                 },
+                */
+                highlighter: {
+                    show: true,
+                    sizeAdjust: 7.5
+                },
                 axes: {
                     xaxis: {
-                        renderer: $.jqplot.DateAxisRenderer,
-                        min: first_time,
-                        max: last_time
+                        min: groups[title]["start"],
+                        max: groups[title]["end"],
+                        renderer: $.jqplot.DateAxisRenderer
                     },
                     yaxis: {
-                        min: low_value,
-                        max: high_value
+                        //tickInterval: (high_value - low_value) / 10,
+                        min: disp_min,
+                        max: disp_max
                     }
                 }
             });
-            log("Plot-" +j+ " Values: " +groups[title]["data"]);
+            //log("Plot-" +j+ " Values: " +groups[title]["start"]+ " " +groups[title]["end"]+ " " +disp_min+ " " +disp_max);
             $("#"+button_id).click(function () {
                 plots[$(this).val()].resetZoom();
             });
@@ -1135,11 +1188,11 @@ function filter()
 {
     row_index = 0;
     $('tr.metrics').map(function(element, index){
-        apply_filters($(this), value);
+        apply_filters($(this));
     });
 }
 
-function apply_filters(item, value)
+function apply_filters(item)
 {
     var parts = item.attr('id').split('-');
     if (show_all && ((filters['filter-network'] != undefined) && (!filters['filter-network'].test(parts[0])))) {

@@ -88,22 +88,25 @@ span.display-month {
 
 input.watermark { color: gray; }
 
+table.tablesorter thead tr th.cat {
+    text-align: center;
+}
 
-table.tablesorter thead tr th {
+table.tablesorter thead tr th.sub {
     vertical-align: bottom;
-    height: 6em;
+    height: 7em;
     max-width: 20px;
 }
-table.tablesorter thead tr th span {
+table.tablesorter thead tr th.sub span {
     text-align: center;
     white-space:nowrap;
     display:block;
     writing-mode:tb-rl;
-    -webkit-transform-origin: 20% 50%;
-    -moz-transform-origin:    20% 50%;
-    -ms-transform-origin:     20% 50%;
-    -o-transform-origin:      20% 50%;
-    transform-origin:         20% 50%;
+    -webkit-transform-origin: 20% 20%;
+    -moz-transform-origin:    20% 20%;
+    -ms-transform-origin:     20% 20%;
+    -o-transform-origin:      20% 20%;
+    transform-origin:         20% 20%;
     -webkit-transform: rotate(270deg);
     -moz-transform:    rotate(270deg);
     -ms-transform:     rotate(270deg);
@@ -127,8 +130,8 @@ div#plots {
     left: 0px;
 }
 div.plot {
-    height: 400px;
-    width: 85%;
+    height: 250px;
+    width: 800px;
 }
 
 
