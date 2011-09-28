@@ -69,8 +69,8 @@
                 <div class="slider" id="slider-reversals"></div>
                 <div class="label" id="label-coherence">Coherence 0.0%</div>
                 <div class="slider" id="slider-coherence"></div>
-                <div class="label" id="label-powerdifference">Power Difference 0.0%</div>
-                <div class="slider" id="slider-powerdifference"></div>
+                <div class="label" id="label-power">Power Difference 0.0%</div>
+                <div class="slider" id="slider-power"></div>
                 <div class="label" id="label-noise">Noise 0.0%</div>
                 <div class="slider" id="slider-noise"></div>
                 <div class="remaining">
@@ -86,7 +86,9 @@
                 <div id="up"><a href="#"><img alt="Exit plot view." src="/dataq/station_health/images/up-24.png"/></a></div>
                 <button id="control-toggle"/>Show Controls</button>
                 <button id="clear-filters">Clear Filters</button>
-                <!--input id="log" type="text" value="" size="40"/-->
+                <!-- - ->
+                <input id="log" type="text" value="" size="40"/>
+                <!- - -->
                 <input id="filter-network"  class="filter" type="text" alt="Network"  value="" size="10"/>
                 <input id="filter-station"  class="filter" type="text" alt="Station"  value="" size="10"/>
                 <input id="filter-location" class="filter" type="text" alt="Location" value="" size="10"/>
@@ -153,6 +155,8 @@
         </div>
         <div id="plots">
             </br>
+        </div>
+        <div id="log">
         </div>
     </div>
 </body>

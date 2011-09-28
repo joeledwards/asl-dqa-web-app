@@ -245,6 +245,7 @@ $(document).ready(function() {
     $('#table-ready').val('FALSE');
     $.ajax({cache:"false"});
     set_prototypes();
+    set_control_defaults();
     $.extend($.jStore.defaults);
     $.jStore.load();
 });
@@ -259,6 +260,28 @@ $.jStore.ready(function(engine){
         }
     });
 });
+
+function set_control_defaults()
+{
+    for (var j in control_map) {
+        var remaining = 100.0;
+        for (var k in control_map[j]) {
+            val = control_defaults[j][k];
+            if (val > remaining) {
+                val = remaining;
+            }
+            remaining -= val;
+            if (remaining <= 0.0) {
+                remaining = 0.0;
+                break;
+            }
+        }
+        for (var k in control_map[j]) {
+            val = control_defaults[j][k];
+            control_map[j][k] = [val,Math.min(val+1.0+remaining, 101.0)];
+        }
+    }
+}
 
 // We wait to load most features until jStore is online
 function jstore_onload()
@@ -317,6 +340,7 @@ function jstore_onload()
         load_data(); // Load data fro the new context
     });
     load_controls();
+    load_table_controls();
     init_table();
     $(window).hashchange(); // force load of data on initial page load
 }
@@ -386,7 +410,7 @@ function init_table() {
         $("#type-map-row").hide();
         $("#metrics").tablesorter({
             headers: {
-                19: { sorter: false }
+                25: { sorter: false }
             },
             widgets: ["callback"]
         });
@@ -419,6 +443,7 @@ function toggle_controls()
 // Check the status of stations
 function load_data()
 {
+    reset_log();
     store_table_controls(); // Store controls from last context before updating
     $('#apply-weights').attr('disabled', 'disabled');
     $('#table').hide();
@@ -426,13 +451,13 @@ function load_data()
     $('#up').hide();
     show_progress();
     // Summary of All Stations
-    "metrics.py?cmd=ALL"
+    //"metrics.py?cmd=ALL"
     // Summary of One Station (Each Channel)
-    "metrics.py?cmd=STATION"
+    //"metrics.py?cmd=STATION"
     // Station Plots
-    "metrics.py?cmd=PLOT-STATION"
+    //"metrics.py?cmd=PLOT.STATION"
     // Channel Plots
-    "metrics.py?cmd=PLOT-CHANNEL"
+    //"metrics.py?cmd=PLOT.CHANNEL"
     st_network  = undefined;
     st_station  = undefined;
     st_location = undefined;
@@ -461,7 +486,7 @@ function load_data()
     }
     else {
         show_all = false;
-        var parts = command.split("-");
+        var parts = command.split(".");
         if (parts.length < 3) {
             $('#main').append('<h1>Page Load Error!</h1>');
             $('#main').append('<h2>Invalid Command.</h2>');
@@ -495,7 +520,7 @@ function load_data()
                 return;
             }
             gen_plots = true;
-            place = parts[0]+ '-' +parts[1];
+            place = parts[0]+ '.' +parts[1];
             st_network = parts[2];
             st_station = parts[3];
             if (parts[1] == "STATION") {
@@ -509,19 +534,11 @@ function load_data()
                 $('#displaying > span.display-info').text(" (" +st_network+ "_" +st_station+ ")");
             }
             else if (parts[1] == "CHANNEL") {
-                $('#up a').attr('href', '#STATION-'+st_network+'-'+st_station);
+                $('#up a').attr('href', '#STATION.'+st_network+'.'+st_station);
                 $('#up').show();
                 if (parts.length == 6) {
                     st_location = parts[4];
                     st_channel  = parts[5];
-                }
-                else if ((parts[4] == "") && (parts[5] == "") && (parts[6] == "")) {
-                    st_location = "--";
-                    st_channel  = parts[7];
-                }
-                else if (parts.length == 7) {
-                    st_location = parts[4] + '-' + parts[5]
-                    st_channel  = parts[6]
                 }
                 else {
                     $('#main').append('<h1>Page Load Error!</h1>');
@@ -571,31 +588,87 @@ function load_data()
     }
 }
 
-var control_map = { "ALL" : {
-                      "slider-availability"     : [0,101],
-                      "slider-gaps"             : [0,101],
-                      "slider-reversals"        : [0,101],
-                      "slider-coherence"        : [0,101],
-                      "slider-powerdifference"  : [0,101],
-                      "slider-noise"            : [0,101]},
-                    "STATION" : {
-                      "slider-availability"     : [0,101],
-                      "slider-gaps"             : [0,101],
-                      "slider-reversals"        : [0,101],
-                      "slider-coherence"        : [0,101],
-                      "slider-powerdifference"  : [0,101],
-                      "slider-noise"            : [0,101]}
-               };
+var control_map = {
+    "ALL" : {
+        "slider-availability" : [0,101],
+        "slider-gaps"         : [0,101],
+        "slider-reversals"    : [0,101],
+        "slider-coherence"    : [0,101],
+        "slider-power"        : [0,101],
+        "slider-noise"        : [0,101]},
+    "STATION" : {
+        "slider-availability" : [0,101],
+        "slider-gaps"         : [0,101],
+        "slider-reversals"    : [0,101],
+        "slider-coherence"    : [0,101],
+        "slider-power"        : [0,101],
+        "slider-noise"        : [0,101]}
+};
+
+var control_defaults = {
+    "ALL" : {
+        "slider-availability" : 20,
+        "slider-gaps"         : 20,
+        "slider-reversals"    : 0,
+        "slider-coherence"    : 20,
+        "slider-power"        : 20,
+        "slider-noise"        : 20},
+    "STATION" : {
+        "slider-availability" : 20,
+        "slider-gaps"         : 20,
+        "slider-reversals"    : 0,
+        "slider-coherence"    : 20,
+        "slider-power"        : 20,
+        "slider-noise"        : 20}
+};
+
+var agg_xform = [
+    ['ignore'],
+    ['ignore'],
+    ['ignore'],
+    ['keep', 'slider-availability', 100.0],
+    ['count', 'slider-gaps', 100.0],
+    ['count', 'slider-reversals', 100.0],
+    //['count', 'slider-cal', 100.0],
+    ['coherence', 'slider-coherence', 25.0, 2.0],
+    ['coherence', 'slider-coherence', 25.0, 0.708],
+    ['coherence', 'slider-coherence', 25.0, 0.146],
+    ['coherence', 'slider-coherence', 25.0, 0.107],
+    ['power', 'slider-power', 25.0, 12.85],
+    ['power', 'slider-power', 25.0, 7.09],
+    ['power', 'slider-power', 25.0, 5.5],
+    ['power', 'slider-power', 25.0, 5.07],
+    ['noise', 'slider-noise', 25.0, 12.85],
+    ['noise', 'slider-noise', 25.0, 8.94],
+    ['noise', 'slider-noise', 25.0, 7.56],
+    ['noise', 'slider-noise', 25.0, 7.21]
+];
+
+function log10(value) {
+    return Math.log(value) / Math.LN10;
+}
+
+function agg_count(value) {
+    return 100.0 - Math.min(20 * log10(value+1), 100.0);
+}
+function agg_coherence(value, power) {
+    return 100.0 * Math.pow(value, power);
+}
+function agg_power(value, adjust) {
+    return 100.0 - Math.min(adjust * log10(Math.abs(value) + 1), 100.0);
+}
+function agg_noise(value, adjust) {
+    return 100.0 - Math.min(adjust * (log10(Math.abs(value) + 1)), 100.0);
+}
+
 
 function store_table_controls()
 {
     $("#control-table div.slider").each( function () {
         if (show_all) {
-            //log("ALL-" +$(this).attr('id'));
             control_map["ALL"][$(this).attr('id')] = $(this).slider("values");
         }
         else {
-            //log("STATION-" +$(this).attr('id'));
             control_map["STATION"][$(this).attr('id')] = $(this).slider("values");
         }
     });
@@ -605,12 +678,10 @@ function load_table_controls()
 {
     $("#control-table div.slider").each( function () {
         if (show_all) {
-            //log("ALL-" +$(this).attr('id'));
-            $(this).slider("values", control_map["ALL"][$(this).id])
+            $(this).slider("values", control_map["ALL"][$(this).attr('id')])
         }
         else {
-            //log("STATION-" +$(this).attr('id'));
-            $(this).slider("values", control_map["STATION"][$(this).id])
+            $(this).slider("values", control_map["STATION"][$(this).attr('id')])
         }
     });
     slide_stop(undefined, undefined);
@@ -639,8 +710,12 @@ function load_controls()
     });
 }
 
+function reset_log() {
+    $("#log div").remove();
+}
+
 function log(text) {
-    $("#log").val(text);
+    $("#log").append("<div>" +text+ "</div>");
 }
 
 function show_progress() {
@@ -847,10 +922,10 @@ function load(data, status, request)
         var display_id = 'display-' + line_id;
         var plot_id = 'plot-' + line_id;
 
-        var aggregate = 1.0;
+        var aggregate = 0.0;
         var link = items[1];
         if (place == "") {
-            link = '<a id="' +display_id+ '" href="#STATION-' +items[0]+ '-' + items[1]+ '">' +items[1]+ '</a>';
+            link = '<a id="' +display_id+ '" href="#STATION.' +items[0]+ '.' + items[1]+ '">' +items[1]+ '</a>';
         }
         for (var j in items) {
             if (j == 0) {
@@ -872,57 +947,74 @@ function load(data, status, request)
                     row.append('<td></td>');
                 } else {
                     row.append('<td>' +(value * 1.0).toFixed(2)+ '</td>');
-                    if (j != 2) {
-                        aggregate += (value * 1.0);
-                    }
                 }
             }
-            /*
-            var weight = weights[j];
-            if (weight[0]) {
-                if (weight[1] == "mul") {
-                    aggregate += items[j] * weight[2] * weight[3];
-                }
-                else if (weight[1] == "div") {
-                    if (items[j] == 0) {
-                        aggregate *= weight[2] * weight[3];
-                    } else {
-                        partial = weight[2] / items[j];
-                        if (partial < 0.1) {
-                            partial = 0.1;
-                        }
-                        aggregate *= partial * weight[3];
-                    }
-                }
-                else if (weight[1] == "root") {
-                    if (items[j] == 0) {
-                        aggregate *= 1.0 * weight[3];
-                    } else {
-                        aggregate *= nthroot(items[j], weight[2]) * weight[3];
-                    }
+            xform = agg_xform[j];
+            if (xform[0] == "ignore") {
+                ;
+            }
+            else {
+                var agg_value = 0.0;
+                if ((value == undefined) || isNaN(value) || (value == 'NaN') || (value == '')) {
+                    agg_value = 100.0;
                 }
                 else {
-                    aggregate *= items[j] * weight[3];
+                    agg_value = value * 1.0;
+                    if (xform[0] == "count") {
+                        agg_value = (xform.length > 3) ? agg_count(agg_value, xform[3]) : agg_count(agg_value);
+                    } else if (xform[0] == "coherence") {
+                        agg_value = (xform.length > 3) ? agg_coherence(agg_value, xform[3]) : agg_coherence(agg_value);
+                    } else if (xform[0] == "power") {
+                        agg_value = (xform.length > 3) ? agg_power(agg_value, xform[3]) : agg_power(agg_value);
+                    } else if (xform[0] == "noise") {
+                        agg_value = (xform.length > 3) ? agg_noise(agg_value, xform[3]) : agg_noise(agg_value);
+                    }
                 }
+
+                var weight = xform[1];
+                if ((typeof weight) != "number") {
+                    weight = $('#'+weight).slider('values')[0];
+                }
+                if (weight == undefined) {
+                    continue;
+                }
+                weight = weight / 100.0;
+
+                var portion = xform[2];
+                if ((typeof portion) != "number") {
+                    portion = $('#'+portion).slider('values')[0];
+                }
+                if (portion == undefined) {
+                    continue;
+                }
+                portion = portion / 100.0;
+
+                //log(items[0]+ "." +items[1]+ " [" +j+ "] agg_value = " +agg_value);
+                aggregate += agg_value * weight * portion;
+                //log("aggregate=" +aggregate+ " value=" +agg_value+ " weight=" +weight+ " portion=" +portion);
             }
-            */
         }
-        //row.append('<td>' + (aggregate / weight_total).toFixed(2) + '</td>');
-        aggregate *= 1.0;
+        //aggregate *= 1.0;
         aggregate_class = "level1";
-        if (aggregate < 0.0) {
-            aggregate_class = "level3";
+        if (aggregate < 70.0) {
+            aggregate_class = "level4";
         } 
-        else if (aggregate < 110.0) {
+        else if (aggregate < 80.0) {
+            aggregate_class = "level3";
+        }
+        else if (aggregate < 90.0) {
             aggregate_class = "level2";
+        }
+        else if (aggregate > 100.0) {
+            aggregate = 100.0;
         }
         row.append('<td class="' +aggregate_class+ '">' + aggregate.toFixed(2) + '</td>');
         var cmd_hash = ""
         if (place == "") {
-            cmd_hash = "PLOT-STATION-" +items[0]+ "-" +items[1];
+            cmd_hash = "PLOT.STATION." +items[0]+ "." +items[1];
         }
         else {
-            cmd_hash = "PLOT-CHANNEL-" +st_network+ "-" +st_station+ "-" +items[0]+ "-" +items[1];
+            cmd_hash = "PLOT.CHANNEL." +st_network+ "." +st_station+ "." +items[0]+ "." +items[1];
         }
         row.append('<td><a id="' +plot_id+ '" href="#'+cmd_hash+'">Plot</a></td>');
     }
@@ -1201,6 +1293,7 @@ function filter()
 function apply_filters(item)
 {
     var parts = item.attr('id').split('-');
+    //log(parts[0]+ "." +parts[1]);
     if (show_all && ((filters['filter-network'] != undefined) && (!filters['filter-network'].test(parts[0])))) {
         item.hide();
     }
