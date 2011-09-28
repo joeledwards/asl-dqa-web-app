@@ -241,6 +241,8 @@ var subsets = {
 
 // Setup event bindings
 $(document).ready(function() {
+    $('#engine-up').val('FALSE');
+    $('#table-ready').val('FALSE');
     $.ajax({cache:"false"});
     set_prototypes();
     $.extend($.jStore.defaults);
@@ -517,6 +519,10 @@ function load_data()
                     st_location = "--";
                     st_channel  = parts[7];
                 }
+                else if (parts.length == 7) {
+                    st_location = parts[4] + '-' + parts[5]
+                    st_channel  = parts[6]
+                }
                 else {
                     $('#main').append('<h1>Page Load Error!</h1>');
                     $('#main').append('<h2>Invalid Command.</h2>');
@@ -550,6 +556,7 @@ function load_data()
     $('#main h1').remove();
     $('#main h2').remove();
     $('#table table tbody tr.metrics').remove();
+    $("#plots div").remove();
     if (command == "") {
         $.get($('#data-url').val()+'?cmd=ALL', {cache:"false"}, function(data, status, request){
             load(data, status, request);
@@ -747,7 +754,6 @@ function load(data, status, request)
             groups[title]["min"] = low_value;
             groups[title]["max"] = high_value;
         }
-        $("#plots div").remove();
         var j = 0;
         plots = {};
         for (var title in groups) { 

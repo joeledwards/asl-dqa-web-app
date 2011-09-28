@@ -120,6 +120,9 @@ table.tablesorter tbody tr td.level2 {
     background-color: #FFFF66;
 }
 table.tablesorter tbody tr td.level3 {
+    background-color: #FF9933;
+}
+table.tablesorter tbody tr td.level4 {
     background-color: #FF7777;
 }
 
