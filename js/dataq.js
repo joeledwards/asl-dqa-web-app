@@ -261,28 +261,6 @@ $.jStore.ready(function(engine){
     });
 });
 
-function set_control_defaults()
-{
-    for (var j in control_map) {
-        var remaining = 100.0;
-        for (var k in control_map[j]) {
-            val = control_defaults[j][k];
-            if (val > remaining) {
-                val = remaining;
-            }
-            remaining -= val;
-            if (remaining <= 0.0) {
-                remaining = 0.0;
-                break;
-            }
-        }
-        for (var k in control_map[j]) {
-            val = control_defaults[j][k];
-            control_map[j][k] = [val,Math.min(val+1.0+remaining, 101.0)];
-        }
-    }
-}
-
 // We wait to load most features until jStore is online
 function jstore_onload()
 {
@@ -297,18 +275,32 @@ function jstore_onload()
             filter();
         }
     });
-    /* Doesn't play well with all the "magic" we are doing already
     $.tablesorter.addParser({
         id: "metrics",
         is: function(s) {
             return false;
         },
-        format: function (s) {
-
+        format: function(s) {
+            //var order = $(this).order;
+            //if ($(this).lockedOrder) {
+            //    order = $(this).lockedOrder;
+            //}
+            if (isNaN(s) || (s == "") || (s == undefined) || (s == null)) {
+                /*
+                if (order == 0) {
+                    return "" + (Math.pow(2,32) - 1);
+                }
+                else {
+                    return "" + (-1.0 * (Math.pow(2,32) - 1));
+                }
+                */
+                log("parser triggered on '" +s+ "'");
+                return null;
+            }
+            return s;
         },
-        type: 'hybrid'
+        type: 'numeric'
     });
-    */
 
     $("#control-table").slideUp(1.0);
     $("#control-toggle").click(function(){
@@ -410,33 +402,30 @@ function init_table() {
         $("#type-map-row").hide();
         $("#metrics").tablesorter({
             headers: {
+                 3: { sorter: "metrics" },
+                 4: { sorter: "metrics" },
+                16: { sorter: "metrics" },
+                17: { sorter: "metrics" },
+                18: { sorter: "metrics" },
+                19: { sorter: "metrics" },
+                20: { sorter: "metrics" },
+                21: { sorter: "metrics" },
+                22: { sorter: "metrics" },
+                23: { sorter: "metrics" },
                 25: { sorter: false }
             },
             widgets: ["callback"]
         });
-        /*
+        /* Doesn't play well with all the "magic" we are doing already
         $("#metrics").fixedHeaderTable({
             footer: false,
             cloneHeadToFoot: false,
             fixedColumn: false
         });
-        */
+        // */
 
+        $('#metrics thead th:contains(Aggregate)').click();
         $('#table-ready').val("TRUE");
-    }
-}
-
-function toggle_controls()
-{
-    if (controls_hidden) {
-        $("#control-table").slideDown(500);
-        controls_hidden = false;
-        $("#control-toggle").text("Hide Controls");
-    }
-    else {
-        $("#control-table").slideUp(500);
-        controls_hidden = true;
-        $("#control-toggle").text("Show Controls");
     }
 }
 
@@ -588,6 +577,9 @@ function load_data()
     }
 }
 
+// =============================================================
+// === Weight Controls =========================================
+// =============================================================
 var control_map = {
     "ALL" : {
         "slider-availability" : [0,101],
@@ -595,31 +587,35 @@ var control_map = {
         "slider-reversals"    : [0,101],
         "slider-coherence"    : [0,101],
         "slider-power"        : [0,101],
-        "slider-noise"        : [0,101]},
+        "slider-noise"        : [0,101]
+    },
     "STATION" : {
         "slider-availability" : [0,101],
         "slider-gaps"         : [0,101],
         "slider-reversals"    : [0,101],
         "slider-coherence"    : [0,101],
         "slider-power"        : [0,101],
-        "slider-noise"        : [0,101]}
+        "slider-noise"        : [0,101]
+    }
 };
 
 var control_defaults = {
     "ALL" : {
         "slider-availability" : 20,
         "slider-gaps"         : 20,
-        "slider-reversals"    : 0,
+        "slider-reversals"    :  0,
         "slider-coherence"    : 20,
         "slider-power"        : 20,
-        "slider-noise"        : 20},
+        "slider-noise"        : 20
+    },
     "STATION" : {
         "slider-availability" : 20,
         "slider-gaps"         : 20,
-        "slider-reversals"    : 0,
+        "slider-reversals"    :  0,
         "slider-coherence"    : 20,
         "slider-power"        : 20,
-        "slider-noise"        : 20}
+        "slider-noise"        : 20
+    }
 };
 
 var agg_xform = [
@@ -644,47 +640,62 @@ var agg_xform = [
     ['noise', 'slider-noise', 25.0, 7.21]
 ];
 
-function log10(value) {
-    return Math.log(value) / Math.LN10;
+function set_control_defaults()
+{
+    for (var j in control_map) {
+        var remaining = 100.0;
+        for (var k in control_map[j]) {
+            val = control_defaults[j][k];
+            if (val > remaining) {
+                val = remaining;
+            }
+            remaining -= val;
+            if (remaining <= 0.0) {
+                remaining = 0.0;
+                break;
+            }
+        }
+        for (var k in control_map[j]) {
+            val = control_defaults[j][k];
+            control_map[j][k] = [val,Math.min(val+1.0+remaining, 101.0)];
+        }
+    }
 }
 
-function agg_count(value) {
-    return 100.0 - Math.min(20 * log10(value+1), 100.0);
+function toggle_controls()
+{
+    if (controls_hidden) {
+        $("#control-table").slideDown(500);
+        controls_hidden = false;
+        $("#control-toggle").text("Hide Controls");
+    }
+    else {
+        $("#control-table").slideUp(500);
+        controls_hidden = true;
+        $("#control-toggle").text("Show Controls");
+    }
 }
-function agg_coherence(value, power) {
-    return 100.0 * Math.pow(value, power);
-}
-function agg_power(value, adjust) {
-    return 100.0 - Math.min(adjust * log10(Math.abs(value) + 1), 100.0);
-}
-function agg_noise(value, adjust) {
-    return 100.0 - Math.min(adjust * (log10(Math.abs(value) + 1)), 100.0);
-}
-
 
 function store_table_controls()
 {
     $("#control-table div.slider").each( function () {
-        if (show_all) {
-            control_map["ALL"][$(this).attr('id')] = $(this).slider("values");
-        }
-        else {
-            control_map["STATION"][$(this).attr('id')] = $(this).slider("values");
-        }
+        var cat = show_all ? "ALL" : "STATION";
+        control_map[cat][$(this).attr('id')] = $(this).slider("values");
     });
 }
 
 function load_table_controls()
 {
     $("#control-table div.slider").each( function () {
-        if (show_all) {
-            $(this).slider("values", control_map["ALL"][$(this).attr('id')])
-        }
-        else {
-            $(this).slider("values", control_map["STATION"][$(this).attr('id')])
-        }
+        var cat = show_all ? "ALL" : "STATION";
+        $(this).slider("values", control_map[cat][$(this).attr('id')])
     });
     slide_stop(undefined, undefined);
+}
+
+function refresh_controls()
+{
+    $("#control-table div.slider").slider();
 }
 
 function load_controls()
@@ -710,34 +721,16 @@ function load_controls()
     });
 }
 
-function reset_log() {
-    $("#log div").remove();
-}
-
-function log(text) {
-    $("#log").append("<div>" +text+ "</div>");
-}
-
-function show_progress() {
-    $("#progress").show();
-}
-
-function hide_progress() {
-    $("#progress").hide();
-}
-
 var slider_total;
-function slide_start(event, ui) {
-}
-
-function slide_change(event, ui) {
-}
+function slide_start(event, ui) {}
+function slide_change(event, ui) {}
 
 function slide_stop(event, ui) {
     slider_total = 0;
-    $("#control-table div.slider").each(function () {
+    $("#control-table div.slider").each(function() {
         slider_total += $(this).slider("values")[0];
     });
+
     if (slider_total > 100) {
         return false;
     }
@@ -755,6 +748,7 @@ function slide_stop(event, ui) {
         label.text(label.text().substr(0, label.text().lastIndexOf(" ")) + " " +value.toFixed(1)+ "%");
     });
     $("#slider-remaining").text((100 - slider_total).toFixed(1) + "%");
+
     return true;
 }
 
@@ -766,21 +760,55 @@ function slide_event(event, ui) {
     if (ui.values[0] >= ui.values[1]) {
         return false;
     }
-
     slide_stop(event, ui);
 }
 
-function capitalize(str)
-{
-    return str.charAt(0).toUpperCase() + str.slice(1);
+
+function log10(value) {
+    return Math.log(value) / Math.LN10;
 }
 
-// Load the data
+function agg_count(value) {
+    return 100.0 - Math.min(20 * log10(value+1), 100.0);
+}
+function agg_coherence(value, power) {
+    return 100.0 * Math.pow(value, power);
+}
+function agg_power(value, adjust) {
+    return 100.0 - Math.min(adjust * log10(Math.abs(value) + 1), 100.0);
+}
+function agg_noise(value, adjust) {
+    return 100.0 - Math.min(adjust * (log10(Math.abs(value) + 1)), 100.0);
+}
+
+
+function show_progress() {
+    $("#progress").show();
+}
+
+function hide_progress() {
+    $("#progress").hide();
+}
+
+// Appends log information to the end of the page.
+function log(text) {
+    $("#log").append("<div>" +text+ "</div>");
+}
+
+// Removes all logs.
+function reset_log() {
+    $("#log div").remove();
+}
+
+
+// =============================================================
+// === Populate the Table ======================================
+// =============================================================
 function load(data, status, request)
 {
     var rows = data.split('\n')//.sort(row_sort);
 
-// === Display Plots ===========================================
+ // === Display Plots ===========================================
     if (gen_plots) {
         $('#plots').show();
         var groups = {};
@@ -888,21 +916,7 @@ function load(data, status, request)
         return;
     }
 
-// === Display Metrics =========================================
-    var weights = [
-        [false, "",     0, 0],
-        [false, "",     0, 0],
-        [true,  "mul",  1, 100.0 / $("#slider-availability").slider("values")[0]],
-        [true,  "mul",  1, 100.0 / $("#slider-gaps").slider("values")[0]],
-        [true,  "mul",  1, 100.0 / $("#slider-reversals").slider("values")[0]]];
-
-    var weight_total = 1;
-    for (var i in weights) {
-        if (weights[i][0] && weights[i][2]) {
-            weight_total *= weights[i][3];
-        }
-    }
-
+ // === Generate Each Row Calculating Aggregate =================
     for (var i in rows) {
         // Skip this row if it is empty.
         if ((rows[i] == undefined) || (rows[i].trim() == '') || (rows[i].trim() == 'None')) {
@@ -1019,15 +1033,163 @@ function load(data, status, request)
         row.append('<td><a id="' +plot_id+ '" href="#'+cmd_hash+'">Plot</a></td>');
     }
     // Clean up our column header styles as tablesorter will not.
-    // Only we know that the tabe data has been replaced.
+    // Only we know that the table data has been replaced.
     $("#metrics thead th").removeClass("headerSortUp");
     $("#metrics thead th").removeClass("headerSortDown");
     $("#metrics").trigger("update");
     hide_progress();
     $('#table').show();
+    $('#metrics thead th:contains(Aggregate)').click();
+    $('#metrics thead th:contains(Aggregate)').click();
     $('#apply-weights').removeAttr('disabled');
 }
 
+// =============================================================
+// === Filters =================================================
+// =============================================================
+function subset_changed() {
+    filter();
+}
+
+function clear_filters() {
+    $('#filter-subset').val('ALL');
+    $("input.filter").map(function(element, index){
+        $(this).val('');
+        input_blur($(this));
+        update_filter($(this));
+    });
+}
+
+function update_filter(item)
+{
+    id = item.attr('id');
+    var text = $('#'+id).attr('value');
+    var alt  = $('#'+id).attr('alt');
+    var value = '';
+    if ((text === null) || (text === undefined) || (text.trim().length < 1) || (text == alt)) {
+        value = 'NOTHING';
+    } else {
+        value = $.base64Encode(text);
+    }
+    $.jStore.set(id, value);
+    if ((text === undefined) || (text === null) || (text === '') || (text == alt)) {
+        filters[id] = null;
+    } else {
+        filters[id] = new RegExp(text, 'i');
+    }
+    filter();
+}
+
+function filter()
+{
+    row_index = 0;
+    $('tr.metrics').map(function(element, index){
+        apply_filters($(this));
+    });
+}
+
+function apply_filters(item)
+{
+    var parts = item.attr('id').split('-');
+    //log(parts[0]+ "." +parts[1]);
+    if (show_all && ((filters['filter-network'] != undefined) && (!filters['filter-network'].test(parts[0])))) {
+        item.hide();
+    }
+    else if (show_all && ((filters['filter-station'] != undefined) && (!filters['filter-station'].test(parts[1])))) {
+        item.hide();
+    }
+    else if (!show_all && ((filters['filter-location'] != undefined) && (!filters['filter-location'].test(parts[0])))) {
+        item.hide();
+    }
+    else if (!show_all && ((filters['filter-channel'] != undefined) && (!filters['filter-channel'].test(parts[1])))) {
+        item.hide();
+    }
+    else if (show_all && ((subsets[parts[0] +'_'+ parts[1]].indexOf($('#filter-subset').val())) == -1)) {
+        item.hide();
+    }
+    else {
+        item.show();
+        if (row_index % 2) {
+            item.addClass('odd');
+        } else {
+            item.removeClass('odd');
+        }
+        row_index++;
+    }
+}
+
+function input_blur(item)
+{
+    if ((item.attr('value') == '') || (item.attr('value') == item.attr('alt'))) {
+        item.attr('value', item.attr('alt'));
+        item.addClass('watermark');
+    }
+}
+
+function input_focus(item)
+{
+    if (item.attr('value') == item.attr('alt')) {
+        item.attr('value', '');
+        item.removeClass('watermark');
+    }
+}
+
+function radio_toggle(item)
+{
+    //$('#debug').append('<pre>toggle</pre>');
+    $.jStore.set(item.attr('name'), item.val());
+    filter()
+}
+
+function checkbox_toggle(id)
+{
+    if ($('#'+id).attr('checked') == true) {
+        $.jStore.set(id, 'TRUE');
+    } else {
+        $.jStore.set(id, 'FALSE');
+    }
+}
+
+function text_restore(class_name)
+{
+    $('input.'+class_name).map(function(element, index){
+        var text = $.jStore.get($(this).attr('id'));
+        if ((text == 'NOTHING') || (text === null) || (text === undefined)) {
+            $(this).val('');
+        } else {
+            $(this).val($.base64Decode(text));
+        }
+        update_filter($(this));
+    });
+    return;
+}
+
+function radio_restore(name)
+{
+    var value = $.jStore.get(name);
+    if (value == undefined) {
+        value = 0;
+    }
+    //$('input[name='+name+']', $('input[value='+value+']')).attr('checked', true);
+    $('input[name='+name+']').map(function(){
+        if ($(this).val() == value) {
+            $(this).attr('checked', true);
+        }
+    });
+}
+
+function checkbox_restore(id)
+{
+    var checked = false;
+    if ($.jStore.get(id) == 'TRUE') {
+        checked = true;
+    }
+    $('#'+id).attr('checked', checked);
+}
+
+// =============================================================
+// === Support Functions =======================================
+// =============================================================
 function nthroot(x, n) {
     try {
         var negate = n % 2 == 1 && x < 0;
@@ -1057,6 +1219,11 @@ function pad_digits(number, total_digits) {
         }
     }
     return pad + number.toString();
+}
+
+function capitalize(str)
+{
+    return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
 function time_to_string(milliseconds) {
@@ -1243,149 +1410,5 @@ function zeroPad(number, length)
         str = "0" + str;
     }
     return str;
-}
-
-/************************
- ***** FILTER LOGIC *****
- ************************/
-
-function subset_changed() {
-    filter();
-}
-
-function clear_filters() {
-    $('#filter-subset').val('ALL');
-    $("input.filter").map(function(element, index){
-        $(this).val('');
-        input_blur($(this));
-        update_filter($(this));
-    });
-}
-
-function update_filter(item)
-{
-    id = item.attr('id');
-    var text = $('#'+id).attr('value');
-    var alt  = $('#'+id).attr('alt');
-    var value = '';
-    if ((text === null) || (text === undefined) || (text.trim().length < 1) || (text == alt)) {
-        value = 'NOTHING';
-    } else {
-        value = $.base64Encode(text);
-    }
-    $.jStore.set(id, value);
-    if ((text === undefined) || (text === null) || (text === '') || (text == alt)) {
-        filters[id] = null;
-    } else {
-        filters[id] = new RegExp(text, 'i');
-    }
-    filter();
-}
-
-function filter()
-{
-    row_index = 0;
-    $('tr.metrics').map(function(element, index){
-        apply_filters($(this));
-    });
-}
-
-function apply_filters(item)
-{
-    var parts = item.attr('id').split('-');
-    //log(parts[0]+ "." +parts[1]);
-    if (show_all && ((filters['filter-network'] != undefined) && (!filters['filter-network'].test(parts[0])))) {
-        item.hide();
-    }
-    else if (show_all && ((filters['filter-station'] != undefined) && (!filters['filter-station'].test(parts[1])))) {
-        item.hide();
-    }
-    else if (!show_all && ((filters['filter-location'] != undefined) && (!filters['filter-location'].test(parts[0])))) {
-        item.hide();
-    }
-    else if (!show_all && ((filters['filter-channel'] != undefined) && (!filters['filter-channel'].test(parts[1])))) {
-        item.hide();
-    }
-    else if (show_all && ((subsets[parts[0] +'_'+ parts[1]].indexOf($('#filter-subset').val())) == -1)) {
-        item.hide();
-    }
-    else {
-        item.show();
-        if (row_index % 2) {
-            item.addClass('odd');
-        } else {
-            item.removeClass('odd');
-        }
-        row_index++;
-    }
-}
-
-function input_blur(item)
-{
-    if ((item.attr('value') == '') || (item.attr('value') == item.attr('alt'))) {
-        item.attr('value', item.attr('alt'));
-        item.addClass('watermark');
-    }
-}
-
-function input_focus(item)
-{
-    if (item.attr('value') == item.attr('alt')) {
-        item.attr('value', '');
-        item.removeClass('watermark');
-    }
-}
-
-function radio_toggle(item)
-{
-    //$('#debug').append('<pre>toggle</pre>');
-    $.jStore.set(item.attr('name'), item.val());
-    filter()
-}
-
-function checkbox_toggle(id)
-{
-    if ($('#'+id).attr('checked') == true) {
-        $.jStore.set(id, 'TRUE');
-    } else {
-        $.jStore.set(id, 'FALSE');
-    }
-}
-
-function text_restore(class_name)
-{
-    $('input.'+class_name).map(function(element, index){
-        var text = $.jStore.get($(this).attr('id'));
-        if ((text == 'NOTHING') || (text === null) || (text === undefined)) {
-            $(this).val('');
-        } else {
-            $(this).val($.base64Decode(text));
-        }
-        update_filter($(this));
-    });
-    return;
-}
-
-function radio_restore(name)
-{
-    var value = $.jStore.get(name);
-    if (value == undefined) {
-        value = 0;
-    }
-    //$('input[name='+name+']', $('input[value='+value+']')).attr('checked', true);
-    $('input[name='+name+']').map(function(){
-        if ($(this).val() == value) {
-            $(this).attr('checked', true);
-        }
-    });
-}
-
-function checkbox_restore(id)
-{
-    var checked = false;
-    if ($.jStore.get(id) == 'TRUE') {
-        checked = true;
-    }
-    $('#'+id).attr('checked', checked);
 }
 
