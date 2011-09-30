@@ -33,6 +33,9 @@
     <script type="text/javascript" src="/dataq/station_health/js/plugins/jqplot.dateAxisRenderer.min.js"></script>
     <script type="text/javascript" src="/dataq/station_health/js/plugins/jqplot.highlighter.min.js"></script>
     <script type="text/javascript" src="/dataq/station_health/js/jquery.fixedheadertable.min.js"></script>
+    <script type="text/javascript" src="/dataq/station_health/js/utils.js"></script>
+    <script type="text/javascript" src="/dataq/station_health/js/filters.js"></script>
+    <script type="text/javascript" src="/dataq/station_health/js/weights.js"></script>
     <script type="text/javascript" src="/dataq/station_health/js/dataq.js"></script>
     <!-- -->
     <!-- Source Libs for Debugging - ->
@@ -62,20 +65,20 @@
         <div id="controls">
             <div id="control-table">
                 <div class="label" id="label-availability">Availability 0.0%</div>
-                <div class="slider" id="slider-availability"></div>
+                <div class="weight" id="weight-availability"></div>
                 <div class="label" id="label-gaps">Gaps 0.0%</div>
-                <div class="slider" id="slider-gaps"></div>
+                <div class="weight" id="weight-gaps"></div>
                 <div class="label" id="label-reversals">Reversals 0.0%</div>
-                <div class="slider" id="slider-reversals"></div>
+                <div class="weight" id="weight-reversals"></div>
                 <div class="label" id="label-coherence">Coherence 0.0%</div>
-                <div class="slider" id="slider-coherence"></div>
+                <div class="weight" id="weight-coherence"></div>
                 <div class="label" id="label-power">Power Difference 0.0%</div>
-                <div class="slider" id="slider-power"></div>
+                <div class="weight" id="weight-power"></div>
                 <div class="label" id="label-noise">Noise 0.0%</div>
-                <div class="slider" id="slider-noise"></div>
+                <div class="weight" id="weight-noise"></div>
                 <div class="remaining">
                     <span>Remaining:</span>
-                    <span id="slider-remaining">100.0%</span>
+                    <span id="weight-remaining">100.0%</span>
                 </div>
                 <div class="apply">
                     <button id="apply-weights"/>Apply Weights</button>
