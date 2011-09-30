@@ -345,6 +345,23 @@ function reset_log() {
     $("#log div").remove();
 }
 
+function log10(value) {
+    return Math.log(value) / Math.LN10;
+}
+
+function agg_count(value) {
+    return 100.0 - Math.min(20 * log10(value+1), 100.0);
+}
+function agg_coherence(value, power) {
+    return 100.0 * Math.pow(value, power);
+}
+function agg_power(value, adjust) {
+    return 100.0 - Math.min(adjust * log10(Math.abs(value) + 1), 100.0);
+}
+function agg_noise(value, adjust) {
+    return 100.0 - Math.min(adjust * (log10(Math.abs(value) + 1)), 100.0);
+}
+
 
 // =============================================================
 // === Populate the Table ======================================

@@ -2,20 +2,20 @@
 
 var control_map = {
     "ALL" : {
-        "weight-availability" : [0,101],
-        "weight-gaps"         : [0,101],
-        "weight-reversals"    : [0,101],
-        "weight-coherence"    : [0,101],
-        "weight-power"        : [0,101],
-        "weight-noise"        : [0,101]
+        "weight-availability" : 0,
+        "weight-gaps"         : 0,
+        "weight-reversals"    : 0,
+        "weight-coherence"    : 0,
+        "weight-power"        : 0,
+        "weight-noise"        : 0
     },
     "STATION" : {
-        "weight-availability" : [0,101],
-        "weight-gaps"         : [0,101],
-        "weight-reversals"    : [0,101],
-        "weight-coherence"    : [0,101],
-        "weight-power"        : [0,101],
-        "weight-noise"        : [0,101]
+        "weight-availability" : 0,
+        "weight-gaps"         : 0,
+        "weight-reversals"    : 0,
+        "weight-coherence"    : 0,
+        "weight-power"        : 0,
+        "weight-noise"        : 0
     }
 };
 
@@ -62,27 +62,23 @@ var agg_xform = [
 
 function get_weight(id)
 {
-    return $('#'+id).slider('values')[0];
+    return $('#'+id).slider('value') / weight_total() * 100.0; 
+}
+
+var weights_all = 0;
+function weight_total()
+{
+    weights_all = 0;
+    $("#control-table div.weight").each(function() {
+        weight_all += $(this).slider("value");
+    });
 }
 
 function set_control_defaults()
 {
     for (var j in control_map) {
-        var remaining = 100.0;
         for (var k in control_map[j]) {
-            val = control_defaults[j][k];
-            if (val > remaining) {
-                val = remaining;
-            }
-            remaining -= val;
-            if (remaining <= 0.0) {
-                remaining = 0.0;
-                break;
-            }
-        }
-        for (var k in control_map[j]) {
-            val = control_defaults[j][k];
-            control_map[j][k] = [val,Math.min(val+1.0+remaining, 101.0)];
+            control_map[j][k] = control_defaults[j][k];
         }
     }
 }
@@ -104,33 +100,26 @@ function toggle_controls()
 function store_table_controls()
 {
     $("#control-table div.weight").each( function () {
-        var cat = show_all ? "ALL" : "STATION";
-        control_map[cat][$(this).attr('id')] = $(this).slider("values");
+        control_map[show_all ? "ALL" : "STATIONS"][$(this).attr('id')] = $(this).slider("value");
     });
 }
 
 function load_table_controls()
 {
     $("#control-table div.weight").each( function () {
-        var cat = show_all ? "ALL" : "STATION";
-        $(this).slider("values", control_map[cat][$(this).attr('id')])
+        $(this).slider("value", control_map[show_all ? "ALL" : "STATIONS"][$(this).attr('id')])
     });
     slide_stop(undefined, undefined);
-}
-
-function refresh_controls()
-{
-    $("#control-table div.weight").slider();
 }
 
 function load_controls()
 {
     $("#control-table div.weight").slider({
-        range: true,
-        values: [0,101],
+        range: false,
+        value: 0,
         min: 0,
-        max: 101,
-        step: 0.1,
+        max: 100,
+        step: 1,
         start: function(event, ui) {
             return slide_start(event, ui);
         },
@@ -146,46 +135,24 @@ function load_controls()
     });
 }
 
-var weight_total;
 function slide_start(event, ui) {}
 function slide_change(event, ui) {}
 
 function slide_stop(event, ui) {
-    weight_total = 0;
     $("#control-table div.weight").each(function() {
-        weight_total += $(this).slider("values")[0];
-    });
-
-    if (weight_total > 100) {
-        return false;
-    }
-    
-    $("#control-table div.weight").each(function() {
-        var max = 101 - weight_total + $(this).slider("values")[0];
-        if (weight_total == 0) {
-            max = 101;
-        }
-        var value = $(this).slider("values")[0];
-        $(this).slider("values", 1, max);
-        $(this).slider("values", 0, value);
+        var value = $(this).slider("value");
+        var percent = value / weight_total() * 100.0;
         var label_id = "#label-" + $(this).attr("id").split("-")[1];
-        var label = $(label_id);
-        label.text(label.text().substr(0, label.text().lastIndexOf(" ")) + " " +value.toFixed(1)+ "%");
+        $(label_id).text(label.text().substr(0, label.text().lastIndexOf(" ")) + " " +value.toFixed(1));
     });
-    $("#weight-remaining").text((100 - weight_total).toFixed(1) + "%");
+    $("#weight-remaining").text(weight_total().toFixed(1));
 
     return true;
 }
 
 function slide_event(event, ui) {
-    if (ui.value == ui.values[1]) {
-        return false;
-    }
-
-    if (ui.values[0] >= ui.values[1]) {
-        return false;
-    }
-    slide_stop(event, ui);
+    // Incremental changes should dynamically update everything
+    // in order to improve the user experience
+    slide_stop(event, ui); 
 }
-
 

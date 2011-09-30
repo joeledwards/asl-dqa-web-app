@@ -249,3 +249,4 @@ function zeroPad(number, length)
     }
     return str;
 }
+
