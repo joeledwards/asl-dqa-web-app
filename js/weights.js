@@ -8,7 +8,9 @@ var agg_xform = [
     ['keep', 'weight-availability', 100.0],
     ['count', 'weight-gaps', 100.0],
     ['count', 'weight-reversals', 100.0],
-    //['count', 'weight-cal', 100.0],
+    //['calibration', 'weight-callast', 33.4],
+    //['calibration', 'weight-calflat', 33.3],
+    //['calibration', 'weight-calcorner', 33.3],
     ['coherence', 'weight-coherence', 25.0, 2.0],
     ['coherence', 'weight-coherence', 25.0, 0.708],
     ['coherence', 'weight-coherence', 25.0, 0.146],
@@ -37,14 +39,12 @@ function toggle_controls()
     }
 }
 
-/*
-function weight_total()
+function weight_total(class_name)
 {
     weights_all = 0;
-    $("#control-table div.weight").each(function() {
+    $("#control-table div." + class_name).each(function() {
         weights_all += get_raw_weight($(this).attr("id"));
     });
     return weights_all;
 }
-*/
 

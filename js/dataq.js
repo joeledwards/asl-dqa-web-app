@@ -57,20 +57,7 @@ function jstore_onload()
             return false;
         },
         format: function(s) {
-            //var order = $(this).order;
-            //if ($(this).lockedOrder) {
-            //    order = $(this).lockedOrder;
-            //}
             if (isNaN(s) || (s == "") || (s == undefined) || (s == null)) {
-                /*
-                if (order == 0) {
-                    return "" + (Math.pow(2,32) - 1);
-                }
-                else {
-                    return "" + (-1.0 * (Math.pow(2,32) - 1));
-                }
-                */
-                log("parser triggered on '" +s+ "'");
                 return null;
             }
             return s;
@@ -382,6 +369,7 @@ function load(data, status, request)
             if (rows[i].trim() == "") {
                 continue;
             }
+
             var parts = rows[i].split(',');
             var title = capitalize(new String(parts[0]))+ ": " +capitalize(new String(parts[1]));
             var timestamp = zeroPad(parts[2],4)+ "-" +zeroPad(parts[3],2)+ "-" +zeroPad(parts[4],2)+ " 12:00:00";
@@ -491,7 +479,7 @@ function load(data, status, request)
             continue;
         }
 
-        var line_id = items[0] + '-' + items[1]
+        var line_id = items[0] + '-' + items[1];
         $('#metrics-body').append('<tr class="metrics" id="' + line_id + '"></tr>');
         var row = $('#'+line_id);
 
@@ -499,6 +487,7 @@ function load(data, status, request)
         var plot_id = 'plot-' + line_id;
 
         var aggregate = 0.0;
+        var total_adjustment = 0.0;
         var link = items[1];
         if (place == "") {
             link = '<a id="' +display_id+ '" href="#STATION.' +items[0]+ '.' + items[1]+ '">' +items[1]+ '</a>';
@@ -530,9 +519,10 @@ function load(data, status, request)
                 ;
             }
             else {
+                var apply = true;
                 var agg_value = 0.0;
                 if ((value == undefined) || isNaN(value) || (value == 'NaN') || (value == '')) {
-                    agg_value = 100.0;
+                    apply = false;
                 }
                 else {
                     agg_value = value * 1.0;
@@ -566,10 +556,16 @@ function load(data, status, request)
                 portion = portion / 100.0;
 
                 //log(items[0]+ "." +items[1]+ " [" +j+ "] agg_value = " +agg_value);
-                aggregate += agg_value * weight * portion;
+                if (apply) {
+                    aggregate += agg_value * weight * portion;
+                }
+                else {
+                    total_adjustment += weight * portion;
+                }
                 //log("aggregate=" +aggregate+ " value=" +agg_value+ " weight=" +weight+ " portion=" +portion);
             }
         }
+        aggregate /= (1.0 - total_adjustment);
         aggregate_class = "level1";
         if (aggregate < 70.0) {
             aggregate_class = "level4";

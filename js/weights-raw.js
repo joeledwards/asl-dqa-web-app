@@ -1,6 +1,5 @@
 // Raw weight controls
 
-var weight_total = 0;
 var control_map = {
     "ALL" : {
         "weight-availability" : 0,
@@ -46,11 +45,7 @@ function get_raw_weight(id)
 
 function get_weight(id)
 {
-    weight_total = 0;
-    $("#control-table div.weight").each(function() {
-        weight_total += $(this).slider("value");
-    });
-    return get_raw_weight(id) / weight_total * 100.0; 
+    return get_raw_weight(id) / weight_total(id.split('-')[0]) * 100.0; 
 }
 
 function set_control_defaults()
@@ -65,14 +60,14 @@ function set_control_defaults()
 function store_table_controls()
 {
     $("#control-table div.weight").each( function () {
-        control_map[show_all ? "ALL" : "STATIONS"][$(this).attr('id')] = $(this).slider("value");
+        control_map[show_all ? "ALL" : "STATION"][$(this).attr('id')] = $(this).slider("value");
     });
 }
 
 function load_table_controls()
 {
     $("#control-table div.weight").each( function () {
-        $(this).slider("value", control_map[show_all ? "ALL" : "STATIONS"][$(this).attr('id')])
+        $(this).slider("value", control_map[show_all ? "ALL" : "STATION"][$(this).attr('id')])
     });
     slide_stop(undefined, undefined);
 }
@@ -99,18 +94,15 @@ function slide_event(event, ui) {
 }
 
 function slide_stop(event, ui) {
-    weight_total = 0;
+    var total = weight_total("weight");
     $("#control-table div.weight").each(function() {
-        weight_total += $(this).slider("value");
-    });
-
-    $("#control-table div.weight").each(function() {
-        var value = $(this).slider("value");
-        var percent = value / weight_total * 100.0;
+        var value = $(this).slider("value") / total * 100.0;
+        var percent = value / total * 100.0;
         var label_id = "#label-" + $(this).attr("id").split("-")[1];
-        $(label_id).text(label.text().substr(0, label.text().lastIndexOf(" ")) + " " +value.toFixed(1));
+        var label = $(label_id);
+        label.text(label.text().substr(0, label.text().lastIndexOf(" ")) + " " +value.toFixed(1) +"%");
     });
-    $("#weight-total").text(weight_total.toFixed(1));
+    $("#weight-total").text(total.toFixed(1));
 
     return true;
 }

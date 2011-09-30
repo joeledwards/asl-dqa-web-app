@@ -203,16 +203,16 @@ function init_filters()
         clear_filters();
     });
     text_restore('filter');
-    $("input.filter").blur(function(){
+    $("#control-display input.filter").blur(function(){
         input_blur($(this));
     });
-    $("input.filter").focus(function(){
+    $("#control-display input.filter").focus(function(){
         input_focus($(this));
     });
-    $("input.filter").bind('keyup', null, function(){
+    $("#control-display input.filter").bind('keyup', null, function(){
         update_filter($(this));
     });
-    $("input.filter").map(function(element, index){
+    $("#control-display input.filter").map(function(element, index){
         input_blur($(this));
     });
     $('#filter-subset').change(function(event) {
@@ -226,7 +226,7 @@ function subset_changed() {
 
 function clear_filters() {
     $('#filter-subset').val('ALL');
-    $("input.filter").map(function(element, index){
+    $("#control-display input.filter").map(function(element, index){
         $(this).val('');
         input_blur($(this));
         update_filter($(this));
@@ -256,7 +256,7 @@ function update_filter(item)
 function filter()
 {
     row_index = 0;
-    $('tr.metrics').map(function(element, index){
+    $('#metrics-body tr.metrics').map(function(element, index){
         apply_filters($(this));
     });
 }
@@ -342,7 +342,7 @@ function radio_restore(name)
         value = 0;
     }
     //$('input[name='+name+']', $('input[value='+value+']')).attr('checked', true);
-    $('input[name='+name+']').map(function(){
+    $('#control-display input[name='+name+']').map(function(){
         if ($(this).val() == value) {
             $(this).attr('checked', true);
         }

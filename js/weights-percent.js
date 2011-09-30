@@ -1,6 +1,5 @@
 // Percentage based weight controls
 
-var weight_total = 0;
 var control_map = {
     "ALL" : {
         "weight-availability" : [0,101],
@@ -74,16 +73,14 @@ function set_control_defaults()
 function store_table_controls()
 {
     $("#control-table div.weight").each( function () {
-        var cat = show_all ? "ALL" : "STATION";
-        control_map[cat][$(this).attr('id')] = $(this).slider("values");
+        control_map[show_all ? "ALL" : "STATION"][$(this).attr('id')] = $(this).slider("values");
     });
 }
 
 function load_table_controls()
 {
     $("#control-table div.weight").each( function () {
-        var cat = show_all ? "ALL" : "STATION";
-        $(this).slider("values", control_map[cat][$(this).attr('id')])
+        $(this).slider("values", control_map[show_all ? "ALL" : "STATION"][$(this).attr('id')])
     });
     slide_stop(undefined, undefined);
 }
@@ -122,19 +119,15 @@ function slide_event(event, ui) {
 }
 
 function slide_stop(event, ui) {
-    weight_total = 0;
-    $("#control-table div.weight").each(function() {
-        weight_total += $(this).slider("values")[0];
-    });
+    var total = weight_total("weight");
 
-    if (weight_total > 100) {
-        log("Weight Total: " + weight_total);
+    if (total > 100) {
         return false;
     }
     
     $("#control-table div.weight").each(function() {
-        var max = 101 - weight_total + $(this).slider("values")[0];
-        if (weight_total == 0) {
+        var max = 101 - total + $(this).slider("values")[0];
+        if (total == 0) {
             max = 101;
         }
         var value = $(this).slider("values")[0];
@@ -144,7 +137,7 @@ function slide_stop(event, ui) {
         var label = $(label_id);
         label.text(label.text().substr(0, label.text().lastIndexOf(" ")) + " " +value.toFixed(1)+ "%");
     });
-    $("#weight-total").text(weight_total.toFixed(1) + "%");
+    $("#weight-total").text(total.toFixed(1) + "%");
 
     return true;
 }
