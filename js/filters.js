@@ -264,7 +264,7 @@ function filter()
 function apply_filters(item)
 {
     var parts = item.attr('id').split('-');
-    log(parts[0]+ "." +parts[1]);
+    //log(parts[0]+ "." +parts[1]);
     if (show_all && ((filters['filter-network'] != undefined) && (!filters['filter-network'].test(parts[0])))) {
         item.hide();
     }
