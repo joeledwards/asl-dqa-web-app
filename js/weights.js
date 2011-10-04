@@ -20,9 +20,9 @@ var agg_xform = [
     ['noise', 'weight-noise', 25.0, 8.94],  // Noise 18 - 22
     ['noise', 'weight-noise', 25.0, 7.56],  // Noise 90 - 110
     ['noise', 'weight-noise', 25.0, 7.21],  // Noise 200 - 500
-    ['calibration', 'weight-calibration', 33.4], // Days since last calibration
-    ['calibration', 'weight-calibration', 33.3], // Mean corner amplitude error
-    ['calibration', 'weight-calibration', 33.3] // Mean flat amplitude error
+    ['cal-days', 'weight-calibration', 33.4], // Days since last calibration
+    ['cal-mae',  'weight-calibration', 33.3, 9.0], // Mean corner amplitude error
+    ['cal-mae',  'weight-calibration', 33.3, 9.0] // Mean flat amplitude error
 ];
 
 function toggle_controls()

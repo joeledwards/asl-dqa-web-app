@@ -14,6 +14,13 @@ function agg_power(value, adjust) {
 function agg_noise(value, adjust) {
     return 100.0 - Math.min(adjust * (log10(Math.abs(value) + 1)), 100.0);
 }
+function agg_cal_days(value) {
+    return 100.0 - Math.min(20 * log10(value+1), 100.0);
+}
+function agg_cal_mae(value, adjust) {
+    return 100.0 - Math.min(adjust * (log10(Math.abs(value) + 1)), 100.0);
+}
+
 
 function init_table() {
     if ($('#table-ready').val() == "FALSE") {
@@ -197,6 +204,10 @@ function table(data, status, request) {
                         agg_value = (xform.length > 3) ? agg_power(agg_value, xform[3]) : agg_power(agg_value);
                     } else if (xform[0] == "noise") {
                         agg_value = (xform.length > 3) ? agg_noise(agg_value, xform[3]) : agg_noise(agg_value);
+                    } else if (xform[0] == "cal-days") {
+                        agg_value = (xform.length > 3) ? agg_cal_days(agg_value, xform[3]) : agg_cal_days(agg_value);
+                    } else if (xform[0] == "cal-mae") {
+                        agg_value = (xform.length > 3) ? agg_cal_mae(agg_value, xform[3]): agg_cal_mae(agg_value);
                     }
                 }
 
