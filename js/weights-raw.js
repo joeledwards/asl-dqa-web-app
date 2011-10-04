@@ -7,7 +7,8 @@ var control_map = {
         "weight-reversals"    : 0,
         "weight-coherence"    : 0,
         "weight-power"        : 0,
-        "weight-noise"        : 0
+        "weight-noise"        : 0,
+        "weight-calibration"  : 0
     },
     "STATION" : {
         "weight-availability" : 0,
@@ -15,7 +16,8 @@ var control_map = {
         "weight-reversals"    : 0,
         "weight-coherence"    : 0,
         "weight-power"        : 0,
-        "weight-noise"        : 0
+        "weight-noise"        : 0,
+        "weight-calibration"  : 0
     }
 };
 
@@ -26,7 +28,8 @@ var control_defaults = {
         "weight-reversals"    :   0,
         "weight-coherence"    : 100,
         "weight-power"        : 100,
-        "weight-noise"        : 100
+        "weight-noise"        : 100,
+        "weight-calibration"  : 100
     },
     "STATION" : {
         "weight-availability" : 100,
@@ -34,7 +37,8 @@ var control_defaults = {
         "weight-reversals"    :   0,
         "weight-coherence"    : 100,
         "weight-power"        : 100,
-        "weight-noise"        : 100
+        "weight-noise"        : 100,
+        "weight-calibration"  : 100
     }
 };
 

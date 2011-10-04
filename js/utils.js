@@ -27,6 +27,24 @@ var month_map = {
     "December"  : 12
 }
 
+function show_progress() {
+    $("#progress").show();
+}
+
+function hide_progress() {
+    $("#progress").hide();
+}
+
+// Appends log information to the end of the page.
+function log(text) {
+    $("#log").append("<div>" +text+ "</div>");
+}
+
+// Removes all logs.
+function reset_log() {
+    $("#log div").remove();
+}
+
 
 function nthroot(x, n) {
     try {
