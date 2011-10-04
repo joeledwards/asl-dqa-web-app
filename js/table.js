@@ -42,7 +42,7 @@ function init_table() {
                 <th class="sub"><span id="col_3_header"></span></th>\
                 <th class="sub"><span>Availability</span></th>\
                 <th class="sub"><span>Gap Count</span></th>\
-                <th class="sub"><span>Reversals</span></th>\
+                <th class="sub"><span>Timing Qual.</span></th>\
                 <th class="sub"><span>4-8</span></th>\
                 <th class="sub"><span>18-22</span></th>\
                 <th class="sub"><span>90-110</span></th>\
@@ -94,6 +94,9 @@ function init_table() {
         $("#type-map-row").hide();
         $("#metrics").tablesorter({
             headers: {
+                 3: { sorter: "metrics" },
+                 4: { sorter: "metrics" },
+                 5: { sorter: "metrics" },
                  6: { sorter: "metrics" },
                  7: { sorter: "metrics" },
                  8: { sorter: "metrics" },

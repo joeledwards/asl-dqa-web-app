@@ -4,7 +4,7 @@ var control_map = {
     "ALL" : {
         "weight-availability" : [0,101],
         "weight-gaps"         : [0,101],
-        "weight-reversals"    : [0,101],
+        "weight-timing"       : [0,101],
         "weight-coherence"    : [0,101],
         "weight-power"        : [0,101],
         "weight-noise"        : [0,101]
@@ -12,7 +12,7 @@ var control_map = {
     "STATION" : {
         "weight-availability" : [0,101],
         "weight-gaps"         : [0,101],
-        "weight-reversals"    : [0,101],
+        "weight-timing"       : [0,101],
         "weight-coherence"    : [0,101],
         "weight-power"        : [0,101],
         "weight-noise"        : [0,101]
@@ -23,7 +23,7 @@ var control_defaults = {
     "ALL" : {
         "weight-availability" :  20,
         "weight-gaps"         :  20,
-        "weight-reversals"    :   0,
+        "weight-timing"       :   0,
         "weight-coherence"    :  20,
         "weight-power"        :  20,
         "weight-noise"        :  20
@@ -31,7 +31,7 @@ var control_defaults = {
     "STATION" : {
         "weight-availability" :  20,
         "weight-gaps"         :  20,
-        "weight-reversals"    :   0,
+        "weight-timing"       :   0,
         "weight-coherence"    :  20,
         "weight-power"        :  20,
         "weight-noise"        :  20

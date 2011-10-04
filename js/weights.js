@@ -7,7 +7,7 @@ var agg_xform = [
     ['ignore'], // --/Rate
     ['keep', 'weight-availability', 100.0], // Availability
     ['count', 'weight-gaps', 100.0], // Gap Count
-    ['count', 'weight-reversals', 100.0], // Reversals
+    ['keep', 'weight-timing', 100.0], // Timing Quality
     ['coherence', 'weight-coherence', 25.0, 2.0],   // Coherence 4 - 8
     ['coherence', 'weight-coherence', 25.0, 0.708], // Coherence 18 - 22
     ['coherence', 'weight-coherence', 25.0, 0.146], // Coherence 90 - 110
