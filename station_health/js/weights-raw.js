@@ -25,7 +25,7 @@ var control_defaults = {
     "ALL" : {
         "weight-availability" : 100,
         "weight-gaps"         : 100,
-        "weight-timing"       :   0,
+        "weight-timing"       : 100,
         "weight-coherence"    : 100,
         "weight-power"        : 100,
         "weight-noise"        : 100,
@@ -34,7 +34,7 @@ var control_defaults = {
     "STATION" : {
         "weight-availability" : 100,
         "weight-gaps"         : 100,
-        "weight-timing"       :   0,
+        "weight-timing"       : 100,
         "weight-coherence"    : 100,
         "weight-power"        : 100,
         "weight-noise"        : 100,

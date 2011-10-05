@@ -7,7 +7,8 @@ var control_map = {
         "weight-timing"       : [0,101],
         "weight-coherence"    : [0,101],
         "weight-power"        : [0,101],
-        "weight-noise"        : [0,101]
+        "weight-noise"        : [0,101],
+        "weight-calibration"  : [0,101]
     },
     "STATION" : {
         "weight-availability" : [0,101],
@@ -15,26 +16,29 @@ var control_map = {
         "weight-timing"       : [0,101],
         "weight-coherence"    : [0,101],
         "weight-power"        : [0,101],
-        "weight-noise"        : [0,101]
+        "weight-noise"        : [0,101],
+        "weight-calibration"  : [0,101]
     }
 };
 
 var control_defaults = {
     "ALL" : {
-        "weight-availability" :  20,
-        "weight-gaps"         :  20,
-        "weight-timing"       :   0,
-        "weight-coherence"    :  20,
-        "weight-power"        :  20,
-        "weight-noise"        :  20
+        "weight-availability" :  14.3,
+        "weight-gaps"         :  14.3,
+        "weight-timing"       :  14.3,
+        "weight-coherence"    :  14.3,
+        "weight-power"        :  14.3,
+        "weight-noise"        :  14.3,
+        "weight-calibration"  :  14.3
     },
     "STATION" : {
-        "weight-availability" :  20,
-        "weight-gaps"         :  20,
-        "weight-timing"       :   0,
-        "weight-coherence"    :  20,
-        "weight-power"        :  20,
-        "weight-noise"        :  20
+        "weight-availability" :  14.3,
+        "weight-gaps"         :  14.3,
+        "weight-timing"       :  14.3,
+        "weight-coherence"    :  14.3,
+        "weight-power"        :  14.3,
+        "weight-noise"        :  14.3,
+        "weight-calibration"  :  14.3
     }
 };
 
