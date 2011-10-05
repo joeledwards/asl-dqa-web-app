@@ -292,6 +292,25 @@ metric_order = [
     ("calibration", "mean-flat-amp-error"),
 ]
 
+plot_order = [
+    ("SOH", "sample-rate"),
+    ("SOH", "availability"),
+    ("SOH", "gap-count"),
+    ("SOH", "timing-quality"),
+    ("coherence", "4-to-8"),
+    ("coherence", "18-to-22"),
+    ("coherence", "90-to-110"),
+    ("coherence", "200-to-500"),
+    ("power-difference", "4-to-8"),
+    ("power-difference", "18-to-22"),
+    ("power-difference", "90-to-110"),
+    ("power-difference", "200-to-500"),
+    ("noise", "4-to-8"),
+    ("noise", "18-to-22"),
+    ("noise", "90-to-110"),
+    ("noise", "200-to-500"),
+]
+
 def format_plot_values(values):
     record = ""
     metric_db = {}
@@ -325,7 +344,9 @@ def format_plot_values(values):
             value = temp_value
         metric_db[line_key][date] = value
 
-    for line_key in sorted(metric_db.keys()):
+    for line_key in plot_order:
+        if not metric_db.has_key(line_key):
+            continue
         line = metric_db[line_key]
         for key in sorted(line.keys()):
             line_str = ",".join(line_key)
