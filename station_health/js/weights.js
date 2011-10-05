@@ -1,4 +1,5 @@
 // Common weight data and functions
+var controls_hidden = true;
 
 var weights_all = 0;
 var agg_xform = [

@@ -1,6 +1,8 @@
+var plots = undefined;
+
 function plot(data, status, request)
 {
-    var rows = data.split('\n')//.sort(row_sort);
+    var rows = data.split('\n');
 
  // === Display Plots ===========================================
     $('#plots').show();
@@ -57,13 +59,13 @@ function plot(data, status, request)
         groups[title]["min"] = low_value;
         groups[title]["max"] = high_value;
     }
-    var j = 0;
     plots = {};
-    for (var title in groups) { 
-        j++;
-        var container_id = "plot-" +j+ "-container";
-        var plot_id      = "plot-" +j;
-        var button_id    = "plot-" +j+ "-button";
+    var count = 0;
+    for (var title in groups) {
+        count++;
+        var container_id = "plot-" +count+ "-container";
+        var plot_id      = "plot-" +count;
+        var button_id    = "plot-" +count+ "-button";
         $("#plots").append('<div id="' +container_id+ '"/></div>');
         $("#"+container_id).append('<div class="plot" id="' +plot_id+ '"/></div>');
         $("#"+container_id).append('<button class="zoom" id="' +button_id+ '">Zoom Out</button>');
@@ -105,7 +107,7 @@ function plot(data, status, request)
                 }
             }
         });
-        //log("Plot-" +j+ " Values: " +groups[title]["start"]+ " " +groups[title]["end"]+ " " +disp_min+ " " +disp_max);
+        //log("Plot-" +count+ " Values: " +groups[title]["start"]+ " " +groups[title]["end"]+ " " +disp_min+ " " +disp_max);
         $("#"+button_id).click(function () {
             plots[$(this).val()].resetZoom();
         });
@@ -114,4 +116,52 @@ function plot(data, status, request)
     hide_progress();
     $('#apply-weights').removeAttr('disabled');
     return;
+}
+
+function title_sort(a, b)
+{
+    var tr_a = a.split(':');
+    var tr_b = b.split(':');
+    var cat_a = tr_a[0].trim();
+    var cat_b = tr_b[0].trim();
+    if (cat_a == cat_b) {
+        var parts_a = tr_a[1].split('-');
+        var parts_b = tr_b[1].split('-');
+        var min_len = Math.min(parts_a.length, parts_b.length);
+        for (var i = 0; i < min_len; i++) {
+            var val_a = parts_a[i].trim();
+            var val_b = parts_b[i].trim();
+            var result = val_cmp(cat_a, cat_b);
+            if (result) {
+                return result;
+            }
+        }
+        if (parts_a.length < parts_b.length) {
+            return -1;
+        } else if (parts_a.length > parts_b.length) {
+            return 1;
+        }
+    } else {
+        return val_cmp(cat_a, cat_b);
+    }
+    return 0;
+}
+
+function val_cmp(a, b)
+{
+    var num_a = parseFloat(a);
+    var num_b = parseFloat(b);
+    if ((!isNaN(num_a)) && (!isNaN(num_b))) {
+        if (num_a < num_b) {
+            return -1;
+        } else if (num_a > num_b) {
+            return 1;
+        }
+    }
+    if (a < b) {
+        return -1;
+    } else if (a > b) {
+        return 1;
+    }
+    return 0;
 }
