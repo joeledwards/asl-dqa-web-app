@@ -15,10 +15,10 @@ function agg_noise(value, adjust) {
     return 100.0 - Math.min(adjust * (log10(Math.abs(value) + 1)), 100.0);
 }
 function agg_cal_days(value) {
-    return 100.0 - Math.min(20 * log10(value+1), 100.0);
+    return 100.0 - Math.min(10 * Math.pow(value/365, 2), 100.0);
 }
-function agg_cal_mae(value, adjust) {
-    return 100.0 - Math.min(adjust * (log10(Math.abs(value) + 1)), 100.0);
+function agg_cal_mae(value) {
+    return 100.0 - Math.min(500*value, 100.0);
 }
 
 

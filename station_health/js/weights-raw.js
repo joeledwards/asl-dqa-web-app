@@ -23,22 +23,22 @@ var control_map = {
 
 var control_defaults = {
     "ALL" : {
-        "weight-availability" : 100,
-        "weight-gaps"         : 100,
-        "weight-timing"       : 100,
-        "weight-coherence"    : 100,
-        "weight-power"        : 100,
-        "weight-noise"        : 100,
-        "weight-calibration"  : 100
+        "weight-availability" : 50,
+        "weight-gaps"         : 50,
+        "weight-timing"       : 50,
+        "weight-coherence"    : 50,
+        "weight-power"        : 50,
+        "weight-noise"        : 50,
+        "weight-calibration"  : 50
     },
     "STATION" : {
-        "weight-availability" : 100,
-        "weight-gaps"         : 100,
-        "weight-timing"       : 100,
-        "weight-coherence"    : 100,
-        "weight-power"        : 100,
-        "weight-noise"        : 100,
-        "weight-calibration"  : 100
+        "weight-availability" : 50,
+        "weight-gaps"         : 50,
+        "weight-timing"       : 50,
+        "weight-coherence"    : 50,
+        "weight-power"        : 50,
+        "weight-noise"        : 50,
+        "weight-calibration"  : 50
     }
 };
 
