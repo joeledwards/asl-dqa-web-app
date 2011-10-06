@@ -94,10 +94,11 @@ table.tablesorter thead tr th.cat {
 
 table.tablesorter thead tr th.sub {
     vertical-align: bottom;
-    height: 7em;
+    height: 8em;
     max-width: 20px;
 }
 table.tablesorter thead tr th.sub span {
+    font-size: 9pt;
     text-align: center;
     white-space:nowrap;
     display:block;

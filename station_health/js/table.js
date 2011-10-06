@@ -21,6 +21,33 @@ function agg_cal_mae(value) {
     return 100.0 - Math.min(500*value, 100.0);
 }
 
+var headers = {
+    "cat" : {
+        "identity"  : [3, "Identity"],
+        "SOH"       : [3, "State-of-Health"],
+        "Coherence" : [4, "Coherence"],
+        "power"     : [4, "Power Difference"],
+        "noise"     : [4, "Noise"],
+        "summary"   : [2, "Summary"]
+    },
+    "sub" : {
+        0 : {"id" : "col_1_head"},
+        1 : {"id" : "col_2_head"},
+        2 : {"id" : "col_3_head"},
+        3 : {"text"       : "% Availability",
+             "tooltip-ch" : "Percent availability for the channel.",
+             "tooltip-st" : "Percent availability across continuous channels."},
+        4 : {"text"       : "Gap Count",
+             "tooltip-ch" : "Number of gaps for the channel.",
+             "tooltip-st" : "Number of gaps across continuous channels."},
+        5 : {"text"       : "Timing Quality",
+             "tooltip-ch" : "Percent timing quality for the channel.",
+             "tooltip-st" : "Percent timing quality across continuous channels."},
+        6 : {"text"       : "Timing Quality",
+             "tooltip-ch" : "Percent timing quality for the channel.",
+             "tooltip-st" : "Percent timing quality across continuous channels."}
+    }
+}
 
 function init_table() {
     if ($('#table-ready').val() == "FALSE") {
@@ -31,8 +58,8 @@ function init_table() {
                 <th class="cat" colspan="3">Identity</th>\
                 <th class="cat" colspan="3">State-of-Health</th>\
                 <th class="cat" colspan="4">Coherence</th>\
-                <th class="cat" colspan="4">Power Difference</th>\
-                <th class="cat" colspan="4">Noise</th>\
+                <th class="cat" colspan="4">Power Difference (dB)</th>\
+                <th class="cat" colspan="4">Noise (dB)</th>\
                 <th class="cat" colspan="3">Calibration</th>\
                 <th class="cat" colspan="2">Summary</th>\
             </tr>\
@@ -40,24 +67,24 @@ function init_table() {
                 <th class="sub"><span id="col_1_header"></span></th>\
                 <th class="sub"><span id="col_2_header"></span></th>\
                 <th class="sub"><span id="col_3_header"></span></th>\
-                <th class="sub"><span>Availability</span></th>\
+                <th class="sub"><span>Availability (%)</span></th>\
                 <th class="sub"><span>Gap Count</span></th>\
-                <th class="sub"><span>Timing Qual.</span></th>\
-                <th class="sub"><span>4-8</span></th>\
-                <th class="sub"><span>18-22</span></th>\
-                <th class="sub"><span>90-110</span></th>\
-                <th class="sub"><span>200-500</span></th>\
-                <th class="sub"><span>4-8</span></th>\
-                <th class="sub"><span>18-22</span></th>\
-                <th class="sub"><span>90-110</span></th>\
-                <th class="sub"><span>200-500</span></th>\
-                <th class="sub"><span>4-8</span></th>\
-                <th class="sub"><span>18-22</span></th>\
-                <th class="sub"><span>90-110</span></th>\
-                <th class="sub"><span>200-500</span></th>\
+                <th class="sub"><span>Timing Qual. (%)</span></th>\
+                <th class="sub"><span>4-8 sec.</span></th>\
+                <th class="sub"><span>18-22 sec.</span></th>\
+                <th class="sub"><span>90-110 sec.</span></th>\
+                <th class="sub"><span>200-500 sec.</span></th>\
+                <th class="sub"><span>4-8 sec.</span></th>\
+                <th class="sub"><span>18-22 sec.</span></th>\
+                <th class="sub"><span>90-110 sec.</span></th>\
+                <th class="sub"><span>200-500 sec.</span></th>\
+                <th class="sub"><span>4-8 sec.</span></th>\
+                <th class="sub"><span>18-22 sec.</span></th>\
+                <th class="sub"><span>90-110 sec.</span></th>\
+                <th class="sub"><span>200-500 sec.</span></th>\
                 <th class="sub"><span>Days Since</span></th>\
-                <th class="sub"><span>Corner MAE</span></th>\
-                <th class="sub"><span>Flat MAE</span></th>\
+                <th class="sub"><span>Corner MAE (dB)</span></th>\
+                <th class="sub"><span>Flat MAE (dB)</span></th>\
                 <th class="sub"><span>Aggregate</span></th>\
                 <th></th>\
             </tr>\
