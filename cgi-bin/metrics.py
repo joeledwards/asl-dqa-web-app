@@ -17,6 +17,12 @@ sys.path.insert(0, "/home/jdedwards/dev/seedscan")
 import MetricDatabase
 
 queries = {
+    "dates" : """
+    SELECT DISTINCT year, month FROM Metrics
+UNION
+    SELECT DISTINCT year, month FROM Calibrations
+ORDER BY year, month
+    """,
     "all" : """
     SELECT  Station.network             AS m_network,
             Station.name                AS m_station,
@@ -311,6 +317,14 @@ plot_order = [
     ("noise", "200-to-500"),
 ]
 
+def format_dates(values):
+    record = ""
+    for parts in values:
+        if len(parts) != 2:
+            continue
+        record += "%s,%s\n" % tuple(map(str, parts))
+    return record
+
 def format_plot_values(values):
     record = ""
     metric_db = {}
@@ -487,7 +501,15 @@ month = 8
 command = parts[0].lower()
 database_file = "/dataq/metrics/metrics.db"
 database = MetricDatabase.MetricDatabase(database_file)
-if command == "all":
+if command == "dates":
+    start = time.time()
+    timestamp = file_m_time(database_file)
+    dates = database.select(queries['dates'])
+    record = format_dates(dates)
+    cache(cmd_str, database_file, record, timestamp)
+    end = time.time()
+    print record
+elif command == "all":
     start = time.time()
     timestamp = file_m_time(database_file)
     db_args = (year, month,
