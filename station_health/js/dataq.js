@@ -211,8 +211,10 @@ function load_data()
         col_1_title = "Network"
         col_2_title = "Station"
         col_3_title = ""
+        $('#home').hide();
         $('#control-toggle').show();
         $('#clear-filters').show();
+        $('#open-legend').show();
         $('#filter-subset').show();
         $('#filter-network').show();
         $('#filter-station').show();
@@ -242,7 +244,9 @@ function load_data()
             col_3_title = "Rate";
             st_network = parts[1];
             st_station = parts[2];
+            $('#home').show();
             $('#control-toggle').show();
+            $('#open-legend').show();
             $('#clear-filters').show();
             $('#filter-subset').hide();
             $('#filter-network').hide();
@@ -291,7 +295,9 @@ function load_data()
                 $('#main').append('<h2>Invalid Command.</h2>');
                 return;
             }
+            $('#home').show();
             $('#control-toggle').hide();
+            $('#open-legend').hide();
             $('#clear-filters').hide();
             $('#filter-subset').hide();
             $('#filter-network').hide();

@@ -34,14 +34,14 @@ div#legend div,
 div#legend table {
     border: 1px solid black;
     font-size: 10pt;
+    width: 100%;
 }
 
 div#legend div {
     background-color: #F5DEB3; /*wheat*/
 }
 div#legend div div {
-    border: 0px;
-    padding: 3px;
+    border: 3px;
 }
 
 div#legend table tr td {
