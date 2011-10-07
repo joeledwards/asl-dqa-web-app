@@ -67,6 +67,7 @@
 <body>
     <input id="data-url"    type="hidden" value="/cgi-bin/metrics.py" />
     <input id="engine-up"   type="hidden" value="FALSE" />
+    <input id="dates-ready" type="hidden" value="FALSE" />
     <input id="table-ready" type="hidden" value="FALSE" />
     <div id="main">
         <div id="controls">
@@ -154,12 +155,12 @@
                 <div id="displaying">
                     &nbsp;
                     <!--span class="display-title">Displaying:</span-->
-                    <span class="display-month">--</span>
-                    <span class="display-info">(--)</span>
+                    <button id="date-change"/>Update</button>
                     <select class="subset" id="date-month">
                     </select>
                     <select class="subset" id="date-year">
                     </select>
+                    <span class="display-info">--</span>
                     &nbsp;
                 </div>
                 <div id="progress">

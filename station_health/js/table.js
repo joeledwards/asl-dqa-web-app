@@ -158,7 +158,7 @@ function init_table() {
 
 // Populate the table
 function table(data, status, request) {
-    var rows = data.split('\n')//.sort(row_sort);
+    var rows = data.split('\n');
 
  // === Generate Each Row Calculating Aggregate =================
     for (var i in rows) {

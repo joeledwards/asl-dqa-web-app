@@ -82,8 +82,10 @@ div#displaying {
 div#displaying span {
     font-weight: bold;
 }
-span.display-month {
-    font-style: italic;
+span.display-info {
+    border: 1px solid black;
+    padding: 3px;
+    background-color: #DDDDDD;
 }
 
 input.watermark { color: gray; }

@@ -17,6 +17,7 @@ var available_dates = {};
 // Setup event bindings
 $(document).ready(function() {
     $('#engine-up').val('FALSE');
+    $('#dates-ready').val('FALSE');
     $('#table-ready').val('FALSE');
     $.ajax({cache:"false"});
     set_prototypes();
@@ -29,7 +30,7 @@ $(document).ready(function() {
 $.jStore.ready(function(engine){
     engine.connect();
     engine.ready(function(){
-        if ($('#engine-up').val() != 'TRUE') {
+        if ($('#engine-up').val() == 'FALSE') {
             $('#engine-up').val('TRUE');
             jstore_onload();
         }
@@ -76,31 +77,34 @@ function jstore_onload()
         close_controls();
         load_data(); // Load data from the new context
     });
-    $("#change-date").click(function(){
+    $("#date-change").click(function(){
         close_controls();
         load_data(); // Load data with new date selection
     });
-    //init_dates();
+    $("#date-year").change(function(event){
+        year_selected(); // Update the months for this year
+    });
     init_filters();
     load_controls();
     load_table_controls();
     init_table();
-    $(window).hashchange(); // force load of data on initial page load
+    init_dates();
 }
 
-function init_dates()
+function init_dates(next)
 {
-    if ($('#table-ready').val() == "FALSE") {
+    if ($('#dates-ready').val() != "FALSE") {
         return;
     }
     $.get($('#data-url').val()+'?cmd=DATES', {cache:"false"}, function(data, status, request){
+        $('#dates-ready').val("TRUE");
         set_available_dates(data);
     }); 
 }
 
 function set_available_dates(data)
 {
-    var rows = data.split('\n')//.sort(row_sort);
+    var rows = data.split('\n');
     var max_year  = undefined;
     var max_month = undefined;
     var year_list = $("#date-year");
@@ -119,16 +123,18 @@ function set_available_dates(data)
 
         if (available_dates[year] == undefined) {
             available_dates[year] = new Array();
+            year_list.append('<option value="' +year+ '">' +year+ '</option>');
         }
         available_dates[year].push(month);
 
         if ((max_year == undefined) || (year > max_year)) {
             max_year = year;
         }
-        year_list.append('<option value="' +year+ '">' +year+ '</option>');
         last = year;
     }
     year_list.val(last);
+    year_selected();
+    $(window).hashchange(); // force load of data on initial page load
 }
 
 function year_selected()
@@ -136,12 +142,25 @@ function year_selected()
     var year = $("#date-year").val();
     var month_list = $("#date-month");
     $("#date-month option").remove();
+    var selected = month_list.val();
+    var match = false;
     var last;
-    for (var i in available_dates[year]) {
-        month_list.append('<option value="' +i+ '">' +month_map[i]+ '</option>');
-        last = i;
+    var months = available_dates[year];
+    var month;
+    for (var i in months) {
+        month = months[i];
+        month_list.append('<option value="' +month+ '">' +month_map[month]+ '</option>');
+        last = month;
+        if (month == selected) {
+            match = true;
+        }
     }
-    month_list.val(last);
+
+    if (match) {
+        month_list.val(selected);
+    } else {
+        month_list.val(last);
+    }
 }
 
 // Check the status of stations
@@ -150,8 +169,8 @@ function load_data()
     reset_log();
     store_table_controls(); // Store controls from last context before updating
 
-    //selected_year = $('#date-year').val();
-    //selected_month = $('#date-month').val();
+    selected_year  = $('#date-year').val();
+    selected_month = $('#date-month').val();
     $('#apply-weights').attr('disabled', 'disabled');
     $('#table').hide();
     $('#plots').hide();
@@ -180,7 +199,7 @@ function load_data()
         $('#filter-station').show();
         $('#filter-location').hide();
         $('#filter-channel').hide();
-        $('#displaying > span.display-info').text("");
+        $('#displaying > span.display-info').text("Summary");
         load_table_controls();
     }
     else {
@@ -209,7 +228,7 @@ function load_data()
             $('#filter-station').hide();
             $('#filter-location').show();
             $('#filter-channel').show();
-            $('#displaying > span.display-info').text(" (" +st_network+ "_" +st_station + ")");
+            $('#displaying > span.display-info').text(st_network+ "_" +st_station);
             load_table_controls();
         }
         else if (parts[0] == "PLOT") {
@@ -230,7 +249,7 @@ function load_data()
                     $('#main').append('<h2>Invalid Command.</h2>');
                     return;
                 }
-                $('#displaying > span.display-info').text(" (" +st_network+ "_" +st_station+ ")");
+                $('#displaying > span.display-info').text(st_network+ "_" +st_station);
             }
             else if (parts[1] == "CHANNEL") {
                 $('#up a').attr('href', '#STATION.'+st_network+'.'+st_station);
@@ -244,7 +263,7 @@ function load_data()
                     $('#main').append('<h2>Invalid Command.</h2>');
                     return;
                 }
-                $('#displaying > span.display-info').text(" (" +st_network+ "_" +st_station+ " " +st_location+ "-" +st_channel+ ")");
+                $('#displaying > span.display-info').text(st_network+ "_" +st_station+ " " +st_location+ "-" +st_channel);
             }
             else {
                 $('#main').append('<h1>Page Load Error!</h1>');
@@ -263,7 +282,6 @@ function load_data()
             return;
         }
     }
-    $('#displaying > span.display-month').text(month_map[selected_month]+ " " +selected_year);
 
     $('#col_1_header').text(col_1_title);
     $('#col_2_header').text(col_2_title);
