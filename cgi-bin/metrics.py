@@ -490,15 +490,29 @@ record = get_cached(cmd_str)
 if record is not None:
     print record
     sys.exit(0)
-#print "Checking Database"
 
-parts = cmd_str.split('.')
-
-# For the GSNSC we are only working with August 2011
+# This is the default for GSNSC meeting, so just in case...
 year  = 2011
 month = 8
 
-command = parts[0].lower()
+parts = cmd_str.split('.')
+
+cmd = parts[0].lower().split()
+if len(cmd) not in (1,3):
+    error("bad command plus date format")
+
+command = cmd[0].lower()
+
+if len(cmd) == 3:
+    try:
+        year  = cmd[1]
+        month = cmd[2]
+        if (year < 0) or (1 > month > 12):
+            raise ValueError("bad year or month value")
+    except:
+        error("bad date values")
+        sys.exit(0)
+
 database_file = "/dataq/metrics/metrics.db"
 database = MetricDatabase.MetricDatabase(database_file)
 if command == "dates":
