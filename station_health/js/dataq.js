@@ -82,7 +82,7 @@ function jstore_onload()
         load_data(); // Load data with new date selection
     });
     $("#date-year").change(function(event){
-        year_selected(); // Update the months for this year
+        year_selected(false); // Update the months for this year
     });
     init_filters();
     load_controls();
@@ -133,11 +133,11 @@ function set_available_dates(data)
         last = year;
     }
     year_list.val(last);
-    year_selected();
+    year_selected(true);
     $(window).hashchange(); // force load of data on initial page load
 }
 
-function year_selected()
+function year_selected(init)
 {
     var year = $("#date-year").val();
     var month_list = $("#date-month");
@@ -160,6 +160,13 @@ function year_selected()
         month_list.val(selected);
     } else {
         month_list.val(last);
+    }
+
+    if (init) {
+        // TODO: Remove the following after the GSN SC meeting
+        // GSN SC Meeting default date override
+        $("#date-year").val(2011);
+        $("#date-month").val(8);
     }
 }
 
@@ -292,9 +299,10 @@ function load_data()
     $('#table table tbody tr.metrics').remove();
     $("#plots div").remove();
 
-    var command_string = command;
+    var date_extension = "_DATE." +selected_year+ "." +selected_month;
+    var command_string = command + date_extension;
     if (show_all) {
-        command_string = "ALL";
+        command_string = "ALL" + date_extension;
     }
     $.get($('#data-url').val()+'?cmd='+command_string, {cache:"false"}, function(data, status, request){
         if (gen_plots) {
