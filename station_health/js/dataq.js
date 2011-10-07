@@ -12,6 +12,7 @@ var channel_plot = false;
 var row_index = 0;
 var selected_year = 2011;
 var selected_month = 8;
+var available_dates = {};
 
 // Setup event bindings
 $(document).ready(function() {
@@ -69,17 +70,78 @@ function jstore_onload()
     });
     $("#apply-weights").click(function(){
         close_controls();
-        load_data();
+        load_data(); // Load data and re-calculate aggregates with new weights
     });
     $(window).hashchange(function(){
         close_controls();
-        load_data(); // Load data fro the new context
+        load_data(); // Load data from the new context
     });
+    $("#change-date").click(function(){
+        close_controls();
+        load_data(); // Load data with new date selection
+    });
+    //init_dates();
     init_filters();
     load_controls();
     load_table_controls();
     init_table();
     $(window).hashchange(); // force load of data on initial page load
+}
+
+function init_dates()
+{
+    if ($('#table-ready').val() == "FALSE") {
+        return;
+    }
+    $.get($('#data-url').val()+'?cmd=DATES', {cache:"false"}, function(data, status, request){
+        set_available_dates(data);
+    }); 
+}
+
+function set_available_dates(data)
+{
+    var rows = data.split('\n')//.sort(row_sort);
+    var max_year  = undefined;
+    var max_month = undefined;
+    var year_list = $("#date-year");
+    var last;
+    $("#date-year option").remove();
+    for (var i in rows) {
+        var parts = rows[i].split(',');
+        if (parts.length != 2) {
+            continue;
+        }
+        year = parseInt(parts[0]);
+        month = parseInt(parts[1]);
+        if ((year == undefined) || (month == undefined)) {
+            continue;
+        }
+
+        if (available_dates[year] == undefined) {
+            available_dates[year] = new Array();
+        }
+        available_dates[year].push(month);
+
+        if ((max_year == undefined) || (year > max_year)) {
+            max_year = year;
+        }
+        year_list.append('<option value="' +year+ '">' +year+ '</option>');
+        last = year;
+    }
+    year_list.val(last);
+}
+
+function year_selected()
+{
+    var year = $("#date-year").val();
+    var month_list = $("#date-month");
+    $("#date-month option").remove();
+    var last;
+    for (var i in available_dates[year]) {
+        month_list.append('<option value="' +i+ '">' +month_map[i]+ '</option>');
+        last = i;
+    }
+    month_list.val(last);
 }
 
 // Check the status of stations
@@ -88,6 +150,8 @@ function load_data()
     reset_log();
     store_table_controls(); // Store controls from last context before updating
 
+    //selected_year = $('#date-year').val();
+    //selected_month = $('#date-month').val();
     $('#apply-weights').attr('disabled', 'disabled');
     $('#table').hide();
     $('#plots').hide();
