@@ -96,6 +96,7 @@
             </div>
             <div id="control-display">
                 <div id="home"><a href="#"><img alt="Back to &quot;Home&quot; view of all stations." src="images/home-24.png"/></a></div>
+                <div id="open-legend"><img alt="Display the Legend" src="images/legend-24.png" /></div>
                 <div id="up"><a href="#"><img alt="Exit plot view." src="images/up-24.png"/></a></div>
                 <button id="control-toggle"/>Show Controls</button>
                 <button id="clear-filters">Clear Filters</button>
@@ -174,6 +175,49 @@
             </br>
         </div>
         <div id="log">
+        </div>
+    </div>
+    <div id="legend">
+        <table>
+            <tr>
+                <td class="term">Availability %</td>
+                <td>Percent of expected data which is available.</td>
+            </tr> <tr>
+                <td class="term">Gap Count</td>
+                <td>Number of gaps in data.</td>
+            </tr> <tr>
+                <td class="term">Timing Qual. %</td>
+                <td>Timing quality as a percent.</td>
+            </tr> <tr>
+                <td class="term">Coherence</td>
+                <td></td>
+            </tr> <tr>
+                <td class="term">Power Difference (dB)</td>
+                <td></td>
+            </tr> <tr>
+                <td class="term">Noise (dB)</td>
+                <td></td>
+            </tr> <tr>
+                <td class="term">?-? sec.</td>
+                <td>Power band specific metrics for a category.</td>
+            </tr> <tr>
+                <td class="term">Days Since (Calibration)</td>
+                <td>The number of days between the selected date and the most recent calibration before that date.</td>
+            </tr> <tr>
+                <td class="term">Corner MAE (Calibration)</td>
+                <td>Corner mean amplitude error.</td>
+            </tr> <tr>
+                <td class="term">Flat MAE (Calibration)</td>
+                <td>Flat mean amplitude error.</td>
+            </tr> <tr>
+                <td class="term">Aggregate</td>
+                <td>A weighted value in the range 0 to 100 which represents the the overall station data quality.</td>
+            </tr>
+        </table>
+        <div>
+            <div>
+            For the main summary page each metric is generated from continuous, non-state-of-health channels.
+            </div>
         </div>
     </div>
 </body>

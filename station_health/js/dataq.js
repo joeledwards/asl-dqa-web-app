@@ -84,6 +84,16 @@ function jstore_onload()
     $("#date-year").change(function(event){
         year_selected(false); // Update the months for this year
     });
+    $("#open-legend").click(function(){
+        $("#legend").dialog("open");
+        return false;
+    });
+    $("#legend").dialog({
+        autoOpen: false,
+        title: "Legend",
+        hide: "explode",
+        width: "auto"
+    });
     init_filters();
     load_controls();
     load_table_controls();
@@ -201,6 +211,8 @@ function load_data()
         col_1_title = "Network"
         col_2_title = "Station"
         col_3_title = ""
+        $('#control-toggle').show();
+        $('#clear-filters').show();
         $('#filter-subset').show();
         $('#filter-network').show();
         $('#filter-station').show();
@@ -230,6 +242,8 @@ function load_data()
             col_3_title = "Rate";
             st_network = parts[1];
             st_station = parts[2];
+            $('#control-toggle').show();
+            $('#clear-filters').show();
             $('#filter-subset').hide();
             $('#filter-network').hide();
             $('#filter-station').hide();
@@ -277,6 +291,8 @@ function load_data()
                 $('#main').append('<h2>Invalid Command.</h2>');
                 return;
             }
+            $('#control-toggle').hide();
+            $('#clear-filters').hide();
             $('#filter-subset').hide();
             $('#filter-network').hide();
             $('#filter-station').hide();

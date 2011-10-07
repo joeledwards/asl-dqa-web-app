@@ -5,17 +5,54 @@ html, body {
     padding: 0;
 }
 
-div#home {
+div#up,
+div#home,
+div#open-legend {
     border: 0px;
     float: left;
     padding-top: 0.1em;
     padding-right: 0.15em;
 }
-div#up {
+div#open-legend {
+    cursor: pointer;
+}
+div#open-legend img {
     border: 0px;
-    float: left;
-    padding-top: 0.1em;
-    padding-right: 0.15em;
+}
+div#up a,
+div#home a { 
+    border: 0px;
+}
+div#up a img,
+div#home a img {
+    border: 0px; 
+}
+
+div#legend {
+}
+div#legend div,
+div#legend table {
+    border: 1px solid black;
+    font-size: 10pt;
+}
+
+div#legend div {
+    background-color: #F5DEB3; /*wheat*/
+}
+div#legend div div {
+    border: 0px;
+    padding: 3px;
+}
+
+div#legend table tr td {
+    padding: 3px;
+    background-color: #ADD8E6; /*light blue*/
+}
+div#legend table tr td.term {
+    background-color: #4682B4; /*steel blue*/
+    color: #FFFFFF;
+    font-weight: bold;
+    white-space:nowrap;
 }
 
 div#progress {
