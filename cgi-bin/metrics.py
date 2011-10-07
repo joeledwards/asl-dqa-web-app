@@ -495,23 +495,27 @@ if record is not None:
 year  = 2011
 month = 8
 
-parts = cmd_str.split('.')
+cmd_parts = cmd_str.split('_')
+parts = cmd_parts[0].split('.')
+extensions = []
+if len(cmd_parts) > 1:
+    extensions = cmd_parts[1:]
+for extension in extensions:
+    if len(extension) < 1:
+        error("bad extension format")
+    pieces = extension.split('.')
+    if pieces[0] == 'DATE':
+        if len(pieces) != 3:
+            error("bad date format")
+        try:
+            year  = int(pieces[1])
+            month = int(pieces[2])
+            if (year < 0) or (1 > month > 12):
+                raise ValueError("bad year or month value")
+        except:
+            error("bad date values")
 
-cmd = parts[0].lower().split()
-if len(cmd) not in (1,3):
-    error("bad command plus date format")
-
-command = cmd[0].lower()
-
-if len(cmd) == 3:
-    try:
-        year  = cmd[1]
-        month = cmd[2]
-        if (year < 0) or (1 > month > 12):
-            raise ValueError("bad year or month value")
-    except:
-        error("bad date values")
-        sys.exit(0)
+command = parts[0].lower()
 
 database_file = "/dataq/metrics/metrics.db"
 database = MetricDatabase.MetricDatabase(database_file)
