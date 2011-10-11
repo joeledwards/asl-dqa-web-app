@@ -42,6 +42,8 @@ var control_defaults = {
     }
 };
 
+function get_control_map(){return control_map;}
+
 function get_raw_weight(id)
 {
     return $('#'+id).slider('values')[0];
@@ -52,25 +54,30 @@ function get_weight(id)
     return get_raw_weight(id);
 }
 
-function set_control_defaults()
+function get_stored_weight(group, id)
 {
-    for (var j in control_map) {
-        var remaining = 100.0;
-        for (var k in control_map[j]) {
-            val = control_defaults[j][k];
-            if (val > remaining) {
-                val = remaining;
-            }
-            remaining -= val;
-            if (remaining <= 0.0) {
-                remaining = 0.0;
-                break;
-            }
+    return $.jStore.get(group+ '-' +id+ '-percent');
+}
+
+function restore_weights(group, to_defaults)
+{
+    var remaining = 100.0;
+    for (var i in control_map[group]) {
+        var val = get_stored_weight(group,i);
+        var value = (to_defaults || (!val)) ? control_defaults[group][i] : val;
+        if (value > remaining) {
+            value = remaining;
         }
-        for (var k in control_map[j]) {
-            val = control_defaults[j][k];
-            control_map[j][k] = [val,Math.min(val+1.0+remaining, 101.0)];
+        remaining -= value;
+        if (remaining <= 0.0) {
+            remaining = 0.0;
+            break;
         }
+    }
+    for (var i in control_map[group]) {
+        var val = get_stored_ewight(group,i);
+        var value = (to_defaults || (val == false)) ? control_defaults[group][i] : val;
+        control_map[group][i] = [value,Math.min(value+1.0+remaining, 101.0)];
     }
 }
 
@@ -144,5 +151,14 @@ function slide_stop(event, ui) {
     $("#weight-total").text(total.toFixed(1) + "%");
 
     return true;
+}
+
+function store_weights(group) {
+    var group_name = group;
+    $("#control-table div.weight").each(function() {
+        var key = group_name+ '-' +$(this).attr('id')+ '-percent';
+        var values = $(this).slider("values");
+        $.jStore.set(key, values[0]);
+    });
 }
 

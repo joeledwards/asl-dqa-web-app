@@ -42,6 +42,8 @@ var control_defaults = {
     }
 };
 
+function get_control_map(){return control_map;}
+
 function get_raw_weight(id)
 {
     return $('#'+id).slider('value');
@@ -52,12 +54,18 @@ function get_weight(id)
     return get_raw_weight(id) / weight_total(id.split('-')[0]) * 100.0; 
 }
 
-function set_control_defaults()
+function get_stored_weight(group, id)
 {
-    for (var j in control_map) {
-        for (var k in control_map[j]) {
-            control_map[j][k] = control_defaults[j][k];
-        }
+    
+    return $.jStore.get(group+ '-' +id+ '-raw');
+}
+
+function restore_weights(group, to_defaults)
+{
+    for (var i in control_map[group]) {
+        var val = get_stored_weight(group,i);
+        var value = (to_defaults || (!val)) ? control_defaults[group][i] : val;
+        control_map[group][i] = value;
     }
 }
 
@@ -109,5 +117,14 @@ function slide_stop(event, ui) {
     $("#weight-total").text(total.toFixed(1));
 
     return true;
+}
+
+function store_weights(group) {
+    var group_name = group;
+    $("#control-table div.weight").each(function() {
+        var key = group_name+ '-' +$(this).attr('id')+ '-raw';
+        var value = $(this).slider("value");
+        $.jStore.set(key, value);
+    });
 }
 

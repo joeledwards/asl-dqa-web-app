@@ -21,7 +21,7 @@ $(document).ready(function() {
     $('#table-ready').val('FALSE');
     $.ajax({cache:"false"});
     set_prototypes();
-    set_control_defaults();
+    init_weights(false);
     $.extend($.jStore.defaults);
     $.jStore.load();
 });
@@ -78,7 +78,14 @@ function jstore_onload()
     });
     $("#apply-weights").click(function(){
         close_controls();
+        save_weights();
         load_data(); // Load data and re-calculate aggregates with new weights
+    });
+    $("#reset-weights").click(function(){
+        reset_weights(false);
+    });
+    $("#default-weights").click(function(){
+        reset_weights(true);
     });
     $(window).hashchange(function(){
         close_controls();

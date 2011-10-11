@@ -71,3 +71,36 @@ function weight_total(class_name)
     return weights_all;
 }
 
+function reset_all_weights(to_defaults)
+{
+    init_weights(to_defaults);
+    load_table_controls();
+}
+
+function reset_weights(to_defaults)
+{
+    restore_weights(show_all ? "ALL" : "STATION", to_defaults);
+    load_table_controls();
+}
+
+function save_weights(group)
+{
+    store_weights(show_all ? "ALL" : "STATION");
+}
+
+function init_weights(to_defaults)
+{
+    var map = get_control_map();
+    for (var g in map) {
+        restore_weights(g, to_defaults);
+    }
+}
+
+function save_all_weights()
+{
+    var map = get_control_map();
+    for (var g in map) {
+        save_weights(g);
+    }
+}
+
