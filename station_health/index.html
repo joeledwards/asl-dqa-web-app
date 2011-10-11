@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-    <title>Data Quality Analyzer</title>
+    <title>Data Quality Analyzer (BETA)</title>
     <!-- The following is a must for Google Chrome, otherwise it caches AJAX requests! -->
     <meta http-equiv="pragma" content="no-cache" />
 
@@ -94,6 +94,7 @@
                 </div>
                 <div class="apply">
                     <button id="apply-weights"/>Apply Weights</button>
+                    <button id="reset-weights"/>Reset Weights</button>
                 </div>
             </div>
             <div id="control-display">
@@ -181,54 +182,11 @@
     </div>
     <div id="legend">
         <div>
-            <table>
-                <tr>
-                    <td class="term">Availability %</td>
-                    <td>Percent of expected data which is available.</td>
-                </tr> <tr>
-                    <td class="term">Gap Count</td>
-                    <td>Number of gaps in data.</td>
-                </tr> <tr>
-                    <td class="term">Timing Qual. %</td>
-                    <td>Timing quality as a percent.</td>
-                </tr> <tr>
-                    <td class="term">Coherence</td>
-                    <td>The cross power between the primary and secondary sensors, divided by the power (P_xy)^2/(P_xx P_yy).  Horizontal sensors are rotated into the North and East components to account for differing orientation.</td>
-                </tr> <tr>
-                    <td class="term">Power Difference (dB)</td>
-                    <td>The difference in the power spectral density between the primary and secondary sensors.  Horizontal sensors are rotated into the North and East components to account for differing orientation. A negative value means that the primary sensor is quieter than the secondary sensor.</td>
-                </tr> <tr>
-                    <td class="term">Noise (dB)</td>
-                    <td>The deviation of the power spectral density from a station baseline. A negative value means that the channel is quieter than the baseline. </td>
-                </tr> <tr>
-                    <td class="term">?-? sec.</td>
-                    <td>Power band specific metrics for a category.</td>
-                </tr> <tr>
-                    <td class="term">Days Since (Calibration)</td>
-                    <td>The number of days between the selected date and the most recent calibration before that date.</td>
-                </tr> <tr>
-                    <td class="term">Corner MAE (Calibration)</td>
-                    <td>Corner mean amplitude error.</td>
-                </tr> <tr>
-                    <td class="term">Flat MAE (Calibration)</td>
-                    <td>Flat mean amplitude error.</td>
-                </tr> <tr>
-                    <td class="term">Aggregate</td>
-                    <td>A weighted value in the range 0 to 100 which represents the the overall station data quality.</td>
-                </tr> <tr>
-                    <td class="level1">90 &lt;&#61; Aggregate</td><td></td>
-                </tr> <tr>
-                    <td class="level2">80 &lt;&#61; Aggregate &lt; 90</td><td></td>
-                </tr> <tr>
-                    <td class="level3">70 &lt;&#61; Aggregate &lt; 80</td><td></td>
-                </tr> <tr>
-                    <td class="level4">Aggregate &lt; 70</td><td></td>
-                </tr>
+            <table id="legend-table">
             </table>
         </div>
-        <div>
+        <div id="legend-info">
             <div>
-            For the main summary page each metric is generated from continuous, non-state-of-health channels.
             </div>
         </div>
     </div>

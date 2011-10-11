@@ -45,6 +45,13 @@ function jstore_onload()
     } catch (e) {
         alert("Wow, a little behind the times are we?! Please update your web browser.");
     }
+
+    // Hide this before it is loaded.
+    $('#apply-weights').attr('disabled', 'disabled');
+    $('#table').hide();
+    $('#plots').hide();
+    $('#up').hide();
+
     $.tablesorter.addWidget({
         id: "callback",
         format: function (table) {
@@ -84,6 +91,7 @@ function jstore_onload()
     $("#date-year").change(function(event){
         year_selected(false); // Update the months for this year
     });
+
     $("#toggle-legend").click(function(){
         if ($("#legend").dialog("isOpen")) {
             $("#legend").dialog("close");
@@ -96,14 +104,16 @@ function jstore_onload()
     $("#legend").dialog({
         autoOpen: false,
         title: "Legend",
-        hide: "explode",
-        width: "500px"
+        width: "70%"
     });
+    make_legend();
+
     $("#browser").dialog({
         autoOpen: false,
         title: "Browser Info",
-        width: "auto"
+        width: "70%"
     });
+
     check_browser();
     init_filters();
     load_controls();
@@ -114,9 +124,9 @@ function jstore_onload()
 
 function check_browser()
 {
-    if ((($.browser.name == 'chrome')  && ($.browser.version >= 10.0)) ||
-        (($.browser.name == 'msie')    && ($.browser.version >=  9.0)) ||
-        (($.browser.name == 'firefox') && ($.browser.version >=  6.0))
+    if ((($.browser.name == 'chrome')  && ($.browser.versionNumber >= 10.0)) ||
+        (($.browser.name == 'msie')    && ($.browser.versionNumber >=  9.0)) ||
+        (($.browser.name == 'firefox') && ($.browser.versionNumber >=  6.0))
        ) {
         ;
     }
@@ -125,8 +135,8 @@ function check_browser()
         add_browser_info("Layout Engine", $.layout.name+ ' ' +$.layout.version);
         add_browser_info("Operating System", $.os.name);
         $("#browser-message").append('<div>Your web browser is not officially supported. The officially supported browsers are: Chrome 10+, Firefox 6+, Internet Explorer 9+</div>');
+        $("#browser").dialog("open");
     }
-    $("#browser").dialog("open");
 }
 
 function add_browser_info(title, info)
@@ -216,6 +226,7 @@ function year_selected(init)
 // Check the status of stations
 function load_data()
 {
+    $("#legend").dialog("close");
     reset_log();
     store_table_controls(); // Store controls from last context before updating
 

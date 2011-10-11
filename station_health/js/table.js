@@ -25,7 +25,7 @@ var headers = {
     "cat" : {
         "identity"  : [3, "Identity"],
         "SOH"       : [3, "State-of-Health"],
-        "Coherence" : [4, "Coherence"],
+        "coherence" : [4, "Coherence"],
         "power"     : [4, "Power Difference"],
         "noise"     : [4, "Noise"],
         "summary"   : [2, "Summary"]
@@ -46,6 +46,91 @@ var headers = {
         6 : {"text"       : "Timing Quality",
              "tooltip-ch" : "Percent timing quality for the channel.",
              "tooltip-st" : "Percent timing quality across continuous channels."}
+    }
+}
+
+var legend_items = [
+    { 'title' : 'Availability %',
+      'desc'  : 'Percent of expected data which is available.'
+    },
+    { 'title' : 'Gap Count',
+      'desc'  : 'Number of gaps in data.'
+    },
+    { 'title' : 'Timing Qual. %',
+      'desc'  : 'Timing quality as a percent.'
+    },
+    { 'title' : 'Coherence',
+      'desc'  : 'The cross power between the primary and secondary sensors, divided by the power (P_xy)^2/(P_xx P_yy).  Horizontal sensors are rotated into the North and East components to account for differing orientation.'
+    },
+    { 'title' : 'Power Difference (dB)',
+      'desc'  : 'The difference in the power spectral density between the primary and secondary sensors.  Horizontal sensors are rotated into the North and East components to account for differing orientation. A negative value means that the primary sensor is quieter than the secondary sensor.'
+    },
+    { 'title' : 'Noise (dB)',
+      'desc'  : 'The deviation of the power spectral density from a station baseline. A negative value means that the channel is quieter than the baseline.'
+    },
+    { 'title' : '?-? sec.',
+      'desc'  : 'Power band specific metrics for a category.'
+    },
+    { 'title' : 'Days Since (Calibration)',
+      'desc'  : 'The number of days between the selected date and the most recent calibration before that date.'
+    },
+    { 'title' : 'Corner MAE (Calibration)',
+      'desc'  : 'Corner mean amplitude error.'
+    },
+    { 'title' : 'Flat MAE (Calibration)',
+      'desc'  : 'Flat mean amplitude error.'
+    },
+    { 'title' : 'Aggregate',
+      'desc'  : 'A weighted value in the range 0 to 100 which represents the the overall station data quality.'
+    },
+
+    { 'title' : 'Aggregate &gt;&#61; 90',
+      'class' : 'level1'
+    },
+    { 'title' : '90 &gt; Aggregate &gt;&#61; 80',
+      'class' : 'level2'
+    },
+    { 'title' : '80 &gt; Aggregate &gt;&#61; 70',
+      'class' : 'level3'
+    },
+    { 'title' : 'Aggregate &lt; 70',
+      'class' : 'level4'
+    }
+]
+
+function make_legend(is_summary)
+{
+    $("#legend-table tr").remove();
+    $("#legend-info div").remove();
+    $("#legend-info").append("<div>For the main summary page each metric is generated from continuous, non-state-of-health channels.</div>");
+    for (var i in legend_items) {
+        var defined = false;
+        var item = legend_items[i];
+        var title = item['title'];
+        var description = item['desc'];
+        var class_name = item['class'];
+        if (title == undefined) {
+            title = '';
+        } else {
+            defined = true;
+        }
+        if (description == undefined) {
+            description = '';
+        } else {
+            defined = true;
+        }
+
+        if (class_name == undefined) {
+            class_name = 'term';
+        }
+        var class_text = '';
+        if (class_name != '') {
+            class_text = ' class="' +class_name+ '"';
+        }
+
+        if (defined) {
+            $("#legend-table").append('<tr><td' +class_text+ '>' +title+ '</td><td>' +description+ '</td></tr>');
+        }
     }
 }
 
