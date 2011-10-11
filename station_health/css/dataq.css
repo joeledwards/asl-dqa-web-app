@@ -8,16 +8,16 @@ html, body {
 
 div#up,
 div#home,
-div#open-legend {
+div#toggle-legend {
     border: 0px;
     float: left;
     padding-top: 0.1em;
     padding-right: 0.15em;
 }
-div#open-legend {
+div#toggle-legend {
     cursor: pointer;
 }
-div#open-legend img {
+div#toggle-legend img {
     border: 0px;
 }
 div#up a,
@@ -30,26 +30,28 @@ div#home a img {
 }
 
 div#legend {
-}
-div#legend div,
-div#legend table {
-    border: 1px solid black;
     font-size: 10pt;
+}
+div#legend div {
+    border: 1px solid black;
+    padding: 2px;
+}
+div#legend div ,
+div#legend div table {
     width: 100%;
 }
 
-div#legend div {
+div#legend div div {
+    padding: 0px;
+    border: 0px;
     background-color: #F5DEB3; /*wheat*/
 }
-div#legend div div {
-    border: 3px;
-}
 
-div#legend table tr td {
+div#legend div table tr td {
     padding: 3px;
     background-color: #ADD8E6; /*light blue*/
 }
-div#legend table tr td.term {
+div#legend div table tr td.term {
     background-color: #4682B4; /*steel blue*/
     color: #FFFFFF;
     font-weight: bold;
@@ -169,18 +171,22 @@ div.plot {
 div#legend table tr td.level1 ,
 table.tablesorter tbody tr td.level1 {
     background-color: #99FF99;
+    font-weight: bold;
 }
 div#legend table tr td.level2 ,
 table.tablesorter tbody tr td.level2 {
     background-color: #FFFF66;
+    font-weight: bold;
 }
 div#legend table tr td.level3 ,
 table.tablesorter tbody tr td.level3 {
     background-color: #FF9933;
+    font-weight: bold;
 }
 div#legend table tr td.level4 ,
 table.tablesorter tbody tr td.level4 {
     background-color: #FF7777;
+    font-weight: bold;
 }
 
 

@@ -84,15 +84,20 @@ function jstore_onload()
     $("#date-year").change(function(event){
         year_selected(false); // Update the months for this year
     });
-    $("#open-legend").click(function(){
-        $("#legend").dialog("open");
+    $("#toggle-legend").click(function(){
+        if ($("#legend").dialog("isOpen")) {
+            $("#legend").dialog("close");
+        }
+        else {
+            $("#legend").dialog("open");
+        }
         return false;
     });
     $("#legend").dialog({
         autoOpen: false,
         title: "Legend",
         hide: "explode",
-        width: "auto"
+        width: "70%"
     });
     init_filters();
     load_controls();
@@ -214,7 +219,7 @@ function load_data()
         $('#home').hide();
         $('#control-toggle').show();
         $('#clear-filters').show();
-        $('#open-legend').show();
+        $('#toggle-legend').show();
         $('#filter-subset').show();
         $('#filter-network').show();
         $('#filter-station').show();
@@ -246,7 +251,7 @@ function load_data()
             st_station = parts[2];
             $('#home').show();
             $('#control-toggle').show();
-            $('#open-legend').show();
+            $('#toggle-legend').show();
             $('#clear-filters').show();
             $('#filter-subset').hide();
             $('#filter-network').hide();
@@ -297,7 +302,7 @@ function load_data()
             }
             $('#home').show();
             $('#control-toggle').hide();
-            $('#open-legend').hide();
+            $('#toggle-legend').hide();
             $('#clear-filters').hide();
             $('#filter-subset').hide();
             $('#filter-network').hide();
