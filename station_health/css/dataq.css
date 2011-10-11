@@ -3,6 +3,7 @@ html, body {
     width: 100%;
     margin: 0;
     padding: 0;
+    font-size: 10pt;
 }
 
 div#up,
@@ -153,19 +154,6 @@ table.tablesorter thead tr th.sub span {
     -o-transform:      rotate(270deg);
     transform:         rotate(270deg);
 }
-table.tablesorter tbody tr td.level1 {
-    background-color: #99FF99;
-}
-table.tablesorter tbody tr td.level2 {
-    background-color: #FFFF66;
-}
-table.tablesorter tbody tr td.level3 {
-    background-color: #FF9933;
-}
-table.tablesorter tbody tr td.level4 {
-    background-color: #FF7777;
-}
-
 div#plots {
     padding-left: 2em;
     width: 100%;
@@ -177,5 +165,22 @@ div.plot {
     width: 800px;
 }
 
+
+div#legend table tr td.level1 ,
+table.tablesorter tbody tr td.level1 {
+    background-color: #99FF99;
+}
+div#legend table tr td.level2 ,
+table.tablesorter tbody tr td.level2 {
+    background-color: #FFFF66;
+}
+div#legend table tr td.level3 ,
+table.tablesorter tbody tr td.level3 {
+    background-color: #FF9933;
+}
+div#legend table tr td.level4 ,
+table.tablesorter tbody tr td.level4 {
+    background-color: #FF7777;
+}
 
 

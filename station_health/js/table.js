@@ -209,6 +209,8 @@ function table(data, status, request) {
                     row.append('<td>' +Math.floor(value)+ '</td>');
                 } else if ((j == 19) || (j == 20)) {
                     row.append('<td>' +(value * 1.0).toFixed(3)+ '</td>');
+                } else if (j == 4) {
+                    row.append('<td>' +(value * 1.0)+ '</td>');
                 } else {
                     row.append('<td>' +(value * 1.0).toFixed(2)+ '</td>');
                 }
