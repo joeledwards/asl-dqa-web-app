@@ -97,13 +97,41 @@ function jstore_onload()
         autoOpen: false,
         title: "Legend",
         hide: "explode",
-        width: "70%"
+        width: "500px"
     });
+    $("#browser").dialog({
+        autoOpen: false,
+        title: "Browser Info",
+        width: "auto"
+    });
+    check_browser();
     init_filters();
     load_controls();
     load_table_controls();
     init_table();
     init_dates();
+}
+
+function check_browser()
+{
+    if ((($.browser.name == 'chrome')  && ($.browser.version >= 10.0)) ||
+        (($.browser.name == 'msie')    && ($.browser.version >=  9.0)) ||
+        (($.browser.name == 'firefox') && ($.browser.version >=  6.0))
+       ) {
+        ;
+    }
+    else {
+        add_browser_info("Browser", $.browser.name+ ' ' +$.browser.version);
+        add_browser_info("Layout Engine", $.layout.name+ ' ' +$.layout.version);
+        add_browser_info("Operating System", $.os.name);
+        $("#browser-message").append('<div>Your web browser is not officially supported. The officially supported browsers are: Chrome 10+, Firefox 6+, Internet Explorer 9+</div>');
+    }
+    $("#browser").dialog("open");
+}
+
+function add_browser_info(title, info)
+{
+    $("#browser-info").append('<tr><td class="term">' +title+ '</td><td>' +info+ '</td></tr>');
 }
 
 function init_dates(next)

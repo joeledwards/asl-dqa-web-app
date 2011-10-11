@@ -29,13 +29,17 @@ div#home a img {
     border: 0px; 
 }
 
+div#browser,
 div#legend {
     font-size: 10pt;
 }
+div#browser div,
 div#legend div {
     border: 1px solid black;
     padding: 2px;
 }
+div#browser div ,
+div#browser div table ,
 div#legend div ,
 div#legend div table {
     width: 100%;
@@ -47,15 +51,23 @@ div#legend div div {
     background-color: #F5DEB3; /*wheat*/
 }
 
+div#browser div table tr td ,
 div#legend div table tr td {
     padding: 3px;
     background-color: #ADD8E6; /*light blue*/
 }
+div#browser div table tr td.term ,
 div#legend div table tr td.term {
     background-color: #4682B4; /*steel blue*/
     color: #FFFFFF;
     font-weight: bold;
     white-space:nowrap;
+}
+
+div#browser-message div {
+    font-size: 18pt;
+    color: #880000;
+    background-color: #CCCCCC;
 }
 
 div#progress {

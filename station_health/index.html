@@ -15,12 +15,14 @@
 
     <!--[if lt IE 9]>
         <script language="javascript" type="text/javascript" src="excanvas.js"></script>
+        <meta http-equiv="X-UA-Compatible" content="IE=8" />
     <![endif]-->
 
     <!-- Minified Libs for Production -->
     <!-- -->
     <script type="text/javascript" src="js/jquery.min.js"></script>
     <script type="text/javascript" src="js/jquery-ui-min.js"></script>
+    <script type="text/javascript" src="js/jquery.browser.min.js"></script>
     <script type="text/javascript" src="js/jquery.jstore-all-min.js"></script>
     <script type="text/javascript" src="js/jquery.timers.js"></script>
     <script type="text/javascript" src="js/jquery.base64.js"></script>
@@ -34,20 +36,13 @@
     <script type="text/javascript" src="js/plugins/jqplot.dateAxisRenderer.min.js"></script>
     <script type="text/javascript" src="js/plugins/jqplot.highlighter.min.js"></script>
     <script type="text/javascript" src="js/jquery.fixedheadertable.min.js"></script>
-    <script type="text/javascript" src="js/utils.js"></script>
-    <script type="text/javascript" src="js/filters.js"></script>
-    <script type="text/javascript" src="js/weights.js"></script>
-    <!--script type="text/javascript" src="js/weights-percent.js"></script-->
-    <script type="text/javascript" src="js/weights-raw.js"></script>
-    <script type="text/javascript" src="js/table.js"></script>
-    <script type="text/javascript" src="js/plots.js"></script>
-    <script type="text/javascript" src="js/dataq.js"></script>
     <!-- -->
 
     <!-- Source Libs for Debugging -->
     <!-- - ->
     <script type="text/javascript" src="js/jquery.js"></script>
     <script type="text/javascript" src="js/jquery-ui-min.js"></script>
+    <script type="text/javascript" src="js/jquery.browser.js"></script>
     <script type="text/javascript" src="js/jquery.jstore-all-min.js"></script>
     <script type="text/javascript" src="js/jquery.timers.js"></script>
     <script type="text/javascript" src="js/jquery.base64.js"></script>
@@ -61,8 +56,15 @@
     <script type="text/javascript" src="js/plugins/jqplot.dateAxisRenderer.js"></script>
     <script type="text/javascript" src="js/plugins/jqplot.highlighter.js"></script>
     <script type="text/javascript" src="js/jquery.fixedheadertable.js"></script>
-    <script type="text/javascript" src="js/dataq.js"></script>
     <!- - -->
+
+    <script type="text/javascript" src="js/utils.js"></script>
+    <script type="text/javascript" src="js/filters.js"></script>
+    <script type="text/javascript" src="js/weights.js"></script>
+    <script type="text/javascript" src="js/weights-raw.js"></script>
+    <script type="text/javascript" src="js/table.js"></script>
+    <script type="text/javascript" src="js/plots.js"></script>
+    <script type="text/javascript" src="js/dataq.js"></script>
 </head>
 <body>
     <input id="data-url"    type="hidden" value="/cgi-bin/metrics.py" />
@@ -228,6 +230,13 @@
             <div>
             For the main summary page each metric is generated from continuous, non-state-of-health channels.
             </div>
+        </div>
+    </div>
+    <div id="browser">
+        <div id="browser-message">
+        </div>
+        <div>
+            <table id="browser-info"></table>
         </div>
     </div>
 </body>
