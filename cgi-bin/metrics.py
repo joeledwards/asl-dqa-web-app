@@ -347,7 +347,7 @@ def format_plot_values(values):
         if category == "SOH":
             if key == "sample-rate":
                 continue
-            elif key == "availability":
+            elif key in ("availability", "timing-quality"):
                 if divider is not None:
                     value = temp_value / divider
                 else:

@@ -83,6 +83,11 @@ function reset_weights(to_defaults)
     load_table_controls();
 }
 
+function zero_weights()
+{
+    zero_table_controls();
+}
+
 function save_weights(group)
 {
     store_weights(show_all ? "ALL" : "STATION");

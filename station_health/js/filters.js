@@ -284,7 +284,7 @@ function apply_filters(item)
     else if (!show_all && ((filters['filter-channel'] != undefined) && (!filters['filter-channel'].test(parts[1])))) {
         item.hide();
     }
-    else if (show_all && ((subsets[parts[0] +'_'+ parts[1]].indexOf($('#filter-subset').val())) == -1)) {
+    else if (show_all && ($.inArray($('#filter-subset').val(), subsets[parts[0] +'_'+ parts[1]]) == -1)) {
         item.hide();
     }
     else {

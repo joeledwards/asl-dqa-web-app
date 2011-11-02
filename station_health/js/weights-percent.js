@@ -96,6 +96,14 @@ function load_table_controls()
     slide_stop(undefined, undefined);
 }
 
+function zero_table_controls()
+{
+    $("#control-table div.weight").each( function () {
+        $(this).slider("values", control_map[show_all ? "ALL" : "STATION"][0, 101])
+    });
+    slide_stop(undefined, undefined);
+}
+
 function refresh_controls()
 {
     $("#control-table div.weight").slider();

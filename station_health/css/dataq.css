@@ -117,12 +117,6 @@ div#main {
     bottom:0px;
 }
 
-div#table {
-    top: 5em;
-    padding-left: 0.5em;
-    padding-right: 0.5em;
-}
-
 div.label {
     padding-top: 8px;
     padding-bottom: 2px;
@@ -141,6 +135,23 @@ span.display-info {
 }
 
 input.watermark { color: gray; }
+
+div#table {
+    top: 5em;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+}
+
+/*
+div#table table thead,
+div#table table tbody {
+    width: 97%;
+}
+
+div#table table thead {
+    position: fixed;
+}
+*/
 
 table.tablesorter thead tr th.cat {
     text-align: center;

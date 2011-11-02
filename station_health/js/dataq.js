@@ -87,6 +87,9 @@ function jstore_onload()
     $("#default-weights").click(function(){
         reset_weights(true);
     });
+    //$("#zero-weights").click(function(){
+    //    zero_weights(true);
+    //});
     $(window).hashchange(function(){
         close_controls();
         load_data(); // Load data from the new context
