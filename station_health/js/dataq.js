@@ -224,13 +224,6 @@ function year_selected(init)
     } else {
         month_list.val(last);
     }
-
-    if (init) {
-        // TODO: Remove the following after the GSN SC meeting
-        // GSN SC Meeting default date override
-        $("#date-year").val(2011);
-        $("#date-month").val(8);
-    }
 }
 
 // Check the status of stations
