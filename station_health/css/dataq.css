@@ -153,6 +153,10 @@ div#table table thead {
 }
 */
 
+table.tablesorter thead tr th {
+    cursor: pointer;
+}
+
 table.tablesorter thead tr th.cat {
     text-align: center;
 }
