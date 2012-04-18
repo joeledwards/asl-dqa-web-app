@@ -13,7 +13,7 @@ import cgi
 import cgitb
 cgitb.enable()
 
-sys.path.insert(0, "/home/jdedwards/dev/seedscan")
+sys.path.insert(0, "/home/jdedwards/dev/seedscan/pytools")
 import MetricDatabase
 
 queries = {
