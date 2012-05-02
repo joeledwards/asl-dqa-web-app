@@ -135,8 +135,9 @@ function jstore_onload()
 function check_browser()
 {
     if ((($.browser.name == 'chrome')  && ($.browser.versionNumber >= 10.0)) ||
+        (($.browser.name == 'firefox') && ($.browser.versionNumber >=  6.0)) ||
         (($.browser.name == 'msie')    && ($.browser.versionNumber >=  9.0)) ||
-        (($.browser.name == 'firefox') && ($.browser.versionNumber >=  6.0))
+        (($.browser.name == 'safari')  && ($.browser.versionNumber >=  5.0))
        ) {
         ;
     }
@@ -144,7 +145,7 @@ function check_browser()
         add_browser_info("Browser", $.browser.name+ ' ' +$.browser.version);
         add_browser_info("Layout Engine", $.layout.name+ ' ' +$.layout.version);
         add_browser_info("Operating System", $.os.name);
-        $("#browser-message").append('<div>Your web browser is not officially supported. The officially supported browsers are: Chrome 10+, Firefox 6+, Internet Explorer 9+</div>');
+        $("#browser-message").append('<div>Your web browser is not officially supported. The officially supported browsers are: Chrome 10+, Firefox 6+, Internet Explorer 9+, Safari 5+</div>');
         $("#browser").dialog("open");
     }
 }
