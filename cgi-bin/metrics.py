@@ -517,7 +517,7 @@ for extension in extensions:
 
 command = parts[0].lower()
 
-database_conString = '10.1.10.3,dev,asldev,Metrics'
+database_conString = 'catbox2.cr.usgs.gov,dev,asldev,metrics'
 database = MetricDatabase.MetricDatabase(database_conString)
 if command == "dates":
     start = time.time()
