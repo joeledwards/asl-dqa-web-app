@@ -8,12 +8,12 @@ import shutil
 import stat
 import sys
 import time
-
+from datetime import datetime
 import cgi
 import cgitb
 cgitb.enable()
 
-sys.path.insert(0, "/home/jdedwards/dev/seedscan/pytools")
+sys.path.insert(0, "/home/jholland/dev/asl/pytools")
 import MetricDatabase
 
 queries = {
@@ -38,14 +38,14 @@ ORDER BY year, month
        ON Sensor.id = Channel.sensor_id
     INNER JOIN Station
        ON Station.id = Sensor.station_id
-    WHERE  Metrics.year    = ?
-      AND  Metrics.month   = ?
+    WHERE  Metrics.year    = %s
+      AND  Metrics.month   = %s
       AND  Station.network != 'XX'
-      AND NOT GLOB('9?',  Sensor.location)
-      AND NOT GLOB('VM?', Channel.name)    
-      AND NOT GLOB('HN?', Channel.name)    
-      AND NOT GLOB('EH?', Channel.name)    
-      AND ( NOT GLOB('HH?', Channel.name)    
+      AND NOT Sensor.location LIKE '9%%'
+      AND NOT Channel.name LIKE 'VM%%'
+      AND NOT Channel.name LIKE 'HN%%'
+      AND NOT Channel.name LIKE 'EH%%'
+      AND ( NOT Channel.name LIKE 'HH%%'    
             OR  Sensor.location = '85')
     GROUP BY  Station.network,
               Station.name,
@@ -85,13 +85,13 @@ UNION
                ON Sensor.id = Channel.sensor_id
             INNER JOIN Station
                ON Station.id = Sensor.station_id
-            WHERE   Calibrations.year     = ?
-              AND   Calibrations.month    = ?
+            WHERE   Calibrations.year     = %s
+              AND   Calibrations.month    = %s
               AND   Station.network != 'XX'
             GROUP BY  Station.network,
                       Station.name,
                       Calibrations.date
-            )
+            ) AS cal2
         )
 
 UNION
@@ -110,8 +110,8 @@ UNION
         ON Sensor.id = Channel.sensor_id
     INNER JOIN Calibrations
         ON Channel.id = Calibrations.channel_id
-    WHERE  Calibrations.year  = ?
-      AND  Calibrations.month = ?
+    WHERE  Calibrations.year  = %s
+      AND  Calibrations.month = %s
       AND  Station.network != 'XX'
       AND  ( Calibrations.key = 'mean-corner-amp-error' OR
              Calibrations.key = 'mean-flat-amp-error' )
@@ -139,10 +139,10 @@ ORDER BY  m_network,
        ON Sensor.id = Channel.sensor_id
     INNER JOIN Station
        ON Station.id = Sensor.station_id
-    WHERE   Station.network = ?
-      AND   Station.name    = ?
-      AND   Metrics.year    = ?
-      AND   Metrics.month   = ?
+    WHERE   Station.network = %s
+      AND   Station.name    = %s
+      AND   Metrics.year    = %s
+      AND   Metrics.month   = %s
     GROUP BY    Station.network,
                 Station.name,
                 Sensor.location,
@@ -182,16 +182,16 @@ UNION
                 ON Sensor.id = Channel.sensor_id
             INNER JOIN Station
                 ON Station.id = Sensor.station_id
-            WHERE  Station.network    = ?
-              AND  Station.name       = ?
-              AND  Calibrations.year  = ?
-              AND  Calibrations.month = ?
+            WHERE  Station.network    = %s
+              AND  Station.name       = %s
+              AND  Calibrations.year  = %s
+              AND  Calibrations.month = %s
             GROUP BY Station.network,
                      Station.name,
                      Sensor.location,
                      Channel.name,
                      Calibrations.date
-            )
+            ) AS cal3
         )
 
 UNION
@@ -210,10 +210,10 @@ UNION
         ON Sensor.id = Channel.sensor_id
     INNER JOIN Calibrations
         ON Channel.id = Calibrations.channel_id
-    WHERE  Station.network    = ?
-      AND  Station.name       = ?
-      AND  Calibrations.year  = ?
-      AND  Calibrations.month = ?
+    WHERE  Station.network    = %s
+      AND  Station.name       = %s
+      AND  Calibrations.year  = %s
+      AND  Calibrations.month = %s
       AND  ( Calibrations.key = 'mean-corner-amp-error' OR
              Calibrations.key = 'mean-flat-amp-error' )
     GROUP BY Station.network,
@@ -242,10 +242,10 @@ INNER JOIN Sensor
    ON Sensor.id = Channel.sensor_id
 INNER JOIN Station
    ON Station.id = Sensor.station_id
-WHERE   Station.network = ?
-  AND   Station.name    = ?
-  AND   Metrics.year    = ?
-  AND   Metrics.month   = ?
+WHERE   Station.network = %s
+  AND   Station.name    = %s
+  AND   Metrics.year    = %s
+  AND   Metrics.month   = %s
   AND   Metrics.category != 'calibration'
 GROUP BY    Metrics.year,
             Metrics.month,
@@ -267,12 +267,12 @@ INNER JOIN Sensor
    ON Sensor.id = Channel.sensor_id
 INNER JOIN Station
    ON Station.id = Sensor.station_id
-WHERE   Station.network = ?
-  AND   Station.name    = ?
-  AND   Sensor.location = ?
-  AND   Channel.name    = ?
-  AND   Metrics.year    = ?
-  AND   Metrics.month   = ?
+WHERE   Station.network = %s
+  AND   Station.name    = %s
+  AND   Sensor.location = %s
+  AND   Channel.name    = %s
+  AND   Metrics.year    = %s
+  AND   Metrics.month   = %s
     """,
 }
 
@@ -486,7 +486,7 @@ cmd_str = form["cmd"].value
 if len(cmd_str) < 1:
     error("empty command string")
 
-record = get_cached(cmd_str)
+record = None #get_cached(cmd_str)
 if record is not None:
     print record
     sys.exit(0)
@@ -517,25 +517,25 @@ for extension in extensions:
 
 command = parts[0].lower()
 
-database_file = "/dataq/metrics/metrics.db"
-database = MetricDatabase.MetricDatabase(database_file)
+database_conString = '10.1.10.3,dev,asldev,Metrics'
+database = MetricDatabase.MetricDatabase(database_conString)
 if command == "dates":
     start = time.time()
-    timestamp = file_m_time(database_file)
+    timestamp = datetime.now()  #broken
     dates = database.select(queries['dates'])
     record = format_dates(dates)
-    cache(cmd_str, database_file, record, timestamp)
+    #cache(cmd_str, database_conString, record, timestamp) #broken
     end = time.time()
     print record
 elif command == "all":
     start = time.time()
-    timestamp = file_m_time(database_file)
+    timestamp = datetime.now()  #broken
     db_args = (year, month,
                year, month,
                year, month)
     metrics = database.select(queries['all'], db_args)
     record = format_metrics(metrics)
-    cache(cmd_str, database_file, record, timestamp)
+    #cache(cmd_str, database_file, record, timestamp) #broken
     end = time.time()
     #print "Summarize all stations"
     #print "  %d records" % len(metrics)
@@ -547,13 +547,13 @@ elif command == "station":
     network = parts[1]
     station = parts[2]
     start = time.time()
-    timestamp = file_m_time(database_file)
+    timestamp = datetime.now()  #broken
     db_args = (network, station, year, month,
                network, station, year, month,
                network, station, year, month)
     metrics = database.select(queries['station'], db_args)
     record = format_metrics(metrics)
-    cache(cmd_str, database_file, record, timestamp)
+    #cache(cmd_str, database_file, record, timestamp) #broken
     end = time.time()
     #print "Summarize all channels for a station"
     #print "  %d records" % len(metrics)
@@ -569,10 +569,10 @@ elif command == "plot":
     station = parts[3]
     if sub_cmd == "station":
         start = time.time()
-        timestamp = file_m_time(database_file)
+        timestamp = datetime.now()  #broken
         metrics = database.select(queries['plot-station'], (network, station, year, month))
         record = format_plot_values(metrics)
-        cache(cmd_str, database_file, record, timestamp)
+        #cache(cmd_str, database_file, record, timestamp)
         end = time.time()
         #print "Plot station metrics [%s_%s]" % (network,station)
         #print "  %d records" % len(metrics)
@@ -585,10 +585,10 @@ elif command == "plot":
         channel = parts[5]
 
         start = time.time()
-        timestamp = file_m_time(database_file)
+        timestamp = datetime.now()  #broken
         metrics = database.select(queries['plot-channel'], (network, station, location, channel, year, month))
         record = format_plot_values(metrics)
-        cache(cmd_str, database_file, record, timestamp)
+        #cache(cmd_str, database_file, record, timestamp)
         end = time.time()
         #print "Plot channel metrics [%s_%s %s-%s]" % (network,station,location,channel)
         #print "  %d records" % len(metrics)
