@@ -13,7 +13,7 @@ import cgi
 import cgitb
 cgitb.enable()
 
-sys.path.insert(0, "/home/jholland/dev/asl/pytools")
+sys.path.insert(0, "/dataq/asl_project/pytools")
 import MetricDatabase
 
 queries = {
