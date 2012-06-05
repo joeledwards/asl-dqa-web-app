@@ -68,31 +68,12 @@ UNION
        ON Sensor.id = Channel.sensor_id
     INNER JOIN Station
        ON Station.id = Sensor.station_id
-    WHERE Calibrations.id
-    IN (
-        SELECT cal_id
-        FROM
-            (
-            SELECT  Station.network,
-                    Station.name,
-                    Calibrations.date,
-                    Calibrations.id AS cal_id,
-                    MAX(Calibrations.cal_date)
-            FROM Calibrations
-            INNER JOIN Channel
-               ON Channel.id = Calibrations.channel_id
-            INNER JOIN Sensor
-               ON Sensor.id = Channel.sensor_id
-            INNER JOIN Station
-               ON Station.id = Sensor.station_id
-            WHERE   Calibrations.year     = %s
-              AND   Calibrations.month    = %s
-              AND   Station.network != 'XX'
-            GROUP BY  Station.network,
-                      Station.name,
-                      Calibrations.date
-            ) AS cal2
-        )
+    WHERE   Calibrations.year     = %s
+      AND   Calibrations.month    = %s
+      AND   Station.network != 'XX'
+    GROUP BY  Station.network,
+              Station.name,
+              Calibrations.date
 
 UNION
 
@@ -166,33 +147,15 @@ UNION
         ON Sensor.id = Channel.sensor_id
     INNER JOIN Calibrations
         ON Channel.id = Calibrations.channel_id
-    WHERE Calibrations.id
-    IN (
-        SELECT  cal_id 
-        FROM (
-            SELECT  Station.network,
-                    Station.name,
-                    Calibrations.date,
-                    Calibrations.id AS cal_id,
-                    MAX(Calibrations.cal_date)
-            FROM Calibrations
-            INNER JOIN Channel
-                ON Channel.id = Calibrations.channel_id
-            INNER JOIN Sensor
-                ON Sensor.id = Channel.sensor_id
-            INNER JOIN Station
-                ON Station.id = Sensor.station_id
-            WHERE  Station.network    = %s
-              AND  Station.name       = %s
-              AND  Calibrations.year  = %s
-              AND  Calibrations.month = %s
-            GROUP BY Station.network,
-                     Station.name,
-                     Sensor.location,
-                     Channel.name,
-                     Calibrations.date
-            ) AS cal3
-        )
+    WHERE  Station.network    = %s
+      AND  Station.name       = %s
+      AND  Calibrations.year  = %s
+      AND  Calibrations.month = %s
+    GROUP BY Station.network,
+             Station.name,
+             Sensor.location,
+             Channel.name,
+             Calibrations.date
 
 UNION
 
