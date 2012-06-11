@@ -18,93 +18,100 @@ import MetricDatabase
 
 queries = {
     "dates" : """
-    SELECT DISTINCT year, month FROM Metrics
+    SELECT DISTINCT year, month FROM tblMetricData
 UNION
-    SELECT DISTINCT year, month FROM Calibrations
+    SELECT DISTINCT year, month FROM tblCalibrationData
 ORDER BY year, month
     """,
     "all" : """
-    SELECT  Station.network             AS m_network,
-            Station.name                AS m_station,
-            Metrics.category            AS m_category,
-            Metrics.key                 AS m_key,
-            COUNT(distinct Metrics.day) AS m_days,
-            COUNT(distinct Channel.id)  AS m_channels,
-            SUM(Metrics.value)          AS m_value
-    FROM Metrics
-    INNER JOIN Channel
-       ON Channel.id = Metrics.channel_id
-    INNER JOIN Sensor
-       ON Sensor.id = Channel.sensor_id
-    INNER JOIN Station
-       ON Station.id = Sensor.station_id
-    WHERE  Metrics.year    = %s
-      AND  Metrics.month   = %s
-      AND  Station.network != 'XX'
-      AND NOT Sensor.location LIKE '9%%'
-      AND NOT Channel.name LIKE 'VM%%'
-      AND NOT Channel.name LIKE 'HN%%'
-      AND NOT Channel.name LIKE 'EH%%'
-      AND ( NOT Channel.name LIKE 'HH%%'    
-            OR  Sensor.location = '85')
-    GROUP BY  Station.network,
-              Station.name,
-              Metrics.category,
-              Metrics.key
+    SELECT      tblNetwork.name                         AS m_network,
+            tblStation.name                         AS m_station,
+            tblCategory.name                        AS m_category,
+            tblMetCalType.name                      AS m_key,
+            COUNT(distinct tblMetricData.day)       AS m_days,
+            COUNT(DISTINCT tblChannel.pkChannelID)  AS m_channels,
+            SUM(tblMetricData.value)                AS m_value
+    FROM tblMetricData
+    INNER JOIN tblChannel
+       ON tblChannel.pkChannelID = tblMetricData.fkChannelID
+    INNER JOIN tblSensor
+       ON tblSensor.pkSensorID = tblChannel.fkSensorID
+    INNER JOIN tblStation
+       ON tblStation.pkStationID = tblSensor.fkStationID
+    INNER JOIN tblNetwork
+        ON tblNetwork.pkNetworkID = tblStation.fkNetworkID
+    INNER JOIN tblCategory
+        ON tblCategory.pkCategoryID = tblMetricData.fkCategoryID
+    INNER JOIN tblMetCalType
+        ON tblMetCalType.pkMetCalTypeID = tblMetricData.fkMetCalTypeID
+    WHERE  tblMetricData.year    = %s
+      AND  tblMetricData.month   = %s
+      AND  tblChannel.isIgnored = FALSE
+    GROUP BY  tblNetwork.pkNetworkID,
+              tblStation.pkStationID,
+              tblMetricData.fkCategoryID,
+              tblMetricData.fkMetCalTypeID
 
 UNION
 
-    SELECT  Station.network AS m_network,
-            Station.name    AS m_station,
-            "calibration"   AS m_category,
-            "last-cal"      AS m_key,
-            1               AS m_days,
-            1               AS m_channels,
-            (Calibrations.date - Calibrations.cal_date) AS  m_value
-    FROM Calibrations
-    INNER JOIN Channel
-       ON Channel.id = Calibrations.channel_id
-    INNER JOIN Sensor
-       ON Sensor.id = Channel.sensor_id
-    INNER JOIN Station
-       ON Station.id = Sensor.station_id
-    WHERE   Calibrations.year     = %s
-      AND   Calibrations.month    = %s
-      AND   Station.network != 'XX'
-    GROUP BY  Station.network,
-              Station.name,
-              Calibrations.date
+    SELECT  tblNetwork.name                             AS m_network,
+            tblStation.name                             AS m_station,
+            "calibration"                               AS m_category,
+            "last-cal"                                  AS m_key,
+            1                                           AS m_days,
+            1                                           AS m_channels,
+            (tblCalibrationData.date - tblCalibrationData.calDate) AS  m_value
+    FROM tblCalibrationData 
+    INNER JOIN tblChannel
+        ON tblChannel.pkChannelID = tblCalibrationData.fkChannelID
+    INNER JOIN tblSensor
+        ON tblSensor.pkSensorID = tblChannel.fkSensorID
+    INNER JOIN tblStation
+        ON tblStation.pkStationID = tblSensor.fkStationID
+    INNER JOIN tblNetwork
+        ON tblNetwork.pkNetworkID = tblStation.fkNetworkID
+    INNER JOIN tblMetCalType
+        ON tblMetCalType.pkMetCalTypeID = tblCalibrationData.fkMetCalTypeID
+    WHERE   tblCalibrationData.year     = %s
+      AND   tblCalibrationData.month    = %s
+      AND  tblNetwork.isIgnored = FALSE
+    GROUP BY tblNetwork.pkNetworkID,
+             tblStation.pkStationID,
+             tblMetCalType.pkMetCalTypeID
 
 UNION
 
-    SELECT  Station.network  AS m_network,
-            Station.name     AS m_station,
-            "calibration"    AS m_category,
-            Calibrations.key AS m_key,
-            1                AS m_days,
-            1                AS m_channels,
-            avg(Calibrations.value) AS m_value
-    FROM Station 
-    INNER JOIN Sensor
-        ON Station.id = Sensor.station_id
-    INNER JOIN Channel
-        ON Sensor.id = Channel.sensor_id
-    INNER JOIN Calibrations
-        ON Channel.id = Calibrations.channel_id
-    WHERE  Calibrations.year  = %s
-      AND  Calibrations.month = %s
-      AND  Station.network != 'XX'
-      AND  ( Calibrations.key = 'mean-corner-amp-error' OR
-             Calibrations.key = 'mean-flat-amp-error' )
-    GROUP BY Station.network,
-             Station.name,
-             Calibrations.key
+    SELECT  tblNetwork.name                 AS m_network,
+            tblStation.name                 AS m_station,
+            "calibration"                   AS m_category,
+            tblMetCalType.name         AS m_key,
+            1                               AS m_days,
+            1                               AS m_channels,
+            avg(tblCalibrationData.value)   AS m_value
+    FROM tblCalibrationData 
+    INNER JOIN tblChannel
+        ON tblChannel.pkChannelID = tblCalibrationData.fkChannelID
+    INNER JOIN tblSensor
+        ON tblSensor.pkSensorID = tblChannel.fkSensorID
+    INNER JOIN tblStation
+        ON tblStation.pkStationID = tblSensor.fkStationID
+    INNER JOIN tblNetwork
+        ON tblNetwork.pkNetworkID = tblStation.fkNetworkID
+    INNER JOIN tblMetCalType
+        ON tblMetCalType.pkMetCalTypeID = tblCalibrationData.fkMetCalTypeID
+    WHERE  tblCalibrationData.year  = %s
+      AND  tblCalibrationData.month = %s
+      AND  tblNetwork.isIgnored = FALSE
+      AND  tblMetCalType.isCalibrationANDNOTLastCal = TRUE 
+    GROUP BY tblNetwork.pkNetworkID,
+             tblStation.pkStationID,
+             tblMetCalType.pkMetCalTypeID
 
 ORDER BY  m_network,
           m_station,
           m_category,
           m_key
-    """,
+        """,
     "station" : """
     SELECT  Sensor.location     AS m_location,
             Channel.name        AS m_channel,
@@ -480,7 +487,7 @@ for extension in extensions:
 
 command = parts[0].lower()
 
-database_conString = 'catbox2.cr.usgs.gov,dev,asldev,metrics'
+database_conString = 'catbox2.cr.usgs.gov,dev,asldev,metricsDev'
 database = MetricDatabase.MetricDatabase(database_conString)
 if command == "dates":
     start = time.time()
