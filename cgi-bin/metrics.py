@@ -24,7 +24,7 @@ UNION
 ORDER BY year, month
     """,
     "all" : """
-    SELECT      tblNetwork.name                         AS m_network,
+SELECT      tblNetwork.name                         AS m_network,
             tblStation.name                         AS m_station,
             tblCategory.name                        AS m_category,
             tblMetCalType.name                      AS m_key,
@@ -113,136 +113,159 @@ ORDER BY  m_network,
           m_key
         """,
     "station" : """
-    SELECT  Sensor.location     AS m_location,
-            Channel.name        AS m_channel,
-            Metrics.category    AS m_category,
-            Metrics.key         AS m_key,
-            count(distinct Metrics.day) AS m_days,
+SELECT  tblSensor.location      AS m_location,
+            tblChannel.name         AS m_channel,
+            tblCategory.name      AS m_category,
+            tblMetCalType.name      AS m_key,
+            count(distinct tblMetricData.day) AS m_days,
             1                   AS m_channels,
-            sum(Metrics.value)  AS m_value
-    FROM Metrics
-    INNER JOIN Channel
-       ON Channel.id = Metrics.channel_id
-    INNER JOIN Sensor
-       ON Sensor.id = Channel.sensor_id
-    INNER JOIN Station
-       ON Station.id = Sensor.station_id
-    WHERE   Station.network = %s
-      AND   Station.name    = %s
-      AND   Metrics.year    = %s
-      AND   Metrics.month   = %s
-    GROUP BY    Station.network,
-                Station.name,
-                Sensor.location,
-                Channel.name,
-                Metrics.category,
-                Metrics.key
+            sum(tblMetricData.value)  AS m_value
+FROM tblMetricData
+INNER JOIN tblChannel
+   ON tblChannel.pkChannelID = tblMetricData.fkChannelID
+INNER JOIN tblSensor
+   ON tblSensor.pkSensorID = tblChannel.fkSensorID
+INNER JOIN tblStation
+   ON tblStation.pkStationID = tblSensor.fkStationID
+INNER JOIN tblNetwork
+    ON tblNetwork.pkNetworkID = tblStation.fkNetworkID
+INNER JOIN tblCategory
+    ON tblCategory.pkCategoryID = tblMetricData.fkCategoryID
+INNER JOIN tblMetCalType
+    ON tblMetCalType.pkMetCalTypeID = tblMetricData.fkMetCalTypeID
+    WHERE   tblNetwork.name         = %s
+      AND   tblStation.name         = %s
+      AND   tblMetricData.year      = %s
+      AND   tblMetricData.month     = %s
+    GROUP BY tblStation.fkNetworkID,
+             tblStation.pkStationID,
+             tblSensor.location,
+             tblMetricData.fkChannelID,
+             tblMetricData.fkMetCalTypeID
 
 UNION
 
-    SELECT  Sensor.location AS m_location,
-            Channel.name    AS m_channel,
-            "calibration"   AS m_category,
-            "last-cal"      AS m_key,
-            1               AS m_days,
-            1               AS m_channels,
-            (Calibrations.date - Calibrations.cal_date) AS m_value
-    FROM Station 
-    INNER JOIN Sensor
-        ON Station.id = Sensor.station_id
-    INNER JOIN Channel
-        ON Sensor.id = Channel.sensor_id
-    INNER JOIN Calibrations
-        ON Channel.id = Calibrations.channel_id
-    WHERE  Station.network    = %s
-      AND  Station.name       = %s
-      AND  Calibrations.year  = %s
-      AND  Calibrations.month = %s
-    GROUP BY Station.network,
-             Station.name,
-             Sensor.location,
-             Channel.name,
-             Calibrations.date
+    SELECT  tblSensor.location  AS m_location,
+            tblChannel.name     AS m_channel,
+            "calibration"       AS m_category,
+            "last-cal"          AS m_key,
+            1                   AS m_days,
+            1                   AS m_channels,
+            (tblCalibrationData.date - tblCalibrationData.caldate) AS m_value
+FROM tblCalibrationData
+INNER JOIN tblChannel
+   ON tblChannel.pkChannelID = tblCalibrationData.fkChannelID
+INNER JOIN tblSensor
+   ON tblSensor.pkSensorID = tblChannel.fkSensorID
+INNER JOIN tblStation
+   ON tblStation.pkStationID = tblSensor.fkStationID
+INNER JOIN tblNetwork
+    ON tblNetwork.pkNetworkID = tblStation.fkNetworkID
+INNER JOIN tblMetCalType
+    ON tblMetCalType.pkMetCalTypeID = tblCalibrationData.fkMetCalTypeID
+    WHERE  tblNetwork.name          = %s
+      AND  tblStation.name          = %s
+      AND  tblCalibrationData.year  = %s
+      AND  tblCalibrationData.month = %s
+    GROUP BY tblStation.fkNetworkID,
+             tblStation.pkStationID,
+             tblSensor.location,
+             tblCalibrationData.fkChannelID,
+             tblCalibrationData.date
 
 UNION
 
-    SELECT  Sensor.location  AS m_network,
-            Channel.name     AS m_channel,
-            "calibration"    AS m_category,
-            Calibrations.key AS m_key,
-            1                AS m_days,
-            1                AS m_channels,
-            avg(Calibrations.value) AS m_value
-    FROM Station 
-    INNER JOIN Sensor
-        ON Station.id = Sensor.station_id
-    INNER JOIN Channel
-        ON Sensor.id = Channel.sensor_id
-    INNER JOIN Calibrations
-        ON Channel.id = Calibrations.channel_id
-    WHERE  Station.network    = %s
-      AND  Station.name       = %s
-      AND  Calibrations.year  = %s
-      AND  Calibrations.month = %s
-      AND  ( Calibrations.key = 'mean-corner-amp-error' OR
-             Calibrations.key = 'mean-flat-amp-error' )
-    GROUP BY Station.network,
-             Station.name,
-             Sensor.location,
-             Channel.name,
-             Calibrations.key
+    SELECT  tblSensor.location  AS m_network,
+            tblChannel.name    	AS m_channel,
+            "calibration"       AS m_category,
+            tblMetCalType.name  AS m_key,
+            1                   AS m_days,
+            1                   AS m_channels,
+            avg(tblCalibrationData.value) AS m_value
+FROM tblCalibrationData
+INNER JOIN tblChannel
+   ON tblChannel.pkChannelID = tblCalibrationData.fkChannelID
+INNER JOIN tblSensor
+   ON tblSensor.pkSensorID = tblChannel.fkSensorID
+INNER JOIN tblStation
+   ON tblStation.pkStationID = tblSensor.fkStationID
+INNER JOIN tblNetwork
+    ON tblNetwork.pkNetworkID = tblStation.fkNetworkID
+INNER JOIN tblMetCalType
+    ON tblMetCalType.pkMetCalTypeID = tblCalibrationData.fkMetCalTypeID
+    WHERE  tblNetwork.name          = %s
+      AND  tblStation.name          = %s
+      AND  tblCalibrationData.year  = %s
+      AND  tblCalibrationData.month = %s
+      AND  tblMetCalType.isCalibrationANDNOTLastCal = TRUE 
+    GROUP BY tblStation.fkNetworkID,
+             tblStation.pkStationID,
+             tblSensor.location,
+             tblCalibrationData.fkChannelID,
+             tblCalibrationData.fkMetCalTypeID
 
 ORDER BY  m_location,
           m_channel,
           m_category,
           m_key
+
     """,
     "plot-station" : """
-SELECT  Metrics.year,
-        Metrics.month,
-        Metrics.day,
-        Metrics.category,
-        Metrics.key,
-        count(distinct Channel.id),
-        sum(Metrics.value)
-FROM Metrics
-INNER JOIN Channel
-   ON Channel.id = Metrics.channel_id
-INNER JOIN Sensor
-   ON Sensor.id = Channel.sensor_id
-INNER JOIN Station
-   ON Station.id = Sensor.station_id
-WHERE   Station.network = %s
-  AND   Station.name    = %s
-  AND   Metrics.year    = %s
-  AND   Metrics.month   = %s
-  AND   Metrics.category != 'calibration'
-GROUP BY    Metrics.year,
-            Metrics.month,
-            Metrics.day,
-            Metrics.category,
-            Metrics.key
+SELECT  tblMetricData.year,
+        tblMetricData.month,
+        tblMetricData.day,
+        tblCategory.name,
+        tblMetCalType.name,
+        count(distinct tblChannel.pkChannelID),
+        sum(tblMetricData.value)
+FROM tblMetricData
+INNER JOIN tblChannel
+   ON tblChannel.pkChannelID = tblMetricData.fkChannelID
+INNER JOIN tblSensor
+   ON tblSensor.pkSensorID = tblChannel.fkSensorID
+INNER JOIN tblStation
+   ON tblStation.pkStationID = tblSensor.fkStationID
+INNER JOIN tblNetwork
+    ON tblNetwork.pkNetworkID = tblStation.fkNetworkID
+INNER JOIN tblCategory
+    ON tblCategory.pkCategoryID = tblMetricData.fkCategoryID
+INNER JOIN tblMetCalType
+    ON tblMetCalType.pkMetCalTypeID = tblMetricData.fkMetCalTypeID
+WHERE   tblNetwork.name     = %s
+  AND   tblStation.name     = %s
+  AND   tblMetricData.year  = %s
+  AND   tblMetricData.month = %s
+  AND   tblCategory.name != 'calibration'
+GROUP BY    tblMetricData.date,
+            tblMetricData.fkCategoryID,
+            tblMetricData.fkMetCalTypeID
     """,
     "plot-channel" : """
-SELECT  Metrics.year,
-        Metrics.month,
-        Metrics.day,
-        Metrics.category,
-        Metrics.key,
-        Metrics.value
-FROM Metrics
-INNER JOIN Channel
-   ON Channel.id = Metrics.channel_id
-INNER JOIN Sensor
-   ON Sensor.id = Channel.sensor_id
-INNER JOIN Station
-   ON Station.id = Sensor.station_id
-WHERE   Station.network = %s
-  AND   Station.name    = %s
-  AND   Sensor.location = %s
-  AND   Channel.name    = %s
-  AND   Metrics.year    = %s
-  AND   Metrics.month   = %s
+SELECT  tblMetricData.year,
+        tblMetricData.month,
+        tblMetricData.day,
+        tblCategory.name,
+        tblMetCalType.name,
+        tblMetricData.value
+FROM tblMetricData
+INNER JOIN tblChannel
+   ON tblChannel.pkChannelID = tblMetricData.fkChannelID
+INNER JOIN tblSensor
+   ON tblSensor.pkSensorID = tblChannel.fkSensorID
+INNER JOIN tblStation
+   ON tblStation.pkStationID = tblSensor.fkStationID
+INNER JOIN tblNetwork
+    ON tblNetwork.pkNetworkID = tblStation.fkNetworkID
+INNER JOIN tblCategory
+    ON tblCategory.pkCategoryID = tblMetricData.fkCategoryID
+INNER JOIN tblMetCalType
+    ON tblMetCalType.pkMetCalTypeID = tblMetricData.fkMetCalTypeID
+WHERE   tblNetwork.name     = %s
+  AND   tblStation.name     = %s
+  AND   tblSensor.location  = %s
+  AND   tblChannel.name     = %s
+  AND   tblMetricData.year  = %s
+  AND   tblMetricData.month = %s
     """,
 }
 
