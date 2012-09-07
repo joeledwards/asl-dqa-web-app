@@ -114,7 +114,7 @@ if "dates" in cmd_parts:
 if "stations" in cmd_parts:
     print database.select(queries['stations'])[0][0]
 if "metrics" in cmd_parts:
-    metrics = database.select(queries['metrics'])
-if "groups" in cmd_parts:
-    print database.select(queries['groups'])[0][0]
+    print database.select(queries['metrics'])[0][0]
+if "groups" in cmd_parts: #Changing the order of the below prints will affect js/dataq.js population of ddlGroups
     print database.select(queries['grouptypes'])[0][0]
+    print database.select(queries['groups'])[0][0]
