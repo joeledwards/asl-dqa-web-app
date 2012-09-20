@@ -9,6 +9,7 @@ var mapGIDtoSIDs = {};
 var mapSIDtoNID = {}; //NID = Network ID
 var mapMIDtoMName = {}; //MID = Metric ID, MName = Metric Name
 var mapMNametoMID = {};
+var mapSIDtoGIDs = {};
 var mapMonthtoNum = {
     1 : "January",
     2 : "February",
@@ -39,6 +40,7 @@ var groups = new Array();
 var dataGrid; //Datatables object initialized in getSetupData()
 
 $("#btnUpdate").click(function(){
+    filterGroups(dataGrid);
     clearDataTable(dataGrid);
     populateGrid(dataGrid);
 });
@@ -46,6 +48,18 @@ $("#btnUpdate").click(function(){
 $(document).ready(function(){
         getSetupData();
         });
+
+function filterGroups(datatable){
+    var group = document.getElementById("ddlGroup");
+    var groupID =  parseInt(group.options[group.selectedIndex].value);
+    if(groupID != 0){
+        datatable.fnFilter(","+groupID+",");
+    }
+    else{
+        datatable.fnFilter("");
+    }
+
+}
 
 function getSetupData(){
 
@@ -104,6 +118,10 @@ function getSetupData(){
                         mapGIDtoSIDs[parts[t]] = new Array();
                     }
                     mapGIDtoSIDs[parts[t]].push(parts[1]);
+                    if(mapSIDtoGIDs[parts[1]] == undefined){
+                        mapSIDtoGIDs[parts[1]] = new Array();
+                    }
+                    mapSIDtoGIDs[parts[1]].push(parts[t]);
                 }
                 break;
             case 'M':
@@ -127,6 +145,7 @@ function buildGrid(){
     var dataGrid = document.getElementById("grid");
     var metricsSorted = new Array();
     var metrics = new Array();
+    $("#grid thead tr"). append('<th id="groups">Groups</th>');
     $("#grid thead tr"). append('<th id="network">Network</th>');
     $("#grid thead tr"). append('<th id="Station">Station</th>');
     for(header in mapMNametoMID) {
@@ -141,7 +160,7 @@ function buildGrid(){
     }
     for(station in mapSIDtoNID){
         if(mapSIDtoNID.hasOwnProperty(station)){
-            var $row = $('<tr id = "'+station+'"><td>'+mapGIDtoGName[mapSIDtoNID[station]]+'</td><td>'+mapSIDtoSName[station]+'</td></tr>');
+            var $row = $('<tr id = "'+station+'"><td>,'+mapSIDtoGIDs[station]+',</td><td>'+mapGIDtoGName[mapSIDtoNID[station]]+'</td><td>'+mapSIDtoSName[station]+'</td></tr>');
             $("#grid tbody").append($row);
             for( var i = 0; i<metricsSorted.length; i++){
                 $row.append('<td id="'+mapMNametoMID[metricsSorted[i]]+'_'+station+'"></td>');
