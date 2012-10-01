@@ -136,9 +136,11 @@ function getSetupData(){
     populateGroups();
     buildGrid();
     dataGrid = $('#grid').dataTable( {
-        "bPaginate":false
+        "bPaginate":false,
+        "bJQueryUI":true
     });
     new FixedHeader( dataGrid );
+    initializeDataGrid(dataGrid);
     populateGrid(dataGrid);
 }
 function buildGrid(){
@@ -178,12 +180,16 @@ function parseStationGrid(data,mid, pDatatable){
             var cell = document.getElementById(mid+"_"+row[0]);
             if(cell){
                 var pos = pDatatable.fnGetPosition(cell);
-                pDatatable.fnUpdate(row[1], pos[0], pos[1], false, false );
+                pDatatable.fnUpdate(row[1], pos[0], pos[2], false, false );
             }
         }
     }
 }
 
+function initializeDataGrid(datatable){
+
+    datatable.fnSetColumnVis(0, false);
+}
 function populateGrid(datatable){
     var stations = new String();
     stations = "";
@@ -280,7 +286,7 @@ function clearDataTable(datatable){
                     var cell = document.getElementById(mid+"_"+sid);
                     if(cell){
                         var pos = datatable.fnGetPosition(cell);
-                        datatable.fnUpdate("", pos[0], pos[1], false, false );
+                        datatable.fnUpdate("", pos[0], pos[2], false, false );
                     }
                 }
             }
