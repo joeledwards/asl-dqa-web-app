@@ -38,6 +38,8 @@ var mapMonthtoNum = {
 };
 var groups = new Array();
 var dataGrid; //Datatables object initialized in getSetupData()
+var dataFC;
+var numCols = 0;
 
 $("#btnUpdate").click(function(){
     filterGroups(dataGrid);
@@ -45,18 +47,25 @@ $("#btnUpdate").click(function(){
     populateGrid(dataGrid);
 });
 
+$("#ddlGroup").change(function(){
+    filterGroups(dataGrid);
+    clearDataTable(dataGrid);
+    populateGrid(dataGrid);
+});
+
 $(document).ready(function(){
         getSetupData();
+
         });
 
 function filterGroups(datatable){
     var group = document.getElementById("ddlGroup");
     var groupID =  parseInt(group.options[group.selectedIndex].value);
     if(groupID != 0){
-        datatable.fnFilter(","+groupID+",");
+        datatable.fnFilter(","+groupID+",", 2);
     }
     else{
-        datatable.fnFilter("");
+        datatable.fnFilter("",2);
     }
 
 }
@@ -136,20 +145,46 @@ function getSetupData(){
     populateGroups();
     buildGrid();
     dataGrid = $('#grid').dataTable( {
-        "bPaginate":false,
+        
         "bJQueryUI":true
+        ,"bPaginate":false
+//        ,"sScrollY":"300px"
+        ,"sScrollY": (window.innerHeight - 220)+"px"
+       // ,"sScrollYInner": "110%"
+        ,"sScrollX": "100%"
+        ,"sScrollXInner": "5200px"
+        ,"bScrollCollapse": true
+        ,"sDom": 'TC<"clear">lfrtip'
+        //,"oTableTools": {
+        //    "aButtons": [ "copy", "print", "csv", "pdf"]
+        //}
     });
-    new FixedHeader( dataGrid );
+    /*new FixedHeader( dataGrid/*,{
+        
+        "left":true
+        ,"zleft":"106"
+        ,"right":true
+        ,"zright":"105"
+    });*/
+//    new FixedColumns(dataGrid);
+    dataFC = new FixedColumns( dataGrid,{
+        "iLeftColumns":2
+     //   ,"sLeftWidth":"fixed"
+     //   ,"iLeftWidth":450
+    });
+
     initializeDataGrid(dataGrid);
     populateGrid(dataGrid);
+
 }
+
 function buildGrid(){
     var dataGrid = document.getElementById("grid");
     var metricsSorted = new Array();
     var metrics = new Array();
-    $("#grid thead tr"). append('<th id="groups">Groups</th>');
     $("#grid thead tr"). append('<th id="network">Network</th>');
     $("#grid thead tr"). append('<th id="Station">Station</th>');
+    $("#grid thead tr"). append('<th id="groups">Groups</th>');
     for(header in mapMNametoMID) {
         if(mapMNametoMID.hasOwnProperty(header)) {
             //       $("#grid thead tr").append('<th id='
@@ -160,15 +195,17 @@ function buildGrid(){
     for( var i = 0; i<metricsSorted.length; i++){
         $("#grid thead tr"). append('<th id="'+mapMNametoMID[metricsSorted[i]]+'">'+metricsSorted[i]+'</th>');
     }
+    
     for(station in mapSIDtoNID){
         if(mapSIDtoNID.hasOwnProperty(station)){
-            var $row = $('<tr id = "'+station+'"><td>,'+mapSIDtoGIDs[station]+',</td><td>'+mapGIDtoGName[mapSIDtoNID[station]]+'</td><td>'+mapSIDtoSName[station]+'</td></tr>');
+            var $row = $('<tr id = "'+station+'"><td>'+mapGIDtoGName[mapSIDtoNID[station]]+'</td><td>'+mapSIDtoSName[station]+'</td><td>,'+mapSIDtoGIDs[station]+',</td></tr>');
             $("#grid tbody").append($row);
             for( var i = 0; i<metricsSorted.length; i++){
                 $row.append('<td id="'+mapMNametoMID[metricsSorted[i]]+'_'+station+'"></td>');
             }
         }
     }
+    
 }
 
 function parseStationGrid(data,mid, pDatatable){
@@ -188,9 +225,11 @@ function parseStationGrid(data,mid, pDatatable){
 
 function initializeDataGrid(datatable){
 
-    datatable.fnSetColumnVis(0, false);
+    datatable.fnSetColumnVis(2, false);
 }
+
 function populateGrid(datatable){
+    numCols = 0;
     var stations = new String();
     stations = "";
     var year = document.getElementById("ddlYear");
@@ -205,19 +244,23 @@ function populateGrid(datatable){
             });
     stations = stations.substr(1); //trims initial - from the string
     $.each(datatable.fnSettings().aoColumns, function(c){
-            if(datatable.fnSettings().aoColumns[c].bVisible == true){
-                if(mapMNametoMID[datatable.fnSettings().aoColumns[c].sTitle]){
-                    
-                    var metricID = mapMNametoMID[datatable.fnSettings().aoColumns[c].sTitle];
-                    $.get("/dataq/cgi-bin/metrics.py", {cmd: "stationgrid", param: "station."+stations+
-                            "_metric."+metricID+"_dates."+dates},
+        if(datatable.fnSettings().aoColumns[c].bVisible == true){
+            if(mapMNametoMID[datatable.fnSettings().aoColumns[c].sTitle]){
+                numCols++; 
+                var metricID = mapMNametoMID[datatable.fnSettings().aoColumns[c].sTitle];
+                $.get("/dataq/cgi-bin/metrics.py", {cmd: "stationgrid", param: "station."+stations+
+                    "_metric."+metricID+"_dates."+dates},
                     function(data){
                         parseStationGrid(data, metricID, datatable);
+                        numCols--;
+                        if(numCols <= 0){
+                            datatable.fnDraw();
+                        }
                     }
                 );
-                }
             }
-            });
+        }
+    });
 }
 
 function populateGroups(){

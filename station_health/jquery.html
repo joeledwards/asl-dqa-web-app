@@ -6,34 +6,41 @@
             <title>Data Quality Analyzer</title>
             <link rel="stylesheet" type="text/css" href="css/demo_table.css"/>
             <link rel="stylesheet" type="text/css" href="css/grid.css"/>
-            <link type="text/css" href="css/trontastic/jquery-ui-1.8.23.custom.css" rel="stylesheet" />
+            <link type="text/css" href="css/mint-choc/jquery-ui-1.9.0.custom.css" rel="stylesheet" />
         </head>
-        <body>
-        <select id='ddlGroup'>
+        <body >
+        <select id='ddlGroup' class="ui-state-default ui-corner-all">
             <option value="0">All</option>
         </select>
 
-        <select id='ddlYear' onchange='year_selected()'>
+        <select id='ddlYear' class="ui-state-default ui-corner-all" onchange='year_selected()'>
         </select>
-        <select id='ddlMonth'>
+        <select id='ddlMonth' class="ui-state-default ui-corner-all">
         </select>
-        <button type="button" id="btnUpdate">Update</button>
+        <button type="button" id="btnUpdate" class="ui-state-default ui-corner-all">Update</button>
         <br/>
-        <table id='grid'>
-            <thead>
-                <tr id='header'/>
-            </thead>
-            <tbody id='body'>
-            </tbody>
-        </table>
-        <script src="js/jquery.js"></script> 
+        <div >
+            <table id='grid' >
+                <thead>
+                    <tr id='header'/>
+                </thead>
+                <tbody id='body'>
+                </tbody>
+            </table>
+        </div>
+        <script src="js/datatables/media/js/jquery.js"></script> 
         <script src="js/dataq.js"></script>
-        <script src="js/jquery.dataTables.js"></script> 
-        <script src="js/FixedHeader.min.js"></script>
+        <script src="js/datatables/media/js/jquery.dataTables.js"></script> 
+        <script src="js/datatables/extras/FixedHeader/js/FixedHeader.min.js"></script>
+        <script src="js/datatables/extras/FixedColumns/media/js/FixedColumns.js"></script>
+        <script src="js/datatables/extras/ColVis/media/js/ColVis.js"></script>
+        <script src="js/datatables/extras/TableTools/media/js/TableTools.js"></script>
+        <script src="js/datatables/extras/TableTools/media/js/ZeroClipboard.js"></script>
+        <script src="js/jquery-ui-1.9.0.custom.js"></script>
         <script type="text/javascript">
                                     
         </script>
 
 
         </body>
-    </html>
+        </html>
