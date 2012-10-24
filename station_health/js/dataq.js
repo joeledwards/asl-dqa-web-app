@@ -152,7 +152,7 @@ function getSetupData(){
         ,"sScrollY": (window.innerHeight - 220)+"px"
        // ,"sScrollYInner": "110%"
         ,"sScrollX": "100%"
-        ,"sScrollXInner": "5200px"
+        //,"sScrollXInner": "5200px"
         ,"bScrollCollapse": true
         ,"sDom": 'TC<"clear">lfrtip'
         //,"oTableTools": {
@@ -167,12 +167,12 @@ function getSetupData(){
         ,"zright":"105"
     });*/
 //    new FixedColumns(dataGrid);
-    dataFC = new FixedColumns( dataGrid,{
+/*    dataFC = new FixedColumns( dataGrid,{
         "iLeftColumns":2
      //   ,"sLeftWidth":"fixed"
      //   ,"iLeftWidth":450
     });
-
+*/
     initializeDataGrid(dataGrid);
     populateGrid(dataGrid);
 

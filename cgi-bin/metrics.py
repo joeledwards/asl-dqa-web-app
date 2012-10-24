@@ -49,7 +49,8 @@ SELECT fnsclGetGroupTypes()
 """
 }
 
-database_conString = 'localhost,dev,asldev,dataq_dev,5433'
+#database_conString = 'localhost,dev,asldev,dataq_dev,5433'
+database_conString = '136.177.121.210,dev,asldev,dataq_dev,5432'
 database = MetricDatabase.MetricDatabase(database_conString)
 
 def error(message=None):
