@@ -198,7 +198,9 @@ function buildGrid(){
     
     for(station in mapSIDtoNID){
         if(mapSIDtoNID.hasOwnProperty(station)){
-            var $row = $('<tr id = "'+station+'"><td>'+mapGIDtoGName[mapSIDtoNID[station]]+'</td><td>'+mapSIDtoSName[station]+'</td><td>,'+mapSIDtoGIDs[station]+',</td></tr>');
+            var $row = $('<tr id = "'+station+'"><td>'+mapGIDtoGName[mapSIDtoNID[station]]+'</td>'
+            +'<td><a href=\"station.html#'+station+'\">'+mapSIDtoSName[station]+'</a></td>'
+            +'<td>,'+mapSIDtoGIDs[station]+',</td></tr>');
             $("#grid tbody").append($row);
             for( var i = 0; i<metricsSorted.length; i++){
                 $row.append('<td id="'+mapMNametoMID[metricsSorted[i]]+'_'+station+'"></td>');
