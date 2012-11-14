@@ -9,6 +9,9 @@ var mapGIDtoSIDs = {};
 var mapSIDtoNID = {}; //NID = Network ID
 var mapMIDtoMName = {}; //MID = Metric ID, MName = Metric Name
 var mapMNametoMID = {};
+var mapCNametoCID = {};
+var mapCIDtoCName = {};
+var mapCIDtoLoc = {};
 var mapSIDtoGIDs = {};
 var mapMonthtoNum = {
     1 : "January",
@@ -71,14 +74,15 @@ function filterGroups(datatable){
 }
 
 function getSetupData(){
-
+    
+    var station = getQueryString("station");
     var max_year  = undefined;
     var max_month = undefined;
     var yearList = $("#ddlYear");
     var last;
     var request = new XMLHttpRequest();
 
-    request.open('GET','/dataq/cgi-bin/metrics.py?cmd=dates_groups_stations_metrics',false);
+    request.open('GET','/dataq/cgi-bin/metrics.py?cmd=groups_dates_stations_metrics_channels&param=station.'+station,false);
     // request.setRequestHeader('User-Agent',navigator.userAgent);
     request.send(null);
     var rows = request.responseText.split(/\n/);
@@ -133,6 +137,11 @@ function getSetupData(){
                     mapSIDtoGIDs[parts[1]].push(parts[t]);
                 }
                 break;
+            case 'C':
+                mapCIDtoCName[parts[1]] = parts[2];
+                mapCNametoCID[parts[2]] = parts[1];
+                mapCIDtoLoc[parts[1]] = parts[3];
+                break;
             case 'M':
                 mapMIDtoMName[parts[1]]=parts[2];
                 mapMNametoMID[parts[2]]=parts[1];
@@ -142,7 +151,7 @@ function getSetupData(){
 
     yearList.val(last);
     year_selected();
-    populateGroups();
+    //populateGroups();
     buildGrid();
     dataGrid = $('#grid').dataTable( {
         
@@ -182,9 +191,11 @@ function buildGrid(){
     var dataGrid = document.getElementById("grid");
     var metricsSorted = new Array();
     var metrics = new Array();
-    $("#grid thead tr"). append('<th id="network">Network</th>');
-    $("#grid thead tr"). append('<th id="Station">Station</th>');
-    $("#grid thead tr"). append('<th id="groups">Groups</th>');
+    //$("#grid thead tr"). append('<th id="network">Network</th>');
+    //$("#grid thead tr"). append('<th id="Station">Station</th>');
+    $("#grid thead tr"). append('<th id="location">Location</th>');
+    $("#grid thead tr"). append('<th id="channel">Channel</th>');
+    //$("#grid thead tr"). append('<th id="groups">Groups</th>');
     for(header in mapMNametoMID) {
         if(mapMNametoMID.hasOwnProperty(header)) {
             //       $("#grid thead tr").append('<th id='
@@ -196,21 +207,20 @@ function buildGrid(){
         $("#grid thead tr"). append('<th id="'+mapMNametoMID[metricsSorted[i]]+'">'+metricsSorted[i]+'</th>');
     }
     
-    for(station in mapSIDtoNID){
-        if(mapSIDtoNID.hasOwnProperty(station)){
-            var $row = $('<tr id = "'+station+'"><td>'+mapGIDtoGName[mapSIDtoNID[station]]+'</td>'
-            +'<td><a href=\"station.html#'+station+'\">'+mapSIDtoSName[station]+'</a></td>'
-            +'<td>,'+mapSIDtoGIDs[station]+',</td></tr>');
+    for(channel in mapCIDtoCName){
+        if(mapCIDtoCName.hasOwnProperty(channel)){
+            var $row = $('<tr id = "'+channel+'"><td>'+mapCIDtoLoc[channel]+'</td>'
+            +'<td>'+mapCIDtoCName[channel]+'</a></td></tr>');
             $("#grid tbody").append($row);
             for( var i = 0; i<metricsSorted.length; i++){
-                $row.append('<td id="'+mapMNametoMID[metricsSorted[i]]+'_'+station+'"></td>');
+                $row.append('<td id="'+mapMNametoMID[metricsSorted[i]]+'_'+channel+'"></td>');
             }
         }
     }
     
 }
 
-function parseStationGrid(data,mid, pDatatable){
+function parseDataReturn(data,mid, pDatatable){
     var rows = new Array();
     rows = data.split("\n");
     for(var i = 0; i <rows.length; i++){
@@ -232,8 +242,8 @@ function initializeDataGrid(datatable){
 
 function populateGrid(datatable){
     numCols = 0;
-    var stations = new String();
-    stations = "";
+    var channelss = new String();
+    channels = "";
     var year = document.getElementById("ddlYear");
     var month = document.getElementById("ddlMonth");
     var startDate = new Date(year.options[year.selectedIndex].value, parseInt(month.options[month.selectedIndex].value)-1, 1);
@@ -241,19 +251,19 @@ function populateGrid(datatable){
     var dates = ""+startDate.getUTCFullYear()+pad((startDate.getUTCMonth()+1),2)+pad(startDate.getUTCDate(),2)+"."+endDate.getUTCFullYear()+pad((endDate.getUTCMonth()+1),2)+pad(endDate.getUTCDate(),2);
     var visibleRows = $('tbody tr', datatable.fnSettings().nTable);
     $.each(visibleRows, function(c){
-            stations= stations+"-"+$(visibleRows[c]).closest('tr').attr('id');
+            channels = channels+"-"+$(visibleRows[c]).closest('tr').attr('id');
             // alert(dataGrid.fnGetData(visibleRows[c])[0]);
             });
-    stations = stations.substr(1); //trims initial - from the string
+    channels = channels.substr(1); //trims initial - from the string
     $.each(datatable.fnSettings().aoColumns, function(c){
         if(datatable.fnSettings().aoColumns[c].bVisible == true){
             if(mapMNametoMID[datatable.fnSettings().aoColumns[c].sTitle]){
                 numCols++; 
                 var metricID = mapMNametoMID[datatable.fnSettings().aoColumns[c].sTitle];
-                $.get("/dataq/cgi-bin/metrics.py", {cmd: "stationgrid", param: "station."+stations+
+                $.get("/dataq/cgi-bin/metrics.py", {cmd: "channelgrid", param: "channel."+channels+
                     "_metric."+metricID+"_dates."+dates},
                     function(data){
-                        parseStationGrid(data, metricID, datatable);
+                        parseDataReturn(data, metricID, datatable);
                         numCols--;
                         if(numCols <= 0){
                             datatable.fnDraw();
