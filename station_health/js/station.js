@@ -237,7 +237,8 @@ function parseDataReturn(data,mid, pDatatable){
 
 function initializeDataGrid(datatable){
 
-    datatable.fnSetColumnVis(2, false);
+    //Hide group Column
+    //datatable.fnSetColumnVis(2, false);
 }
 
 function populateGrid(datatable){
