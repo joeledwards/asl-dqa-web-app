@@ -82,7 +82,7 @@ function getSetupData(){
     var last;
     var request = new XMLHttpRequest();
 
-    request.open('GET','/dataq/cgi-bin/metrics.py?cmd=groups_dates_stations_metrics_channels&param=station.'+station,false);
+    request.open('GET','/cgi-bin/metrics.py?cmd=groups_dates_stations_metrics_channels&param=station.'+station,false);
     // request.setRequestHeader('User-Agent',navigator.userAgent);
     request.send(null);
     var rows = request.responseText.split(/\n/);
@@ -260,7 +260,7 @@ function populateGrid(datatable){
             if(mapMNametoMID[datatable.fnSettings().aoColumns[c].sTitle]){
                 numCols++; 
                 var metricID = mapMNametoMID[datatable.fnSettings().aoColumns[c].sTitle];
-                $.get("/dataq/cgi-bin/metrics.py", {cmd: "channelgrid", param: "channel."+channels+
+                $.get("/cgi-bin/metrics.py", {cmd: "channelgrid", param: "channel."+channels+
                     "_metric."+metricID+"_dates."+dates},
                     function(data){
                         parseDataReturn(data, metricID, datatable);

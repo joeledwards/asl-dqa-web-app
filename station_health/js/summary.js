@@ -78,7 +78,7 @@ function getSetupData(){
     var last;
     var request = new XMLHttpRequest();
 
-    request.open('GET','/dataq/cgi-bin/metrics.py?cmd=dates_groups_stations_metrics',false);
+    request.open('GET','/cgi-bin/metrics.py?cmd=dates_groups_stations_metrics',false);
     // request.setRequestHeader('User-Agent',navigator.userAgent);
     request.send(null);
     var rows = request.responseText.split(/\n/);
@@ -250,7 +250,7 @@ function populateGrid(datatable){
             if(mapMNametoMID[datatable.fnSettings().aoColumns[c].sTitle]){
                 numCols++; 
                 var metricID = mapMNametoMID[datatable.fnSettings().aoColumns[c].sTitle];
-                $.get("/dataq/cgi-bin/metrics.py", {cmd: "stationgrid", param: "station."+stations+
+                $.get("/cgi-bin/metrics.py", {cmd: "stationgrid", param: "station."+stations+
                     "_metric."+metricID+"_dates."+dates},
                     function(data){
                         parseStationGrid(data, metricID, datatable);
