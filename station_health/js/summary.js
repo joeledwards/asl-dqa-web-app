@@ -54,9 +54,9 @@ $("#ddlGroup").change(function(){
 });
 
 $(document).ready(function(){
-        getSetupData();
+    getSetupData();
 
-        });
+});
 
 function filterGroups(datatable){
     var group = document.getElementById("ddlGroup");
@@ -145,12 +145,12 @@ function getSetupData(){
     populateGroups();
     buildGrid();
     dataGrid = $('#grid').dataTable( {
-        
+
         "bJQueryUI":true
         ,"bPaginate":false
-//        ,"sScrollY":"300px"
+        //        ,"sScrollY":"300px"
         ,"sScrollY": (window.innerHeight - 220)+"px"
-       // ,"sScrollYInner": "110%"
+        // ,"sScrollYInner": "110%"
         ,"sScrollX": "100%"
         //,"sScrollXInner": "5200px"
         ,"bScrollCollapse": true
@@ -160,19 +160,19 @@ function getSetupData(){
         //}
     });
     /*new FixedHeader( dataGrid/*,{
-        
-        "left":true
-        ,"zleft":"106"
-        ,"right":true
-        ,"zright":"105"
-    });*/
-//    new FixedColumns(dataGrid);
-/*    dataFC = new FixedColumns( dataGrid,{
-        "iLeftColumns":2
-     //   ,"sLeftWidth":"fixed"
-     //   ,"iLeftWidth":450
+
+      "left":true
+      ,"zleft":"106"
+      ,"right":true
+      ,"zright":"105"
+      });*/
+    //    new FixedColumns(dataGrid);
+    /*    dataFC = new FixedColumns( dataGrid,{
+          "iLeftColumns":2
+    //   ,"sLeftWidth":"fixed"
+    //   ,"iLeftWidth":450
     });
-*/
+     */
     initializeDataGrid(dataGrid);
     populateGrid(dataGrid);
 
@@ -195,19 +195,19 @@ function buildGrid(){
     for( var i = 0; i<metricsSorted.length; i++){
         $("#grid thead tr"). append('<th id="'+mapMNametoMID[metricsSorted[i]]+'">'+metricsSorted[i]+'</th>');
     }
-    
+
     for(station in mapSIDtoNID){
         if(mapSIDtoNID.hasOwnProperty(station)){
             var $row = $('<tr id = "'+station+'"><td>'+mapGIDtoGName[mapSIDtoNID[station]]+'</td>'
-            +'<td><a href=\"station.html?station='+station+'\">'+mapSIDtoSName[station]+'</a></td>'
-            +'<td>,'+mapSIDtoGIDs[station]+',</td></tr>');
+                    +'<td><a href=\"station.html?station='+station+'\">'+mapSIDtoSName[station]+'</a></td>'
+                    +'<td>,'+mapSIDtoGIDs[station]+',</td></tr>');
             $("#grid tbody").append($row);
             for( var i = 0; i<metricsSorted.length; i++){
                 $row.append('<td id="'+mapMNametoMID[metricsSorted[i]]+'_'+station+'"></td>');
             }
         }
     }
-    
+
 }
 
 function parseStationGrid(data,mid, pDatatable){
@@ -241,9 +241,9 @@ function populateGrid(datatable){
     var dates = ""+startDate.getUTCFullYear()+pad((startDate.getUTCMonth()+1),2)+pad(startDate.getUTCDate(),2)+"."+endDate.getUTCFullYear()+pad((endDate.getUTCMonth()+1),2)+pad(endDate.getUTCDate(),2);
     var visibleRows = $('tbody tr', datatable.fnSettings().nTable);
     $.each(visibleRows, function(c){
-            stations= stations+"-"+$(visibleRows[c]).closest('tr').attr('id');
-            // alert(dataGrid.fnGetData(visibleRows[c])[0]);
-            });
+        stations= stations+"-"+$(visibleRows[c]).closest('tr').attr('id');
+        // alert(dataGrid.fnGetData(visibleRows[c])[0]);
+    });
     stations = stations.substr(1); //trims initial - from the string
     $.each(datatable.fnSettings().aoColumns, function(c){
         if(datatable.fnSettings().aoColumns[c].bVisible == true){
@@ -259,7 +259,7 @@ function populateGrid(datatable){
                             datatable.fnDraw();
                         }
                     }
-                );
+                    );
             }
         }
     });
