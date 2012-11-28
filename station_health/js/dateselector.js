@@ -51,12 +51,12 @@ function getQueryDates(){
     var startDate = new Date($("#dpStartDate").val());
     var endDate = new Date($("#dpEndDate").val());
     var dates = ""  +startDate.getUTCFullYear()
-                    +prepad((startDate.getUTCMonth()+1),2,"0")
-                    +prepad(startDate.getUTCDate(),2,"0")
-                    +"."
-                    +endDate.getUTCFullYear()
-                    +prepad((endDate.getUTCMonth()+1),2,"0")
-                    +prepad(endDate.getUTCDate(),2,"0");
+        +prepad((startDate.getUTCMonth()+1),2,"0")
+        +prepad(startDate.getUTCDate(),2,"0")
+        +"."
+        +endDate.getUTCFullYear()
+        +prepad((endDate.getUTCMonth()+1),2,"0")
+        +prepad(endDate.getUTCDate(),2,"0");
     return dates;
 }
 function yearMonthToStartDate(){
@@ -68,13 +68,7 @@ function yearMonthToStartDate(){
             prepad(startDate.getUTCDate(),2,"0")
             );
 }
-/*
-   var year = document.getElementById("ddlYear");
-   var month = document.getElementById("ddlMonth");
-   var startDate = new Date(year.options[year.selectedIndex].value, parseInt(month.options[month.selectedIndex].value)-1, 1);
-   var endDate = new Date(year.options[year.selectedIndex].value, parseInt(month.options[month.selectedIndex].value), 0);
-   var dates = ""+startDate.getUTCFullYear()+prepad((startDate.getUTCMonth()+1),2)+prepad(startDate.getUTCDate(),2)+"."+endDate.getUTCFullYear()+prepad((endDate.getUTCMonth()+1),2)+prepad(endDate.getUTCDate(),2);
- */
+
 function yearMonthToEndDate(){
     var endDate = new Date($("#ddlYear").val(), parseInt($("#ddlMonth").val()),0);
 

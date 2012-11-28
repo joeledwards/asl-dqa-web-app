@@ -29,7 +29,7 @@ function getSetupData(type){
         setYear:undefined //Set to max year and month if not a station query
     };
 
-    if (type = "station"){
+    if (type == "station"){
         var station = getQueryString("station");
         $.get("/cgi-bin/metrics.py", 
                 {cmd: "groups_dates_stations_metrics_channels", param: "station."+station},
@@ -58,9 +58,60 @@ function getSetupData(type){
                 }
         );
     }
+    else if (type == "summary"){
+        $.get("/cgi-bin/metrics.py", 
+                {cmd: "groups_dates_stations_metrics"},
+                function(data){
+                    parseSetupResponse(data, setupParams);
+                    initDates(setupParams.setYear);
+                    populateGroups();
+                    buildGrid();
+                    dataGrid = $('#grid').dataTable( {
+
+                        "bJQueryUI":true
+                        ,"bPaginate":false
+                        //        ,"sScrollY":"300px"
+                        ,"sScrollY": (window.innerHeight - 220)+"px"
+                        // ,"sScrollYInner": "110%"
+                        ,"sScrollX": "100%"
+                        //,"sScrollXInner": "5200px"
+                        ,"bScrollCollapse": true
+                        ,"sDom": 'TC<"clear">lfrtip'
+                        //,"oTableTools": {
+                        //    "aButtons": [ "copy", "print", "csv", "pdf"]
+                        //}
+                    });
+                    initializeDataGrid(dataGrid);
+                    populateGrid(dataGrid);
+                }
+        );
+
+    }
 
 }
 
+function populateGroups(){
+    var groupList = document.getElementById("ddlGroup");
+    var typesSorted = new Array();
+    var types = new Array();
+    for(var groupType in mapTNametoTID){ //puts the group types into an array that can be sorted
+        if(mapTNametoTID.hasOwnProperty(groupType)){
+            types.push(groupType);
+        }
+    }
+    typesSorted = types.sort();
+    for(var i = 0; i < typesSorted.length; i++){
+        var optGroup = document.createElement('optgroup');
+        optGroup.label = typesSorted[i];
+        groupList.appendChild(optGroup);
+        for(var t = 0; t<mapTIDtoGIDs[mapTNametoTID[typesSorted[i]]].length;t++){
+            var option = document.createElement("option")
+                option.value = mapTIDtoGIDs[mapTNametoTID[typesSorted[i]]][t];
+            option.innerHTML = mapGIDtoGName[mapTIDtoGIDs[mapTNametoTID[typesSorted[i]]][t]];
+            optGroup.appendChild(option);
+        }
+    }
+}
 function parseSetupResponse(response, params){
     var rows = response.split(/\n/);
     for (var i =0; i< rows.length; i++){

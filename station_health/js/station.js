@@ -1,16 +1,9 @@
 /*
-station.js
-Author: James Holland jholland@usgs.gov
-station.js contains functions, objects and calls needed for using station.html.
-License: Public Domain
-*/
-
-
-/*$("#ddlGroup").change(function(){
-    filterGroups(dataGrid);
-    clearDataTable(dataGrid);
-    populateGrid(dataGrid);
-});*/
+   station.js
+   Author: James Holland jholland@usgs.gov
+   station.js contains functions, objects and calls needed for using station.html.
+   License: Public Domain
+ */
 
 
 $(document).ready(function(){
@@ -36,14 +29,10 @@ function buildGrid(){
     var dataGrid = document.getElementById("grid");
     var metricsSorted = new Array();
     var metrics = new Array();
-    //$("#grid thead tr"). append('<th id="network">Network</th>');
-    //$("#grid thead tr"). append('<th id="Station">Station</th>');
     $("#grid thead tr"). append('<th id="location">Location</th>');
     $("#grid thead tr"). append('<th id="channel">Channel</th>');
-    //$("#grid thead tr"). append('<th id="groups">Groups</th>');
     for(header in mapMNametoMID) {
         if(mapMNametoMID.hasOwnProperty(header)) {
-            //       $("#grid thead tr").append('<th id='
             metrics.push(header);
         }
     }
@@ -143,7 +132,7 @@ function clearDataTable(datatable){
     for(var cid in mapCIDtoCName){
         if(mapCIDtoCName.hasOwnProperty(cid)){
             for(var mid in mapMIDtoMName){
-                    if(mapMIDtoMName.hasOwnProperty(mid)){
+                if(mapMIDtoMName.hasOwnProperty(mid)){
                     var cell = document.getElementById(mid+"_"+cid);
                     if(cell){
                         var pos = datatable.fnGetPosition(cell);
