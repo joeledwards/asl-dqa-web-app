@@ -83,21 +83,20 @@ function initForm(type){
 
 function bindFormActions(type){
     if (type == "summary"){
-        $("#btnUpdate").click(function(){
+        $("#btnUpdate").on('click',function(){
             filterGroups(dataGrid);
             clearDataTable(dataGrid);
             populateGrid(dataGrid);
         });
     }
     else {
-        $("#btnUpdate").click(function(){
+        $("#btnUpdate").on('click',function(){
             clearDataTable(dataGrid);
             populateGrid(dataGrid);
         });
     }
 
-
-    $("#btnToggleDate").click(function(){
+    $("#btnToggleDate").on('click',function(){
         $("#spanYearMonth").toggle();
         $("#spanDateRange").toggle();
     });

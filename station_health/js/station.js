@@ -88,6 +88,7 @@ function initializeDataGrid(datatable){
 
 function populateGrid(datatable){
     numCols = 0;
+    var dates = getQueryDates();
     var channelss = new String();
     channels = "";
     var visibleRows = $('tbody tr', datatable.fnSettings().nTable);
@@ -138,20 +139,12 @@ function populateGroups(){
     }
 }
 
-/*function pad(input, size) {
-    var output = input+"";
-    while (output.length<size){
-        output = "0"+output;
-    }
-    return output;
-}*/
-
 function clearDataTable(datatable){
-    for(var sid in mapSIDtoSName){
-        if(mapSIDtoSName.hasOwnProperty(sid)){
+    for(var cid in mapCIDtoCName){
+        if(mapCIDtoCName.hasOwnProperty(cid)){
             for(var mid in mapMIDtoMName){
-                if(mapMIDtoMName.hasOwnProperty(mid)){
-                    var cell = document.getElementById(mid+"_"+sid);
+                    if(mapMIDtoMName.hasOwnProperty(mid)){
+                    var cell = document.getElementById(mid+"_"+cid);
                     if(cell){
                         var pos = datatable.fnGetPosition(cell);
                         datatable.fnUpdate("", pos[0], pos[2], false, false );

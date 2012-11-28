@@ -47,6 +47,18 @@ function initDates(year){
     yearMonthToEndDate();
 }
 
+function getQueryDates(){
+    var startDate = new Date($("#dpStartDate").val());
+    var endDate = new Date($("#dpEndDate").val());
+    var dates = ""  +startDate.getUTCFullYear()
+                    +prepad((startDate.getUTCMonth()+1),2,"0")
+                    +prepad(startDate.getUTCDate(),2,"0")
+                    +"."
+                    +endDate.getUTCFullYear()
+                    +prepad((endDate.getUTCMonth()+1),2,"0")
+                    +prepad(endDate.getUTCDate(),2,"0");
+    return dates;
+}
 function yearMonthToStartDate(){
     var startDate = new Date($("#ddlYear").val(), parseInt($("#ddlMonth").val()-1),1);
 

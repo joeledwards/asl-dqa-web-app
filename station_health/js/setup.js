@@ -54,7 +54,7 @@ function getSetupData(type){
                         //}
                     });
                     initializeDataGrid(dataGrid);
-                    //populateGrid(dataGrid);
+                    populateGrid(dataGrid);
                 }
         );
     }
