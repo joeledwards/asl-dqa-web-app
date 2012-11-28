@@ -32,6 +32,10 @@ var mapMonthtoNum = {
     "December"  : 12
 };
 
+//Max and Min dates for datepickers
+var dpMaxDate = undefined;
+var dpMinDate = undefined;
+
 function initDates(year){
     if(getQueryString("year") != undefined)
         $("#ddlYear").val(getQueryString("year"));
@@ -45,6 +49,8 @@ function initDates(year){
 
     yearMonthToStartDate();
     yearMonthToEndDate();
+    $("#dpEndDate").datepicker( "option", "maxDate", dpMaxDate);
+    $("#dpStartDate").datepicker( "option", "minDate", dpMinDate);
 }
 
 function getQueryDates(){
@@ -85,6 +91,10 @@ function addMonthYear(year, month){
     if ((year == undefined) || (month == undefined)) {
         return null;
     }
+    if (dpMaxDate == undefined || dpMaxDate < new Date(year, parseInt(month), 0))
+        dpMaxDate = new Date(year, parseInt(month), 0);
+    if (dpMinDate == undefined || dpMinDate > new Date(year, parseInt(month-1), 1))
+        dpMinDate =  new Date(year, parseInt(month-1), 1);
 
     if (mapYearstoMonths[year] == undefined) {
         mapYearstoMonths[year] = new Array();
