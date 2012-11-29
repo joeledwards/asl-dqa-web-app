@@ -49,9 +49,26 @@ function getSetupData(type){
                         //,"sScrollXInner": "5200px"
                         ,"bScrollCollapse": true
                         ,"sDom": 'TC<"clear">lfrtip'
-                        //,"oTableTools": {
-                        //    "aButtons": [ "copy", "print", "csv", "pdf"]
-                        //}
+                        ,"oTableTools": {
+                            "aButtons": [ 
+                                {
+                                    "sExtends":"copy",
+                                    "fnInit": function(node){formatTableTools(node, 'ui-icon-clipboard');}
+                                },
+                                {
+                                    "sExtends":"print",
+                                    "fnInit": function(node){formatTableTools(node, 'ui-icon-print');}
+                                },
+                                {
+                                    "sExtends":"csv",
+                                    "fnInit": function(node){formatTableTools(node, 'ui-icon-calculator');}
+                                },
+                                {
+                                    "sExtends":"pdf",
+                                    "fnInit": function(node){formatTableTools(node, 'ui-icon-copy');}
+                                }
+                            ]
+                        }
                     });
                     initializeDataGrid(dataGrid);
                     populateGrid(dataGrid);
@@ -77,9 +94,26 @@ function getSetupData(type){
                         //,"sScrollXInner": "5200px"
                         ,"bScrollCollapse": true
                         ,"sDom": 'TC<"clear">lfrtip'
-                        //,"oTableTools": {
-                        //    "aButtons": [ "copy", "print", "csv", "pdf"]
-                        //}
+                        ,"oTableTools": {
+                            "aButtons": [ 
+                                {
+                                    "sExtends":"copy",
+                                    "fnInit": function(node){formatTableTools(node, 'ui-icon-clipboard');}
+                                },
+                                {
+                                    "sExtends":"print",
+                                    "fnInit": function(node){formatTableTools(node, 'ui-icon-print');}
+                                },
+                                {
+                                    "sExtends":"csv",
+                                    "fnInit": function(node){formatTableTools(node, 'ui-icon-calculator');}
+                                },
+                                {
+                                    "sExtends":"pdf",
+                                    "fnInit": function(node){formatTableTools(node, 'ui-icon-copy');}
+                                }
+                            ]
+                        }
                     });
                     initializeDataGrid(dataGrid);
                     populateGrid(dataGrid);
@@ -88,6 +122,12 @@ function getSetupData(type){
 
     }
 
+}
+
+function formatTableTools(button, icon){
+    $(button).removeClass('DTTT_button');
+    $(button).button({icons: {primary: icon}});
+    $('.DTTT_container').buttonset();
 }
 
 function populateGroups(){
