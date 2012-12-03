@@ -51,27 +51,28 @@ function getSetupData(type){
                         ,"sDom": 'TC<"clear">lfrtip'
                         ,"oTableTools": {
                             "aButtons": [ 
-                                {
-                                    "sExtends":"copy",
-                                    "fnInit": function(node){formatTableTools(node, 'ui-icon-clipboard');}
-                                },
-                                {
-                                    "sExtends":"print",
-                                    "fnInit": function(node){formatTableTools(node, 'ui-icon-print');}
-                                },
-                                {
-                                    "sExtends":"csv",
-                                    "fnInit": function(node){formatTableTools(node, 'ui-icon-calculator');}
-                                },
-                                {
-                                    "sExtends":"pdf",
-                                    "fnInit": function(node){formatTableTools(node, 'ui-icon-copy');}
-                                }
-                            ]
+                    {
+                        "sExtends":"copy",
+                             "fnInit": function(node){formatTableTools(node, 'ui-icon-clipboard');}
+                    },
+                             {
+                                 "sExtends":"print",
+                             "fnInit": function(node){formatTableTools(node, 'ui-icon-print');}
+                             },
+                             {
+                                 "sExtends":"csv",
+                                 "fnInit": function(node){formatTableTools(node, 'ui-icon-calculator');}
+                             },
+                             {
+                                 "sExtends":"pdf",
+                                 "fnInit": function(node){formatTableTools(node, 'ui-icon-copy');}
+                             }
+                    ]
                         }
                     });
                     initializeDataGrid(dataGrid);
                     populateGrid(dataGrid);
+                    bindDatatableActions()
                 }
         );
     }
@@ -96,27 +97,28 @@ function getSetupData(type){
                         ,"sDom": 'TC<"clear">lfrtip'
                         ,"oTableTools": {
                             "aButtons": [ 
-                                {
-                                    "sExtends":"copy",
-                                    "fnInit": function(node){formatTableTools(node, 'ui-icon-clipboard');}
-                                },
-                                {
-                                    "sExtends":"print",
-                                    "fnInit": function(node){formatTableTools(node, 'ui-icon-print');}
-                                },
-                                {
-                                    "sExtends":"csv",
-                                    "fnInit": function(node){formatTableTools(node, 'ui-icon-calculator');}
-                                },
-                                {
-                                    "sExtends":"pdf",
-                                    "fnInit": function(node){formatTableTools(node, 'ui-icon-copy');}
-                                }
-                            ]
+                    {
+                        "sExtends":"copy",
+                             "fnInit": function(node){formatTableTools(node, 'ui-icon-clipboard');}
+                    },
+                             {
+                                 "sExtends":"print",
+                             "fnInit": function(node){formatTableTools(node, 'ui-icon-print');}
+                             },
+                             {
+                                 "sExtends":"csv",
+                                 "fnInit": function(node){formatTableTools(node, 'ui-icon-calculator');}
+                             },
+                             {
+                                 "sExtends":"pdf",
+                                 "fnInit": function(node){formatTableTools(node, 'ui-icon-copy');}
+                             }
+                    ]
                         }
                     });
                     initializeDataGrid(dataGrid);
                     populateGrid(dataGrid);
+                    bindDatatableActions()
                 }
         );
 

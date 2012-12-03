@@ -5,4 +5,8 @@
     License: Public Domain
  */
 
-
+function bindDatatableActions(datatable) {
+    $('#grid tbody td').click(function(){
+        createDialog($(this).attr('id'));
+    });
+}
