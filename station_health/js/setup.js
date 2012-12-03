@@ -72,7 +72,7 @@ function getSetupData(type){
                     });
                     initializeDataGrid(dataGrid);
                     populateGrid(dataGrid);
-                    bindDatatableActions()
+                    bindDatatableActions(dataGrid,type)
                 }
         );
     }
@@ -118,7 +118,7 @@ function getSetupData(type){
                     });
                     initializeDataGrid(dataGrid);
                     populateGrid(dataGrid);
-                    bindDatatableActions()
+                    bindDatatableActions(dataGrid, type)
                 }
         );
 
