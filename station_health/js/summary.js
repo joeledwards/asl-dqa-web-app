@@ -48,7 +48,7 @@ function buildGrid(){
                     +'<td>,'+mapSIDtoGIDs[station]+',</td></tr>');
             $("#grid tbody").append($row);
             for( var i = 0; i<metricsSorted.length; i++){
-                $row.append('<td id="'+mapMNametoMID[metricsSorted[i]]+'_'+station+'"></td>');
+                $row.append('<td id="d_'+mapMNametoMID[metricsSorted[i]]+'_'+station+'"></td>');
             }
         }
     }
@@ -61,7 +61,7 @@ function parseStationGrid(data,mid, pDatatable){
     for(var i = 0; i <rows.length; i++){
         row = rows[i].split(",");
         if(row[1] && row[0] && mid){
-            var cell = document.getElementById(mid+"_"+row[0]);
+            var cell = document.getElementById("d_"+mid+"_"+row[0]);
             if(cell){
                 var pos = pDatatable.fnGetPosition(cell);
                 pDatatable.fnUpdate(row[1], pos[0], pos[2], false, false );

@@ -7,6 +7,8 @@
 
 function bindDatatableActions(datatable) {
     $('#grid tbody td').click(function(){
-        createDialog($(this).attr('id'));
+        var id = $(this).attr('id');
+        if(id != undefined && id.charAt(0) == 'd')
+            createDialog(id);
     });
 }
