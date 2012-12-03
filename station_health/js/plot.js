@@ -7,7 +7,11 @@
 
 function createDialog(id){
     var ids = id.split("_");
-    var dialog = $("<div id='div"+id+"' title='"+mapSIDtoSName[ids[1]]+" "+mapMIDtoMName[ids[0]]+"'></div>").dialog();
+    var dialog = $("<div id='div"+id+"' title='"+mapSIDtoSName[ids[1]]+" "+mapMIDtoMName[ids[0]]+"'></div>").dialog({
+        close: function(event, ui){
+            $("#div"+id).remove();
+        }
+    });
     $('#html').append(dialog);
 }
 
