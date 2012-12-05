@@ -88,7 +88,7 @@ if "param" in form:
             stationID = parts[1]
             stationIDs = "{"+ parts[1].replace("-", ",")+"}"   
         elif parts[0].lower() == "channel":
-            stationID = parts[1]
+            channelID = parts[1]
             channelIDs = "{"+ parts[1].replace("-", ",")+"}"
         elif parts[0].lower() == "metric":
             metricID = parts[1]
