@@ -22,14 +22,15 @@ var mapCIDtoLoc = {};
 var groups = new Array();
 var dataGrid; //Datatables object initialized in getSetupData()
 var numCols = 0;
-
+var pageType = undefined; //Allows rest of functions to check page type without passing type around. It is only changed in getSetupData.
 
 function getSetupData(type){
+    pageType = type;
     var setupParams = {
         setYear:undefined //Set to max year and month if not a station query
     };
 
-    if (type == "station"){
+    if (pageType == "station"){
         var station = getQueryString("station");
         $.get("/cgi-bin/metrics.py", 
                 {cmd: "groups_dates_stations_metrics_channels", param: "station."+station},
@@ -72,11 +73,11 @@ function getSetupData(type){
                     });
                     initializeDataGrid(dataGrid);
                     populateGrid(dataGrid);
-                    bindDatatableActions(dataGrid,type)
+                    bindDatatableActions(dataGrid)
                 }
         );
     }
-    else if (type == "summary"){
+    else if (pageType == "summary"){
         $.get("/cgi-bin/metrics.py", 
                 {cmd: "groups_dates_stations_metrics"},
                 function(data){
@@ -118,7 +119,7 @@ function getSetupData(type){
                     });
                     initializeDataGrid(dataGrid);
                     populateGrid(dataGrid);
-                    bindDatatableActions(dataGrid, type)
+                    bindDatatableActions(dataGrid)
                 }
         );
 

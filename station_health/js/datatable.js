@@ -5,20 +5,10 @@
     License: Public Domain
  */
 
-function bindDatatableActions(datatable, type) {
-    if(type == 'summary'){
+function bindDatatableActions(datatable) {
     datatable.find('tbody td').click(function(){
         var id = $(this).attr('id');
         if(id != undefined && id.charAt(0) == 'd')
-            createSummaryDialog(id);
+            createDialog(id);
     });
-    }
-    else if(type == 'station')
-    {
-    datatable.find('tbody td').click(function(){
-        var id = $(this).attr('id');
-        if(id != undefined && id.charAt(0) == 'd')
-            createStationDialog(id);
-    });
-    }
 }

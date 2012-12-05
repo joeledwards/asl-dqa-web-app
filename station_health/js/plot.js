@@ -5,37 +5,34 @@
    License: Public Domain
  */
 
-function createStationDialog(id){
-    var ids = id.split("_");
-    //We may want the ability to have multiple of the same plot up to compare different date ranges.
-    //If we do try to implement this, there is a bug. When the last dialog is closed, the first disapears, but doesn't get removed. Same with Second to last and second.
-    if($("#div"+id).length) //If dialog exists, close it.
-        $("#div"+id).dialog("close");
-
-    var dialog = $("<div id='div"+id+
-            "' title='"+mapCIDtoCName[ids[2]]+" "+mapMIDtoMName[ids[1]]+
-            "'></div>").dialog({
+function plotTemplate(id, title){
+    var dialog = $("<div id='dia"+id+"' title='"+title+"'></div>").dialog({
                 close: function(event, ui){
-                    $("#div"+id).remove();
+                    $("#dia"+id).remove();
                 }
             });
-    $('#html').append(dialog);
+    dialog.append("<div id='plot"+id+"'></div>");
+    dialog.append("<button class='button' id='btn"+id+"' value='"+id+"'>Zoom out</button>");
+    return dialog;
 }
 
-function createSummaryDialog(id){
+function createDialog(id){
     var ids = id.split("_");
+    var pid = ids[1]+"_"+ids[2]; //removes the "d_" from the front of the id
+    var title = undefined;
+
+    if (pageType == "summary")
+        title = mapSIDtoSName[ids[2]]+" "+mapMIDtoMName[ids[1]];
+    else if (pageType == "station")
+        title = mapCIDtoCName[ids[2]]+" "+mapMIDtoMName[ids[1]];
+    else
+        title = "ERROR page type not defined";
+
     //We may want the ability to have multiple of the same plot up to compare different date ranges.
     //If we do try to implement this, there is a bug. When the last dialog is closed, the first disapears, but doesn't get removed. Same with Second to last and second.
-    if($("#div"+id).length) //If dialog exists, close it.
-        $("#div"+id).dialog("close");
-
-    var dialog = $("<div id='div"+id+
-            "' title='"+mapSIDtoSName[ids[2]]+" "+mapMIDtoMName[ids[1]]+
-            "'></div>").dialog({
-                close: function(event, ui){
-                    $("#div"+id).remove();
-                }
-            });
-    $('#html').append(dialog);
+    if($("#dia"+pid).length) //If dialog exists, close it.
+        $("#dia"+pid).dialog("close");
+    $('#html').append(plotTemplate(pid, title));
 }
+
 
