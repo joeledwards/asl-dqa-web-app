@@ -65,6 +65,15 @@ function getQueryDates(){
         +prepad(endDate.getUTCDate(),2,"0");
     return dates;
 }
+
+function getStartDate(){
+    return new Date($("#dpStartDate").val());
+}
+
+function getEndDate(){
+    return new Date($("#dpEndDate").val());
+}
+
 function yearMonthToStartDate(){
     var startDate = new Date($("#ddlYear").val(), parseInt($("#ddlMonth").val()-1),1);
 

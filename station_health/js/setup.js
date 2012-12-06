@@ -22,6 +22,8 @@ var mapCIDtoLoc = {};
 var groups = new Array();
 var dataGrid; //Datatables object initialized in getSetupData()
 var numCols = 0;
+var plots = {};
+var plotdata = {};
 var pageType = undefined; //Allows rest of functions to check page type without passing type around. It is only changed in getSetupData.
 
 function getSetupData(type){
