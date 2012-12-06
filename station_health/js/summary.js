@@ -1,15 +1,15 @@
 /*
-   summary.js
-   Author: James Holland jholland@usgs.gov
-   summary.js contains functions, objects and calls needed for using summary.html.
-   License: Public Domain
+ summary.js
+ Author: James Holland jholland@usgs.gov
+ summary.js contains functions, objects and calls needed for using summary.html.
+ License: Public Domain
  */
 
 $(document).ready(function(){
-    initForm("summary");
-    getSetupData("summary");
+        initForm("summary");
+        getSetupData("summary");
 
-});
+    });
 
 function filterGroups(datatable){
     var group = document.getElementById("ddlGroup");
@@ -44,8 +44,8 @@ function buildGrid(){
     for(station in mapSIDtoNID){
         if(mapSIDtoNID.hasOwnProperty(station)){
             var $row = $('<tr id = "'+station+'"><td>'+mapGIDtoGName[mapSIDtoNID[station]]+'</td>'
-                    +'<td><a href=\"station.html?station='+station+'\">'+mapSIDtoSName[station]+'</a></td>'
-                    +'<td>,'+mapSIDtoGIDs[station]+',</td></tr>');
+                +'<td><a href=\"station.html?station='+station+'\">'+mapSIDtoSName[station]+'</a></td>'
+                +'<td>,'+mapSIDtoGIDs[station]+',</td></tr>');
             $("#grid tbody").append($row);
             for( var i = 0; i<metricsSorted.length; i++){
                 $row.append('<td id="d_'+mapMNametoMID[metricsSorted[i]]+'_'+station+'"></td>');
@@ -82,42 +82,42 @@ function populateGrid(datatable){
     var dates = getQueryDates();
     var visibleRows = $('tbody tr', datatable.fnSettings().nTable);
     $.each(visibleRows, function(c){
-        stations= stations+"-"+$(visibleRows[c]).closest('tr').attr('id');
-        // alert(dataGrid.fnGetData(visibleRows[c])[0]);
-    });
+            stations= stations+"-"+$(visibleRows[c]).closest('tr').attr('id');
+            // alert(dataGrid.fnGetData(visibleRows[c])[0]);
+        });
     stations = stations.substr(1); //trims initial - from the string
     $.each(datatable.fnSettings().aoColumns, function(c){
-        if(datatable.fnSettings().aoColumns[c].bVisible == true){
-            if(mapMNametoMID[datatable.fnSettings().aoColumns[c].sTitle]){
-                numCols++; 
-                var metricID = mapMNametoMID[datatable.fnSettings().aoColumns[c].sTitle];
-                $.get("/cgi-bin/metrics.py", {cmd: "stationgrid", param: "station."+stations+
-                    "_metric."+metricID+"_dates."+dates},
-                    function(data){
-                        parseStationGrid(data, metricID, datatable);
-                        numCols--;
-                        if(numCols <= 0){
-                            datatable.fnDraw();
-                        }
+            if(datatable.fnSettings().aoColumns[c].bVisible == true){
+                if(mapMNametoMID[datatable.fnSettings().aoColumns[c].sTitle]){
+                    numCols++; 
+                    var metricID = mapMNametoMID[datatable.fnSettings().aoColumns[c].sTitle];
+                    $.get("/cgi-bin/metrics.py", {cmd: "stationgrid", param: "station."+stations+
+                                "_metric."+metricID+"_dates."+dates},
+                            function(data){
+                                parseStationGrid(data, metricID, datatable);
+                                numCols--;
+                                if(numCols <= 0){
+                                    datatable.fnDraw();
+                                }
+                            }
+                        );
                     }
-                    );
-            }
-        }
-    });
-}
+                }
+            });
+    }
 
-function clearDataTable(datatable){
-    for(var sid in mapSIDtoSName){
-        if(mapSIDtoSName.hasOwnProperty(sid)){
-            for(var mid in mapMIDtoMName){
-                if(mapMIDtoMName.hasOwnProperty(mid)){
-                    var cell = document.getElementById(mid+"_"+sid);
-                    if(cell){
-                        var pos = datatable.fnGetPosition(cell);
-                        datatable.fnUpdate("", pos[0], pos[2], false, false );
+    function clearDataTable(datatable){
+        for(var sid in mapSIDtoSName){
+            if(mapSIDtoSName.hasOwnProperty(sid)){
+                for(var mid in mapMIDtoMName){
+                    if(mapMIDtoMName.hasOwnProperty(mid)){
+                        var cell = document.getElementById(mid+"_"+sid);
+                        if(cell){
+                            var pos = datatable.fnGetPosition(cell);
+                            datatable.fnUpdate("", pos[0], pos[2], false, false );
+                        }
                     }
                 }
             }
         }
     }
-}

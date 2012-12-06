@@ -1,16 +1,16 @@
 /*
-   station.js
-   Author: James Holland jholland@usgs.gov
-   station.js contains functions, objects and calls needed for using station.html.
-   License: Public Domain
+ station.js
+ Author: James Holland jholland@usgs.gov
+ station.js contains functions, objects and calls needed for using station.html.
+ License: Public Domain
  */
 
 
 $(document).ready(function(){
-    initForm("station");
-    getSetupData("station");
+        initForm("station");
+        getSetupData("station");
 
-});
+    });
 
 function filterGroups(datatable){
     var group = document.getElementById("ddlGroup");
@@ -44,7 +44,7 @@ function buildGrid(){
     for(channel in mapCIDtoCName){
         if(mapCIDtoCName.hasOwnProperty(channel)){
             var $row = $('<tr id = "'+channel+'"><td>'+mapCIDtoLoc[channel]+'</td>'
-                    +'<td>'+mapCIDtoCName[channel]+'</a></td></tr>');
+                +'<td>'+mapCIDtoCName[channel]+'</a></td></tr>');
             $("#grid tbody").append($row);
             for( var i = 0; i<metricsSorted.length; i++){
                 $row.append('<td id="d_'+mapMNametoMID[metricsSorted[i]]+'_'+channel+'"></td>');
@@ -82,64 +82,64 @@ function populateGrid(datatable){
     channels = "";
     var visibleRows = $('tbody tr', datatable.fnSettings().nTable);
     $.each(visibleRows, function(c){
-        channels = channels+"-"+$(visibleRows[c]).closest('tr').attr('id');
-    });
+            channels = channels+"-"+$(visibleRows[c]).closest('tr').attr('id');
+        });
     channels = channels.substr(1); //trims initial - from the string
     $.each(datatable.fnSettings().aoColumns, function(c){
-        if(datatable.fnSettings().aoColumns[c].bVisible == true){
-            if(mapMNametoMID[datatable.fnSettings().aoColumns[c].sTitle]){
-                numCols++; 
-                var metricID = mapMNametoMID[datatable.fnSettings().aoColumns[c].sTitle];
-                $.get("/cgi-bin/metrics.py", {cmd: "channelgrid", param: "channel."+channels+
-                    "_metric."+metricID+"_dates."+dates},
-                    function(data){
-                        parseDataReturn(data, metricID, datatable);
-                        numCols--;
-                        if(numCols <= 0){
-                            datatable.fnDraw();
-                        }
+            if(datatable.fnSettings().aoColumns[c].bVisible == true){
+                if(mapMNametoMID[datatable.fnSettings().aoColumns[c].sTitle]){
+                    numCols++; 
+                    var metricID = mapMNametoMID[datatable.fnSettings().aoColumns[c].sTitle];
+                    $.get("/cgi-bin/metrics.py", {cmd: "channelgrid", param: "channel."+channels+
+                                "_metric."+metricID+"_dates."+dates},
+                            function(data){
+                                parseDataReturn(data, metricID, datatable);
+                                numCols--;
+                                if(numCols <= 0){
+                                    datatable.fnDraw();
+                                }
+                            }
+                        );
                     }
-                    );
+                }
+            });
+    }
+
+    function populateGroups(){
+        var groupList = document.getElementById("ddlGroup");
+        var typesSorted = new Array();
+        var types = new Array();
+        for(var groupType in mapTNametoTID){ //puts the group types into an array that can be sorted
+            if(mapTNametoTID.hasOwnProperty(groupType)){
+                types.push(groupType);
             }
         }
-    });
-}
-
-function populateGroups(){
-    var groupList = document.getElementById("ddlGroup");
-    var typesSorted = new Array();
-    var types = new Array();
-    for(var groupType in mapTNametoTID){ //puts the group types into an array that can be sorted
-        if(mapTNametoTID.hasOwnProperty(groupType)){
-            types.push(groupType);
-        }
-    }
-    typesSorted = types.sort();
-    for(var i = 0; i < typesSorted.length; i++){
-        var optGroup = document.createElement('optgroup');
-        optGroup.label = typesSorted[i];
-        groupList.appendChild(optGroup);
-        for(var t = 0; t<mapTIDtoGIDs[mapTNametoTID[typesSorted[i]]].length;t++){
-            var option = document.createElement("option")
+        typesSorted = types.sort();
+        for(var i = 0; i < typesSorted.length; i++){
+            var optGroup = document.createElement('optgroup');
+            optGroup.label = typesSorted[i];
+            groupList.appendChild(optGroup);
+            for(var t = 0; t<mapTIDtoGIDs[mapTNametoTID[typesSorted[i]]].length;t++){
+                var option = document.createElement("option")
                 option.value = mapTIDtoGIDs[mapTNametoTID[typesSorted[i]]][t];
-            option.innerHTML = mapGIDtoGName[mapTIDtoGIDs[mapTNametoTID[typesSorted[i]]][t]];
-            optGroup.appendChild(option);
+                option.innerHTML = mapGIDtoGName[mapTIDtoGIDs[mapTNametoTID[typesSorted[i]]][t]];
+                optGroup.appendChild(option);
+            }
         }
     }
-}
 
-function clearDataTable(datatable){
-    for(var cid in mapCIDtoCName){
-        if(mapCIDtoCName.hasOwnProperty(cid)){
-            for(var mid in mapMIDtoMName){
-                if(mapMIDtoMName.hasOwnProperty(mid)){
-                    var cell = document.getElementById(mid+"_"+cid);
-                    if(cell){
-                        var pos = datatable.fnGetPosition(cell);
-                        datatable.fnUpdate("", pos[0], pos[2], false, false );
+    function clearDataTable(datatable){
+        for(var cid in mapCIDtoCName){
+            if(mapCIDtoCName.hasOwnProperty(cid)){
+                for(var mid in mapMIDtoMName){
+                    if(mapMIDtoMName.hasOwnProperty(mid)){
+                        var cell = document.getElementById(mid+"_"+cid);
+                        if(cell){
+                            var pos = datatable.fnGetPosition(cell);
+                            datatable.fnUpdate("", pos[0], pos[2], false, false );
+                        }
                     }
                 }
             }
         }
     }
-}

@@ -1,16 +1,16 @@
 /*
-   plot.js
-   Author: James Holland jholland@usgs.gov
-   plot.js contains functions for creating plot windows and actual plotting
-   License: Public Domain
+ plot.js
+ Author: James Holland jholland@usgs.gov
+ plot.js contains functions for creating plot windows and actual plotting
+ License: Public Domain
  */
 
 function plotTemplate(id, title){
     var dialog = $("<div id='dia"+id+"' title='"+title+"'></div>").dialog({
-        close: function(event, ui){
-            $("#dia"+id).remove();
-        }
-    });
+            close: function(event, ui){
+                $("#dia"+id).remove();
+            }
+        });
     var plotTarget = $("<div id='plot"+id+"'></div>");
 
     dialog.append(plotTarget);
@@ -27,7 +27,7 @@ function createDialog(id){
     if (pageType == "summary")
         title = mapSIDtoSName[ids[2]]+" "+mapMIDtoMName[ids[1]];
     else if (pageType == "station")
-        title = mapCIDtoCName[ids[2]]+" "+mapMIDtoMName[ids[1]];
+    title = mapCIDtoCName[ids[2]]+" "+mapMIDtoMName[ids[1]];
     else
         title = "ERROR page type not defined";
 
@@ -40,69 +40,68 @@ function createDialog(id){
 }
 
 function bindPlot(pid){
-    //    plots[pid] = $.jqplot('plot'+pid, [plotdata[pid]]);
     plots[pid] = $.jqplot('plot'+pid, [plotdata[pid]], {
-        //title: title,
-        cursor:{
-            show: true,
-    zoom: true,
-    showTooltip: false
-        },
-    
-       axesDefaults: {
-            pad: 1.2
-           //labelRenderer: $.jqplot.CanvasAxisLabelRenderer
-       },
-     
-    highlighter: {
-        show: true,
-    sizeAdjust: 7.5
-    },
-    axes: {
-        xaxis: {
-            min: (getStartDate()+1), //groups[title]["start"],
-    max: (getEndDate()+1), //groups[title]["end"],
-    renderer: $.jqplot.DateAxisRenderer,
-    pad: 1.2
-        },
-        yaxis: {
-            //tickInterval: (high_value - low_value) / 10,
-            min: (parseFloat(plotdata["ymin"+pid])-5), //groups[title]["start"],
-    max: (parseFloat(plotdata["ymax"+pid])+5),
-    pad: 1.2
-        }
-    }
-    });
+            //title: title,  //Title is on the dialog window
+            cursor: {
+                show: true,
+                zoom: true,
+                showTooltip: false
+            },
 
-//Bind the zoom out button
-        $("#btn"+pid).click(function () {
+            /*axesDefaults: {
+             pad: 1.2
+             //labelRenderer: $.jqplot.CanvasAxisLabelRenderer
+         },*/
+
+            highlighter: {
+                show: true,
+                sizeAdjust: 7.5
+            },
+            axes: {
+                xaxis: {
+                    min: (getStartDate()+1),
+                    max: (getEndDate()+1),
+                    renderer: $.jqplot.DateAxisRenderer,
+                    pad: 1.2
+                },
+                yaxis: {
+                    //tickInterval: (high_value - low_value) / 10,
+                    min: (parseFloat(plotdata["ymin"+pid])-5),
+                    max: (parseFloat(plotdata["ymax"+pid])+5),
+                    pad: 1.2
+                }
+            }
+        });
+
+    //Bind the zoom out button
+    $("#btn"+pid).click(function () {
             plots[$(this).val()].resetZoom();
         });
-    
+
 }
 
 function getPlotData(ids, pid){
     var daterange = getQueryDates();
     if (pageType == "station"){
         $.get("/cgi-bin/metrics.py", 
-                {cmd: "channelplot", param: "channel."+ids[2]+"_metric."+ids[1]+"_dates."+daterange},
-                function(data){
-                    parsePlotReturn(data, pid);
-                }
-             ).done(function(){
-        bindPlot(pid);
-    });
+            {cmd: "channelplot", param: "channel."+ids[2]+"_metric."+ids[1]+"_dates."+daterange},
+            function(data){
+                parsePlotReturn(data, pid);
+            }
+        ).done(function(){
+                bindPlot(pid);
+            });
 
     }
     else if (pageType == "summary"){
         $.get("/cgi-bin/metrics.py", 
-                {cmd: "stationplot", param: "station."+ids[2]+"_metric."+ids[1]+"_dates."+daterange},
-                function(data){
-                    parsePlotReturn(data, pid);
-                }
-             ).done(function(){
-        bindPlot(pid);
-    });
+            {cmd: "stationplot", param: "station."+ids[2]+"_metric."+ids[1]+"_dates."+daterange},
+            function(data){
+                parsePlotReturn(data, pid);
+            }
+        ).done(function(){
+                bindPlot(pid);
+            });
     }
 }
 

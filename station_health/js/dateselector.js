@@ -1,8 +1,8 @@
 /*
-   dateselector.js
-   Author: James Holland jholland@usgs.gov
-   dateselector.js contains functions and objects connected to only the date controls
-   License: Public Domain
+ dateselector.js
+ Author: James Holland jholland@usgs.gov
+ dateselector.js contains functions and objects connected to only the date controls
+ License: Public Domain
  */
 var mapYearstoMonths = {}; //Available months for each year
 var mapMonthtoNum = {
@@ -57,12 +57,12 @@ function getQueryDates(){
     var startDate = new Date($("#dpStartDate").val());
     var endDate = new Date($("#dpEndDate").val());
     var dates = ""  +startDate.getUTCFullYear()
-        +prepad((startDate.getUTCMonth()+1),2,"0")
-        +prepad(startDate.getUTCDate(),2,"0")
-        +"."
-        +endDate.getUTCFullYear()
-        +prepad((endDate.getUTCMonth()+1),2,"0")
-        +prepad(endDate.getUTCDate(),2,"0");
+    +prepad((startDate.getUTCMonth()+1),2,"0")
+    +prepad(startDate.getUTCDate(),2,"0")
+    +"."
+    +endDate.getUTCFullYear()
+    +prepad((endDate.getUTCMonth()+1),2,"0")
+    +prepad(endDate.getUTCDate(),2,"0");
     return dates;
 }
 
@@ -78,20 +78,20 @@ function yearMonthToStartDate(){
     var startDate = new Date($("#ddlYear").val(), parseInt($("#ddlMonth").val()-1),1);
 
     $("#dpStartDate").val(
-            startDate.getUTCFullYear()+"-"+
+        startDate.getUTCFullYear()+"-"+
             (startDate.getUTCMonth()+1)+"-"+
-            prepad(startDate.getUTCDate(),2,"0")
-            );
+        prepad(startDate.getUTCDate(),2,"0")
+);
 }
 
 function yearMonthToEndDate(){
     var endDate = new Date($("#ddlYear").val(), parseInt($("#ddlMonth").val()),0);
 
     $("#dpEndDate").val(
-            endDate.getUTCFullYear()+"-"+
+        endDate.getUTCFullYear()+"-"+
             (endDate.getUTCMonth()+1)+"-"+
-            prepad(endDate.getUTCDate(),2,"0")
-            );
+        prepad(endDate.getUTCDate(),2,"0")
+);
 }
 
 
