@@ -94,6 +94,16 @@ function getPlotData(ids, pid){
     });
 
     }
+    else if (pageType == "summary"){
+        $.get("/cgi-bin/metrics.py", 
+                {cmd: "stationplot", param: "station."+ids[2]+"_metric."+ids[1]+"_dates."+daterange},
+                function(data){
+                    parsePlotReturn(data, pid);
+                }
+             ).done(function(){
+        bindPlot(pid);
+    });
+    }
 }
 
 function parsePlotReturn(data,pid){
