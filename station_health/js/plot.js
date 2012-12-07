@@ -49,27 +49,25 @@ function bindPlot(pid){
                 showTooltip: false
             },
 
-            /*axesDefaults: {
-             pad: 1.2
-             //labelRenderer: $.jqplot.CanvasAxisLabelRenderer
-         },*/
-
             highlighter: {
                 show: true,
                 sizeAdjust: 7.5
             },
             axes: {
                 xaxis: {
-                    //min: (getStartDate()+1),
-                    //max: (getEndDate()+1),
-                    tickOptions:{formatString:'%b %#d, %y'},
+                    autoscale:true,
+                    min: (getStartDate()+1),
+                    max: (getEndDate()+1),
+                    tickOptions:{
+                        formatString:'%b %#d, %y',
+                        fontSize: '10pt'
+                    },
                     renderer: $.jqplot.DateAxisRenderer
-                    //pad: 1.2
                 },
                 yaxis: {
-                    //tickInterval: (high_value - low_value) / 10,
-//                    min: (parseFloat(plotdata["ymin"+pid])-5),
-//                    max: (parseFloat(plotdata["ymax"+pid])+5),
+                    tickOptions:{
+                        fontSize: '10pt'
+                    },
                     pad: 1.01
                 }
             }
