@@ -66,9 +66,9 @@ function bindPlot(pid){
                 },
                 yaxis: {
                     //tickInterval: (high_value - low_value) / 10,
-                    min: (parseFloat(plotdata["ymin"+pid])-5),
-                    max: (parseFloat(plotdata["ymax"+pid])+5),
-                    pad: 1.2
+//                    min: (parseFloat(plotdata["ymin"+pid])-5),
+//                    max: (parseFloat(plotdata["ymax"+pid])+5),
+                    pad: 1.01
                 }
             }
         });
@@ -116,16 +116,19 @@ function parsePlotReturn(data,pid){
     for(var i = 0; i <rows.length; i++){
         row = rows[i].split(",");   //row[0] is date, row[1] is value
         if(row[1] && row[0]){
-            plotdata[pid].push([row[0],parseFloat(row[1]).toFixed(2)]);
-            if(plotdata["xmax"+pid] == undefined ||row[0] > plotdata["xmax"+pid])
-                plotdata["xmax"+pid] = row[0];
-            if(plotdata["xmin"+pid] == undefined ||row[0] < plotdata["xmin"+pid])
-                plotdata["xmin"+pid] = row[0];
-            if(plotdata["ymax"+pid] == undefined ||parseFloat(row[1]) > plotdata["ymax"+pid])
-                plotdata["ymax"+pid] = parseFloat(row[1]).toFixed(2);
-            if(plotdata["ymin"+pid] == undefined ||parseFloat(row[1]) < plotdata["ymin"+pid])
-                plotdata["ymin"+pid] = parseFloat(row[1]).toFixed(2);
-            alert(row[1] +" "+ plotdata["ymin"+pid]);
+            var rdate = parseDate(row[0],'-');
+            var rval = parseFloat(parseFloat(row[1]).toFixed(2)); //Second parseFloat loses trailing 0s and lets us parseFloat on every comparison and store.
+            plotdata[pid].push([rdate,rval]);
+            /*//Padding makes this code unneeded
+            if(plotdata["xmax"+pid] == undefined || rdate > plotdata["xmax"+pid])
+                plotdata["xmax"+pid] = rdate;
+            if(plotdata["xmin"+pid] == undefined || rdate < plotdata["xmin"+pid])
+                plotdata["xmin"+pid] = rdate;
+            if(plotdata["ymax"+pid] == undefined || rval > plotdata["ymax"+pid])
+                plotdata["ymax"+pid] = rval;
+            if((plotdata["ymin"+pid] == undefined) || rval < plotdata["ymin"+pid])
+                plotdata["ymin"+pid] = rval;
+            */
         }
     }
 }
