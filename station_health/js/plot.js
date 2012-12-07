@@ -35,8 +35,8 @@ function createDialog(id){
     //If we do try to implement this, there is a bug. When the last dialog is closed, the first disapears, but doesn't get removed. Same with Second to last and second.
     if($("#dia"+pid).length) //If dialog exists, close it.
         $("#dia"+pid).dialog("close");
-    $('#html').append(plotTemplate(pid, title));
     getPlotData(ids, pid);
+    $('#html').append(plotTemplate(pid, title));
 }
 
 function bindPlot(pid){
@@ -59,8 +59,8 @@ function bindPlot(pid){
             },
             axes: {
                 xaxis: {
-                    min: (getStartDate()+1),
-                    max: (getEndDate()+1),
+                    //min: (getStartDate()+1),
+                    //max: (getEndDate()+1),
                     renderer: $.jqplot.DateAxisRenderer,
                     pad: 1.2
                 },
@@ -77,7 +77,9 @@ function bindPlot(pid){
     $("#btn"+pid).click(function () {
             plots[$(this).val()].resetZoom();
         });
-
+    $('#dia'+pid).bind('dialogresize', function(event, ui) {
+                    plots[pid].replot( { resetAxes: true } );
+                        });
 }
 
 function getPlotData(ids, pid){
