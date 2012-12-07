@@ -121,10 +121,11 @@ function parsePlotReturn(data,pid){
                 plotdata["xmax"+pid] = row[0];
             if(plotdata["xmin"+pid] == undefined ||row[0] < plotdata["xmin"+pid])
                 plotdata["xmin"+pid] = row[0];
-            if(plotdata["ymax"+pid] == undefined ||row[1] > plotdata["ymax"+pid])
+            if(plotdata["ymax"+pid] == undefined ||parseFloat(row[1]) > plotdata["ymax"+pid])
                 plotdata["ymax"+pid] = parseFloat(row[1]).toFixed(2);
-            if(plotdata["ymin"+pid] == undefined ||row[1] < plotdata["ymin"+pid])
+            if(plotdata["ymin"+pid] == undefined ||parseFloat(row[1]) < plotdata["ymin"+pid])
                 plotdata["ymin"+pid] = parseFloat(row[1]).toFixed(2);
+            alert(row[1] +" "+ plotdata["ymin"+pid]);
         }
     }
 }
