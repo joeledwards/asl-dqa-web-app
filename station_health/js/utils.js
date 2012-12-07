@@ -22,3 +22,8 @@ function getQueryString(key) {
     }
     return null;
 }
+
+function parseDate(datein, delimiter){
+            var datea = datein.split(""+delimiter);
+            return new Date(datea[0],(datea[1]-1),datea[2]);
+}
