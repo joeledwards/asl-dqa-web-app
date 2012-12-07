@@ -7,6 +7,7 @@
 
 function plotTemplate(id, title){
     var dialog = $("<div id='dia"+id+"' title='"+title+"'></div>").dialog({
+            width: 500,
             close: function(event, ui){
                 $("#dia"+id).remove();
             }
@@ -61,8 +62,9 @@ function bindPlot(pid){
                 xaxis: {
                     //min: (getStartDate()+1),
                     //max: (getEndDate()+1),
-                    renderer: $.jqplot.DateAxisRenderer,
-                    pad: 1.2
+                    tickOptions:{formatString:'%b %#d, %y'},
+                    renderer: $.jqplot.DateAxisRenderer
+                    //pad: 1.2
                 },
                 yaxis: {
                     //tickInterval: (high_value - low_value) / 10,
