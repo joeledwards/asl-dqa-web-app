@@ -111,7 +111,7 @@ function populateGrid(datatable){
             if(mapSIDtoSName.hasOwnProperty(sid)){
                 for(var mid in mapMIDtoMName){
                     if(mapMIDtoMName.hasOwnProperty(mid)){
-                        var cell = document.getElementById(mid+"_"+sid);
+                        var cell = document.getElementById("d_"+mid+"_"+sid);
                         if(cell){
                             var pos = datatable.fnGetPosition(cell);
                             datatable.fnUpdate("", pos[0], pos[2], false, false );

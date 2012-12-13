@@ -133,7 +133,7 @@ function populateGrid(datatable){
             if(mapCIDtoCName.hasOwnProperty(cid)){
                 for(var mid in mapMIDtoMName){
                     if(mapMIDtoMName.hasOwnProperty(mid)){
-                        var cell = document.getElementById(mid+"_"+cid);
+                        var cell = document.getElementById("d_"+mid+"_"+cid);
                         if(cell){
                             var pos = datatable.fnGetPosition(cell);
                             datatable.fnUpdate("", pos[0], pos[2], false, false );
