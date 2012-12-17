@@ -73,6 +73,7 @@ function initializeDataGrid(datatable){
 
     //Hide group Column
     //datatable.fnSetColumnVis(2, false);
+    datatable.fnSort([[0,'asc'],[1,'asc']]);
 }
 
 function populateGrid(datatable){

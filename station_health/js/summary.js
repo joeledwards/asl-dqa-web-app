@@ -73,6 +73,7 @@ function parseStationGrid(data,mid, pDatatable){
 function initializeDataGrid(datatable){
 
     datatable.fnSetColumnVis(2, false);
+    datatable.fnSort([[0,'asc'],[1,'asc']]);
 }
 
 function populateGrid(datatable){
