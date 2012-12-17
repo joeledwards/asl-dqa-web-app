@@ -41,45 +41,51 @@ function createDialog(id){
 }
 
 function bindPlot(pid){
-    plots[pid] = $.jqplot('plot'+pid, [plotdata[pid]], {
-            //title: title,  //Title is on the dialog window
-            cursor: {
-                show: true,
-                zoom: true,
-                showTooltip: false
-            },
-
-            highlighter: {
-                show: true,
-                sizeAdjust: 7.5
-            },
-            axes: {
-                xaxis: {
-                    autoscale:true,
-                    min: (getStartDate()+1),
-                    max: (getEndDate()+1),
-                    tickOptions:{
-                        formatString:'%b %#d, %y',
-                        fontSize: '10pt'
-                    },
-                    renderer: $.jqplot.DateAxisRenderer
+    if (plotdata[pid].length > 0){
+        plots[pid] = $.jqplot('plot'+pid, [plotdata[pid]], {
+                //title: title,  //Title is on the dialog window
+                cursor: {
+                    show: true,
+                    zoom: true,
+                    showTooltip: false
                 },
-                yaxis: {
-                    tickOptions:{
-                        fontSize: '10pt'
-                    },
-                    pad: 1.01
-                }
-            }
-        });
 
-    //Bind the zoom out button
-    $("#btn"+pid).click(function () {
-            plots[$(this).val()].resetZoom();
-        });
-    $('#dia'+pid).bind('dialogresize', function(event, ui) {
-                    plots[pid].replot( { resetAxes: true } );
-                        });
+                highlighter: {
+                    show: true,
+                    sizeAdjust: 7.5
+                },
+                axes: {
+                    xaxis: {
+                        autoscale:true,
+                        min: (getStartDate()+1),
+                        max: (getEndDate()+1),
+                        tickOptions:{
+                            formatString:'%b %#d, %y',
+                            fontSize: '10pt'
+                        },
+                        renderer: $.jqplot.DateAxisRenderer
+                    },
+                    yaxis: {
+                        tickOptions:{
+                            fontSize: '10pt'
+                        },
+                        pad: 1.01
+                    }
+                }
+            });
+
+        //Bind the zoom out button
+        $("#btn"+pid).click(function () {
+                plots[$(this).val()].resetZoom();
+            });
+        $('#dia'+pid).bind('dialogresize', function(event, ui) {
+                plots[pid].replot( { resetAxes: true } );
+            });
+    }
+    else {
+        $('#dia'+pid).text('No data available');
+    }
+
 }
 
 function getPlotData(ids, pid){
