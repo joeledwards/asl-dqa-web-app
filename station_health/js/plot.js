@@ -41,7 +41,7 @@ function createDialog(id){
 }
 
 function bindPlot(pid){
-    if (plotdata[pid].length > 0){
+    if (plotdata[pid].length > 0){ //Check if data was returned
         plots[pid] = $.jqplot('plot'+pid, [plotdata[pid]], {
                 //title: title,  //Title is on the dialog window
                 cursor: {
@@ -82,7 +82,7 @@ function bindPlot(pid){
                 plots[pid].replot( { resetAxes: true } );
             });
     }
-    else {
+    else { //TODO:Make it so the dialog doesn't pop up or is closed already
         $('#dia'+pid).text('No data available');
     }
 
@@ -125,7 +125,7 @@ function parsePlotReturn(data,pid){
         row = rows[i].split(",");   //row[0] is date, row[1] is value
         if(row[1] && row[0]){
             var rdate = parseDate(row[0],'-');
-            var rval = parseFloat(parseFloat(row[1]).toFixed(2)); //Second parseFloat loses trailing 0s and lets us parseFloat on every comparison and store.
+            var rval = parseFloat(parseFloat(row[1]).toFixed(2)); //Second parseFloat loses trailing 0s and lets us not have to parseFloat on every comparison and store.
             plotdata[pid].push([rdate,rval]);
             /*//Padding makes this code unneeded
             if(plotdata["xmax"+pid] == undefined || rdate > plotdata["xmax"+pid])
