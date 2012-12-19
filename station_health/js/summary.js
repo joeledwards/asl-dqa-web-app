@@ -55,21 +55,6 @@ function buildGrid(){
 
 }
 
-function parseStationGrid(data,mid, pDatatable){
-    var rows = new Array();
-    rows = data.split("\n");
-    for(var i = 0; i <rows.length; i++){
-        row = rows[i].split(",");
-        if(row[1] && row[0] && mid){
-            var cell = document.getElementById("d_"+mid+"_"+row[0]);
-            if(cell){
-                var pos = pDatatable.fnGetPosition(cell);
-                pDatatable.fnUpdate(row[1], pos[0], pos[2], false, false );
-            }
-        }
-    }
-}
-
 function initializeDataGrid(datatable){
 
     datatable.fnSetColumnVis(2, false);
@@ -95,7 +80,7 @@ function populateGrid(datatable){
                     $.get("/cgi-bin/metrics.py", {cmd: "stationgrid", param: "station."+stations+
                                 "_metric."+metricID+"_dates."+dates},
                             function(data){
-                                parseStationGrid(data, metricID, datatable);
+                                parseDataReturn(data, metricID, datatable);
                                 numCols--;
                                 if(numCols <= 0){
                                     datatable.fnDraw();
