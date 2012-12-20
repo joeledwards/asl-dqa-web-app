@@ -26,6 +26,22 @@ var plots = {};
 var plotdata = {};
 var pageType = undefined; //Allows rest of functions to check page type without passing type around. It is only changed in getSetupData.
 
+var percents = {}; //Contains list of objects for each metric
+/* Format is like so:
+    percents = {
+        "station1ID" = {
+            metric1ID = 100,
+            metric2ID = 85
+        },
+        "station2ID" = ...
+        OR
+        "channel1ID" = {
+            metric1ID = ...
+        }
+
+    }
+*/
+
 function getSetupData(type){
     pageType = type;
     var setupParams = {
@@ -160,8 +176,11 @@ function parseDataReturn(data,mid, pDatatable){
     var rows = new Array();
     rows = data.split("\n");
     for(var i = 0; i <rows.length; i++){
-        row = rows[i].split(",");
-        if(row[1] && row[0] && mid){
+        row = rows[i].split(","); //stationID/channelID, value, percentage
+        if(row[0] && row[1] && mid){ //Check if id, value, and metricID exist
+            if(!isNaN(row[2])){ //Uncomputable values are sent a "n"
+                percents[row[0]][mid] = row[2];
+            }
             var cell = document.getElementById("d_"+mid+"_"+row[0]);
             if(cell){
                 var pos = pDatatable.fnGetPosition(cell);
@@ -174,9 +193,9 @@ function parseDataReturn(data,mid, pDatatable){
 function parseSetupResponse(response, params){
     var rows = response.split(/\n/);
     for (var i =0; i< rows.length; i++){
-        var parts = rows[i].split(',');
+        var parts = rows[i].split(',');  //Typical return like Type, TypeID, Values
         switch(parts[0]){
-        case 'D':
+        case 'D': //D, year, month
             if (parts.length != 3) {
                 continue;
             }
@@ -187,7 +206,7 @@ function parseSetupResponse(response, params){
                 params.setYear = year;
             }
             break;
-        case 'T':
+        case 'T': //T, GroupTypeID, GroupTypeName (Network, Country, etc), Groups associated with Type
             mapTNametoTID[parts[2]] = parts[1]; //Allows lookup by TName
             mapTIDtoTName[parts[1]] = parts[2];
             if (mapTIDtoGIDs[parts[1]] == undefined){
@@ -197,10 +216,10 @@ function parseSetupResponse(response, params){
                 mapTIDtoGIDs[parts[1]].push( parts[t]);
             }
             break;
-        case 'G':
+        case 'G': //G, GroupID, GroupName (IU, CU, Asia, etc), GroupTypeID
             mapGIDtoGName[parts[1]] = parts[2];
             break;
-        case 'S':
+        case 'S': //S, StationID, NetworkID, StationName, groupIDs
             mapSIDtoSName[parts[1]] = parts[3];
             mapSIDtoNID[parts[1]] = parts[2];
             for(var t=4; t<parts.length; t++){
@@ -211,15 +230,27 @@ function parseSetupResponse(response, params){
                 if(mapSIDtoGIDs[parts[1]] == undefined){
                     mapSIDtoGIDs[parts[1]] = new Array();
                 }
+                /* When loading Station.html both stations and channels get loaded,
+                    but this is a nonissue as we will never have both station averages
+                    and channel averages on the same page. It only initializes empty
+                    objects. If overlap of IDs occurs, then it treats it still stores
+                    channel data. */
                 mapSIDtoGIDs[parts[1]].push(parts[t]);
+                if(percents[parts[1]] == undefined){ 
+                    percents[parts[1]] = {};
+                }
             }
             break;
-        case 'C':
+        case 'C': //C, ChannelID, ChannelName, LocationName, StationID
             mapCIDtoCName[parts[1]] = parts[2];
             mapCNametoCID[parts[2]] = parts[1];
             mapCIDtoLoc[parts[1]] = parts[3];
+            //See "percentage" comment where S is processed.
+            if(percents[parts[1]] == undefined){
+                percents[parts[1]] = {};
+            }
             break;
-        case 'M':
+        case 'M': //M, MetricID, MetricName
             mapMIDtoMName[parts[1]]=parts[2];
             mapMNametoMID[parts[2]]=parts[1];
             break;
