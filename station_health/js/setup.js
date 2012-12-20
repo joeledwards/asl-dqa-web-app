@@ -26,21 +26,6 @@ var plots = {};
 var plotdata = {};
 var pageType = undefined; //Allows rest of functions to check page type without passing type around. It is only changed in getSetupData.
 
-var percents = {}; //Contains list of objects for each metric
-/* Format is like so:
-    percents = {
-        "station1ID" = {
-            metric1ID = 100,
-            metric2ID = 85
-        },
-        "station2ID" = ...
-        OR
-        "channel1ID" = {
-            metric1ID = ...
-        }
-
-    }
-*/
 
 function getSetupData(type){
     pageType = type;
@@ -178,15 +163,7 @@ function parseDataReturn(data,mid, pDatatable){
     for(var i = 0; i <rows.length; i++){
         row = rows[i].split(","); //stationID/channelID, value, percentage
         if(row[0] && row[1] && mid){ //Check if id, value, and metricID exist
-            if(!isNaN(row[2])){ //Uncomputable values are sent a "n"
-                /* Overlaps in percents could occur if both station 
-                    averages and channel averages were loaded on the same
-                    page. */
-                if(percents[row[0]] == undefined){ 
-                    percents[row[0]] = {};
-                }
-                percents[row[0]][mid] = row[2];
-            }
+            addPercent(row[0], mid, row[1]);
             var cell = document.getElementById("d_"+mid+"_"+row[0]);
             if(cell){
                 var pos = pDatatable.fnGetPosition(cell);
