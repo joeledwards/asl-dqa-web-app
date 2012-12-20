@@ -179,6 +179,12 @@ function parseDataReturn(data,mid, pDatatable){
         row = rows[i].split(","); //stationID/channelID, value, percentage
         if(row[0] && row[1] && mid){ //Check if id, value, and metricID exist
             if(!isNaN(row[2])){ //Uncomputable values are sent a "n"
+                /* Overlaps in percents could occur if both station 
+                    averages and channel averages were loaded on the same
+                    page. */
+                if(percents[row[0]] == undefined){ 
+                    percents[row[0]] = {};
+                }
                 percents[row[0]][mid] = row[2];
             }
             var cell = document.getElementById("d_"+mid+"_"+row[0]);
@@ -230,25 +236,13 @@ function parseSetupResponse(response, params){
                 if(mapSIDtoGIDs[parts[1]] == undefined){
                     mapSIDtoGIDs[parts[1]] = new Array();
                 }
-                /* When loading Station.html both stations and channels get loaded,
-                    but this is a nonissue as we will never have both station averages
-                    and channel averages on the same page. It only initializes empty
-                    objects. If overlap of IDs occurs, then it treats it still stores
-                    channel data. */
                 mapSIDtoGIDs[parts[1]].push(parts[t]);
-                if(percents[parts[1]] == undefined){ 
-                    percents[parts[1]] = {};
-                }
             }
             break;
         case 'C': //C, ChannelID, ChannelName, LocationName, StationID
             mapCIDtoCName[parts[1]] = parts[2];
             mapCNametoCID[parts[2]] = parts[1];
             mapCIDtoLoc[parts[1]] = parts[3];
-            //See "percentage" comment where S is processed.
-            if(percents[parts[1]] == undefined){
-                percents[parts[1]] = {};
-            }
             break;
         case 'M': //M, MetricID, MetricName
             mapMIDtoMName[parts[1]]=parts[2];
