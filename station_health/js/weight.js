@@ -1,7 +1,7 @@
 /*
  weight.js
  Author: James Holland jholland@usgs.gov
- weight.js contains functions related to weighting and aggregate calculation
+ weight.js contains variables and functions related to weighting and aggregate calculation
  License: Public Domain
  */
 var percents = {}; //Contains list of objects for each metric
@@ -19,7 +19,7 @@ var percents = {}; //Contains list of objects for each metric
 
 }
 */
-var weightableMetrics = {}; //Contains available metrics and weight setting (.50) 
+var weights = {}; //Contains available metrics and weight setting (.50) 
 
 function addPercent(rowID, metricID, value){
     if(!isNaN(row[2])){ //Uncomputable values are sent as "n"
@@ -30,10 +30,32 @@ function addPercent(rowID, metricID, value){
             percents[rowID] = {};
         }
         percents[rowID][metricID] = value;
-        if(weightableMetrics[metricID] == undefined){
-            alert(metricID);
-            weightableMetrics[metricID] = 0; //Placeholder value
+        if(weights[metricID] == undefined){
+            weights[metricID] = 50; //Placeholder value
         }
 
     }
+}
+
+function calcAggr(rowID){
+    var numMetrics = 0;
+    var weightSum = 0;
+    var aggr = 0;
+    //Build sums and counts before computing aggregates
+    for (var metric in percents[rowID] ){ //
+        if(percents[rowID].hasOwnProperty(metric)){
+            weightSum += weights[metric];
+            numMetrics++;
+        }
+    }
+    
+    for (var metric in percents[rowID] ){ //
+        if(percents[rowID].hasOwnProperty(metric)){
+            //Doesn't need to be multiplied by 100 because percent already is
+            var trueWeight = weights[metric] / weightSum;
+            aggr += percents[rowID][metric] * trueWeight; 
+        }
+    }
+    return aggr;
+    
 }
