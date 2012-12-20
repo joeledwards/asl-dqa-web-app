@@ -31,7 +31,7 @@ function addPercent(rowID, metricID, value){
         }
         percents[rowID][metricID] = value;
         if(weights[metricID] == undefined){
-            weights[metricID] = 50; //Placeholder value
+            weights[metricID] = 25; //Placeholder value
         }
 
     }
@@ -48,14 +48,14 @@ function calcAggr(rowID){
             numMetrics++;
         }
     }
-    
+
     for (var metric in percents[rowID] ){ //
         if(percents[rowID].hasOwnProperty(metric)){
-            //Doesn't need to be multiplied by 100 because percent already is
+            //Doesn't need to be multiplied by 100 because the weight already is
             var trueWeight = weights[metric] / weightSum;
             aggr += percents[rowID][metric] * trueWeight; 
         }
     }
     return aggr;
-    
+
 }
