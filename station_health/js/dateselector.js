@@ -46,7 +46,7 @@ function initDates(year){
     }
     else{
         $("#ddlYear").val(year);
-        year_selected();
+        yearSelected();
         yearMonthToStartDate();
         yearMonthToEndDate();
     }
@@ -134,7 +134,7 @@ function addMonthYear(year, month){
     mapYearstoMonths[year].push(month);
 }
 
-function year_selected()
+function yearSelected()
 {
     var year = $("#ddlYear").val();
     var month_list = $("#ddlMonth");

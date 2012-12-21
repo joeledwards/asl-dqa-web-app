@@ -13,7 +13,11 @@ function initForm(type){
     }
 
     if (type == "station"){
-        form.append("<a href='summary.html' class='ui-state-default ui-corner-all'>Summary</a>");
+        form.append(
+        "<button type='button' id='btnSummary' class='ui-state-default ui-corner-all'>"+
+            "Summary"+
+            "</button>"
+    );
     }
 
     //Create YearMonth form for easier displaying/hiding
@@ -79,16 +83,21 @@ function initForm(type){
 
 function bindFormActions(type){
     if (type == "summary"){
-        $("#btnUpdate").on('click',function(){
+        $('#btnUpdate').on('click',function(){
                 filterGroups(dataGrid);
                 clearDataTable(dataGrid);
                 populateGrid(dataGrid);
             });
     }
-    else {
-        $("#btnUpdate").on('click',function(){
+    else if(type == "station") {
+        $('#btnUpdate').on('click',function(){
                 clearDataTable(dataGrid);
                 populateGrid(dataGrid);
+            });
+        $('#btnSummary').on('click',function(){
+            window.location = 'summary.html?'
+                    +'&sdate='+getStartDate('simple')
+                    +'&edate='+getEndDate('simple');
             });
     }
 
@@ -96,15 +105,16 @@ function bindFormActions(type){
             $("#spanYearMonth").toggle();
             $("#spanDateRange").toggle();
             if($("#spanYearMonth").is(":visible")){ //If switching back to YearMonthView, take year and month from startDate
-                $("#ddlYear").val(getStartDate().getUTCFullYear());
-                $("#ddlMonth").val(getStartDate().getUTCMonth()); 
+                $("#ddlYear").val(getStartDate('object').getUTCFullYear());
+                yearSelected();
+                $("#ddlMonth").val(getStartDate('object').getUTCMonth() +1); 
                 yearMonthToStartDate(); //push yearmonth back to startend date fields
                 yearMonthToEndDate();
             }
         });
 
     $("#ddlYear").change(function(){
-            year_selected();
+            yearSelected();
             yearMonthToStartDate();
             yearMonthToEndDate();
         });
