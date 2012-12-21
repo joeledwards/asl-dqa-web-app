@@ -47,7 +47,7 @@ function buildGrid(){
                 +'<td>'+mapCIDtoCName[channel]+'</a></td></tr>');
             $("#grid tbody").append($row);
             for( var i = 0; i<metricsSorted.length; i++){
-                $row.append('<td id="d_'+mapMNametoMID[metricsSorted[i]]+'_'+channel+'"></td>');
+                $row.append('<td id="d_'+mapMNametoMID[metricsSorted[i]]+'_'+channel+'" class="ltd"></td>');
             }
         }
     }
