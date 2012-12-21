@@ -31,11 +31,11 @@ function initForm(type){
     var spanDateRange = $("<span id='spanDateRange'/>");
     spanDateRange.append(
         "<label for='dpStartDate'>  From</label>"+
-            "<input type='text' id='dpStartDate' name='dpStartDate'/>"
+            "<input type='text' id='dpStartDate' name='dpStartDate' class='ddl'/>"
     );
     spanDateRange.append(
         "<label for='dpEndDate'>  To</label>"+
-            "<input type='text' id='dpEndDate' name='dpEndDate'/>"
+            "<input type='text' id='dpEndDate' name='dpEndDate' class='ddl'/>"
     );
     //Add both spans to the form, then hide daterange
     form.append(spanYearMonth);

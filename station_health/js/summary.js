@@ -44,11 +44,11 @@ function buildGrid(){
     for(station in mapSIDtoNID){
         if(mapSIDtoNID.hasOwnProperty(station)){
             var $row = $('<tr id = "'+station+'"><td>'+mapGIDtoGName[mapSIDtoNID[station]]+'</td>'
-                +'<td id="l_'+station+'">'+mapSIDtoSName[station]+'</td>'
+                +'<td id="l_'+station+'" class="ltd">'+mapSIDtoSName[station]+'</td>'
                 +'<td>,'+mapSIDtoGIDs[station]+',</td></tr>');
             $("#grid tbody").append($row);
             for( var i = 0; i<metricsSorted.length; i++){
-                $row.append('<td id="d_'+mapMNametoMID[metricsSorted[i]]+'_'+station+'"></td>');
+                $row.append('<td id="d_'+mapMNametoMID[metricsSorted[i]]+'_'+station+'" class="ltd"></td>');
             }
         }
     }
