@@ -37,20 +37,24 @@ var dpMaxDate = undefined;
 var dpMinDate = undefined;
 
 function initDates(year){
-    if(getQueryString("year") != undefined)
-        $("#ddlYear").val(getQueryString("year"));
-    else
+    if(getQueryString("sdate") != undefined && getQueryString("edate") != undefined){
+        $("#dpStartDate").val(getQueryString("sdate"));
+        $("#dpEndDate").val(getQueryString("edate"));
+        //Toggle so date range is showing
+        $("#spanYearMonth").toggle();
+        $("#spanDateRange").toggle();
+    }
+    else{
         $("#ddlYear").val(year);
-
-    year_selected();
-
-    if(getQueryString("month") != undefined)
-        $("#ddlMonth").val(getQueryString("month"));
-
-    yearMonthToStartDate();
-    yearMonthToEndDate();
-    $("#dpEndDate").datepicker( "option", "maxDate", dpMaxDate);
-    $("#dpStartDate").datepicker( "option", "minDate", dpMinDate);
+        year_selected();
+        yearMonthToStartDate();
+        yearMonthToEndDate();
+    }
+    //Set Minimums and maximums
+    $("#dpStartDate").datepicker("option", "minDate", dpMinDate);
+    $("#dpStartDate").datepicker("option", "maxDate", getEndDate('simple'));
+    $("#dpEndDate").datepicker("option", "maxDate", dpMaxDate);
+    $("#dpEndDate").datepicker("option", "minDate", getStartDate('simple'));
 }
 
 function getQueryDates(){
