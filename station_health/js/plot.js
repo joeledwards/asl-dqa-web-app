@@ -57,8 +57,8 @@ function bindPlot(pid){
                 axes: {
                     xaxis: {
                         autoscale:true,
-                        min: (getStartDate()+1),
-                        max: (getEndDate()+1),
+                        min: (getStartDate('object')+1),
+                        max: (getEndDate('object')+1),
                         tickOptions:{
                             formatString:'%b %#d, %y',
                             fontSize: '10pt'

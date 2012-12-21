@@ -54,8 +54,8 @@ function initDates(year){
 }
 
 function getQueryDates(){
-    var startDate = new Date($("#dpStartDate").val());
-    var endDate = new Date($("#dpEndDate").val());
+    var startDate = getStartDate('object'); 
+    var endDate = getEndDate('object');
     var dates = ""  +startDate.getUTCFullYear()
     +prepad((startDate.getUTCMonth()+1),2,"0")
     +prepad(startDate.getUTCDate(),2,"0")
@@ -66,12 +66,22 @@ function getQueryDates(){
     return dates;
 }
 
-function getStartDate(){
-    return new Date($("#dpStartDate").val());
+function getStartDate(complex){
+    if (complex == 'simple')
+        return $("#dpStartDate").val();
+    else if (complex == 'object')
+        return new Date($("#dpStartDate").val());
+    else
+        return $("#dpStartDate").val();
 }
 
-function getEndDate(){
-    return new Date($("#dpEndDate").val());
+function getEndDate(complex){
+    if (complex == 'simple')
+        return $("#dpEndDate").val();
+    else if (complex == 'object')
+        return new Date($("#dpEndDate").val());
+    else
+        return $("#dpEndDate").val();
 }
 
 function yearMonthToStartDate(){
