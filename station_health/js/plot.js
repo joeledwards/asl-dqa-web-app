@@ -129,13 +129,13 @@ function parsePlotReturn(data,pid){
             plotdata[pid].push([rdate,rval]);
             /*//Padding makes this code unneeded
             if(plotdata["xmax"+pid] == undefined || rdate > plotdata["xmax"+pid])
-                plotdata["xmax"+pid] = rdate;
+            plotdata["xmax"+pid] = rdate;
             if(plotdata["xmin"+pid] == undefined || rdate < plotdata["xmin"+pid])
-                plotdata["xmin"+pid] = rdate;
+            plotdata["xmin"+pid] = rdate;
             if(plotdata["ymax"+pid] == undefined || rval > plotdata["ymax"+pid])
-                plotdata["ymax"+pid] = rval;
+            plotdata["ymax"+pid] = rval;
             if((plotdata["ymin"+pid] == undefined) || rval < plotdata["ymin"+pid])
-                plotdata["ymin"+pid] = rval;
+            plotdata["ymin"+pid] = rval;
             */
         }
     }

@@ -14,10 +14,10 @@ function initForm(type){
 
     if (type == "station"){
         form.append(
-        "<button type='button' id='btnSummary' class='ui-state-default ui-corner-all'>"+
-            "Summary"+
-            "</button>"
-    );
+            "<button type='button' id='btnSummary' class='ui-state-default ui-corner-all'>"+
+                "Summary"+
+                "</button>"
+        );
     }
 
     //Create YearMonth form for easier displaying/hiding
@@ -95,9 +95,9 @@ function bindFormActions(type){
                 populateGrid(dataGrid);
             });
         $('#btnSummary').on('click',function(){
-            window.location = 'summary.html?'
-                    +'&sdate='+getStartDate('simple')
-                    +'&edate='+getEndDate('simple');
+                window.location = 'summary.html?'
+                +'&sdate='+getStartDate('simple')
+                +'&edate='+getEndDate('simple');
             });
     }
 
