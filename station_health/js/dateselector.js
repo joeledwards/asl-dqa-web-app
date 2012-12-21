@@ -56,13 +56,7 @@ function initDates(year){
 function getQueryDates(){
     var startDate = getStartDate('object'); 
     var endDate = getEndDate('object');
-    var dates = ""  +startDate.getUTCFullYear()
-    +prepad((startDate.getUTCMonth()+1),2,"0")
-    +prepad(startDate.getUTCDate(),2,"0")
-    +"."
-    +endDate.getUTCFullYear()
-    +prepad((endDate.getUTCMonth()+1),2,"0")
-    +prepad(endDate.getUTCDate(),2,"0");
+    var dates = getStartDate('query')+"."+getEndDate('query');
     return dates;
 }
 
@@ -71,6 +65,13 @@ function getStartDate(complex){
         return $("#dpStartDate").val();
     else if (complex == 'object')
         return new Date($("#dpStartDate").val());
+    else if (complex == 'query'){
+        var odate = new Date($("#dpStartDate").val());
+        return ""
+            +odate.getUTCFullYear()
+            +prepad((odate.getUTCMonth()+1),2,"0")
+            +prepad(odate.getUTCDate(),2,"0");
+    }
     else
         return $("#dpStartDate").val();
 }
@@ -80,6 +81,13 @@ function getEndDate(complex){
         return $("#dpEndDate").val();
     else if (complex == 'object')
         return new Date($("#dpEndDate").val());
+    else if (complex == 'query'){
+        var odate = new Date($("#dpStartDate").val());
+        return "" 
+            +odate.getUTCFullYear()
+            +prepad((odate.getUTCMonth()+1),2,"0")
+            +prepad(odate.getUTCDate(),2,"0");
+    }
     else
         return $("#dpEndDate").val();
 }
