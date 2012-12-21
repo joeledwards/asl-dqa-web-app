@@ -86,7 +86,7 @@ function getEndDate(complex){
     else if (complex == 'object')
     return new Date($("#dpEndDate").val());
     else if (complex == 'query'){
-        var odate = new Date($("#dpStartDate").val());
+        var odate = new Date($("#dpEndDate").val());
         return "" 
         +odate.getUTCFullYear()
         +prepad((odate.getUTCMonth()+1),2,"0")
