@@ -29,8 +29,9 @@ function buildGrid(){
     var dataGrid = document.getElementById("grid");
     var metricsSorted = new Array();
     var metrics = new Array();
-    $("#grid thead tr"). append('<th id="location">Location</th>');
-    $("#grid thead tr"). append('<th id="channel">Channel</th>');
+    var $gridhead = $("#grid thead tr");
+    $gridhead.append('<th id="location">Location</th>');
+    $gridhead.append('<th id="channel">Channel</th>');
     for(header in mapMNametoMID) {
         if(mapMNametoMID.hasOwnProperty(header)) {
             metrics.push(header);
@@ -38,17 +39,19 @@ function buildGrid(){
     }
     metricsSorted = metrics.sort();
     for( var i = 0; i<metricsSorted.length; i++){
-        $("#grid thead tr"). append('<th id="'+mapMNametoMID[metricsSorted[i]]+'">'+metricsSorted[i]+'</th>');
+        $gridhead.append('<th id="'+mapMNametoMID[metricsSorted[i]]+'">'+metricsSorted[i]+'</th>');
     }
+    $gridhead.append('<th id="aggregate">Aggregate</th>');
 
     for(channel in mapCIDtoCName){
         if(mapCIDtoCName.hasOwnProperty(channel)){
             var $row = $('<tr id = "'+channel+'"><td>'+mapCIDtoLoc[channel]+'</td>'
                 +'<td>'+mapCIDtoCName[channel]+'</a></td></tr>');
-            $("#grid tbody").append($row);
             for( var i = 0; i<metricsSorted.length; i++){
                 $row.append('<td id="d_'+mapMNametoMID[metricsSorted[i]]+'_'+channel+'" class="ltd"></td>');
             }
+            $row.append('<td id="a_'+channel+'"></td>');
+            $("#grid tbody").append($row);
         }
     }
 
@@ -83,6 +86,7 @@ function populateGrid(datatable){
                                 parseDataReturn(data, metricID, datatable);
                                 numCols--;
                                 if(numCols <= 0){
+                                    processAllAggr();
                                     datatable.fnDraw();
                                 }
                             }
