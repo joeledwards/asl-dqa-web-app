@@ -27,29 +27,32 @@ function buildGrid(){
     var dataGrid = document.getElementById("grid");
     var metricsSorted = new Array();
     var metrics = new Array();
-    $("#grid thead tr"). append('<th id="network">Network</th>');
-    $("#grid thead tr"). append('<th id="Station">Station</th>');
-    $("#grid thead tr"). append('<th id="groups">Groups</th>');
+    var $gridhead = $("#grid thead tr");
+    $gridhead.append('<th id="network">Network</th>');
+    $gridhead.append('<th id="Station">Station</th>');
+    $gridhead.append('<th id="groups">Groups</th>');
     for(header in mapMNametoMID) {
         if(mapMNametoMID.hasOwnProperty(header)) {
-            //       $("#grid thead tr").append('<th id='
             metrics.push(header);
         }
     }
     metricsSorted = metrics.sort();
     for( var i = 0; i<metricsSorted.length; i++){
-        $("#grid thead tr"). append('<th id="'+mapMNametoMID[metricsSorted[i]]+'">'+metricsSorted[i]+'</th>');
+        $gridhead. append('<th id="'+mapMNametoMID[metricsSorted[i]]+'">'+metricsSorted[i]+'</th>');
     }
+    $gridhead.append('<th id="aggregate">Aggregate</th>');
 
     for(station in mapSIDtoNID){
         if(mapSIDtoNID.hasOwnProperty(station)){
             var $row = $('<tr id = "'+station+'"><td>'+mapGIDtoGName[mapSIDtoNID[station]]+'</td>'
                 +'<td id="l_'+station+'" class="ltd">'+mapSIDtoSName[station]+'</td>'
                 +'<td>,'+mapSIDtoGIDs[station]+',</td></tr>');
-            $("#grid tbody").append($row);
             for( var i = 0; i<metricsSorted.length; i++){
                 $row.append('<td id="d_'+mapMNametoMID[metricsSorted[i]]+'_'+station+'" class="ltd"></td>');
             }
+            //Append aggregate cell here
+            $row.append('<td id="a_'+station+'"></td>');
+            $("#grid tbody").append($row);
         }
     }
 
@@ -84,6 +87,8 @@ function populateGrid(datatable){
                                 numCols--;
                                 if(numCols <= 0){
                                     datatable.fnDraw();
+                                    //compute aggregate
+                                    processAllAggr();
                                 }
                             }
                         );
@@ -91,7 +96,7 @@ function populateGrid(datatable){
                 }
             });
     }
-
+//Move clearDataTable to datatable.js
     function clearDataTable(datatable){
         for(var sid in mapSIDtoSName){
             if(mapSIDtoSName.hasOwnProperty(sid)){

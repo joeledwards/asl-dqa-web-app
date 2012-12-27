@@ -59,3 +59,16 @@ function calcAggr(rowID){
     return aggr;
 
 }
+
+function processAllAggr(){
+    var rows = dataGrid.fnGetNodes();
+    for(var i = 0; i<rows.length; i++){
+        var rowID = $(rows[i]).attr("id");
+        
+            var cell = document.getElementById("a_"+rowID);
+            if(cell){
+                var pos = dataGrid.fnGetPosition(cell);
+                dataGrid.fnUpdate(parseFloat(parseFloat(calcAggr(rowID)).toFixed(2)), pos[0], pos[2], false, false );
+            }
+    }
+}
