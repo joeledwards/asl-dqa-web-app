@@ -19,3 +19,15 @@ function bindDatatableActions(datatable) {
             }
         });
 }
+
+function clearDataTable(datatable){
+    var rows = datatable.fnGetNodes();
+    for( var i = 0; i<rows.length; i++){
+        $(rows[i]).find("td").each(function(){
+                var pos = datatable.fnGetPosition(this);
+                if(String($(this).attr("id")).charAt(0) == "d"){ //only clear data cells; Aggregate is recomputed every update
+                    datatable.fnUpdate("", pos[0], pos[2], false, false); 
+                }
+            });
+    }
+}
