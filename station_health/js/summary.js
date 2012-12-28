@@ -96,19 +96,3 @@ function populateGrid(datatable){
                 }
             });
     }
-//Move clearDataTable to datatable.js
-    function clearDataTable(datatable){
-        for(var sid in mapSIDtoSName){
-            if(mapSIDtoSName.hasOwnProperty(sid)){
-                for(var mid in mapMIDtoMName){
-                    if(mapMIDtoMName.hasOwnProperty(mid)){
-                        var cell = document.getElementById("d_"+mid+"_"+sid);
-                        if(cell){
-                            var pos = datatable.fnGetPosition(cell);
-                            datatable.fnUpdate("", pos[0], pos[2], false, false );
-                        }
-                    }
-                }
-            }
-        }
-    }

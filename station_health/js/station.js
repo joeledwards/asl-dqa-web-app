@@ -119,18 +119,3 @@ function populateGrid(datatable){
         }
     }
 
-    function clearDataTable(datatable){
-        for(var cid in mapCIDtoCName){
-            if(mapCIDtoCName.hasOwnProperty(cid)){
-                for(var mid in mapMIDtoMName){
-                    if(mapMIDtoMName.hasOwnProperty(mid)){
-                        var cell = document.getElementById("d_"+mid+"_"+cid);
-                        if(cell){
-                            var pos = datatable.fnGetPosition(cell);
-                            datatable.fnUpdate("", pos[0], pos[2], false, false );
-                        }
-                    }
-                }
-            }
-        }
-    }
