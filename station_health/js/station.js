@@ -45,10 +45,11 @@ function buildGrid(){
         if(mapCIDtoCName.hasOwnProperty(channel)){
             var $row = $('<tr id = "'+channel+'"><td>'+mapCIDtoLoc[channel]+'</td>'
                 +'<td>'+mapCIDtoCName[channel]+'</a></td></tr>');
-            $("#grid tbody").append($row);
+            //Adding 1.01 causes datatables to automatically set the column types to numeric
             for( var i = 0; i<metricsSorted.length; i++){
-                $row.append('<td id="d_'+mapMNametoMID[metricsSorted[i]]+'_'+channel+'" class="ltd"></td>');
+                $row.append('<td id="d_'+mapMNametoMID[metricsSorted[i]]+'_'+channel+'" class="ltd">1.01</td>');
             }
+            $("#grid tbody").append($row);
         }
     }
 

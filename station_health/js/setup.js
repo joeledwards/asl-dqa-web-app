@@ -73,6 +73,7 @@ function getSetupData(type){
                         }
                     });
                 initializeDataGrid(dataGrid);
+                clearDataTable(dataGrid); //Clears 1.01 values before populating with proper values
                 populateGrid(dataGrid);
                 bindDatatableActions(dataGrid)
             }
@@ -119,6 +120,7 @@ function getSetupData(type){
                         }
                     });
                 initializeDataGrid(dataGrid);
+                clearDataTable(dataGrid); //Clears 1.01 values before populating with real values
                 populateGrid(dataGrid);
                 bindDatatableActions(dataGrid)
             }
