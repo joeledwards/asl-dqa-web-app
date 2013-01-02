@@ -2,3 +2,10 @@
 .ddl {position: relative; z-index:9001;}
 .ltd {color:blue;}
 .ltd:hover {text-decoration:underline;}
+
+th.vertical {
+    -webkit-transform:rotate(-90deg);
+    -mox-transform:rotate(-90deg);
+    filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+   /* -o-transform:rotate(-90deg);*/
+}
