@@ -53,6 +53,7 @@ function buildGrid(){
             }
             //Append aggregate cell here
             $row.append('<td id="a_'+station+'">1.01</td>');
+            
             $("#grid tbody").append($row);
         }
     }
