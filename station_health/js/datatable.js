@@ -25,9 +25,13 @@ function clearDataTable(datatable){
     for( var i = 0; i<rows.length; i++){
         $(rows[i]).find("td").each(function(){
                 var pos = datatable.fnGetPosition(this);
-                if(String($(this).attr("id")).charAt(0) == "d"){ //only clear data cells; Aggregate is recomputed every update
+                if(String($(this).attr("id")).charAt(0) == "d"){ //only clear data cells 
                     datatable.fnUpdate("", pos[0], pos[2], false, false); 
                 }
+                if(String($(this).attr("id")).charAt(0) == "a"){
+                    datatable.fnUpdate(parseFloat(0), pos[0],pos[2], false, false);
+                }
+            
             });
     }
 }
