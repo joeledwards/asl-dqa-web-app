@@ -31,10 +31,26 @@ function addPercent(rowID, metricID, value){
         }
         percents[rowID][metricID] = value;
         if(weights[metricID] == undefined){
-            weights[metricID] = 25; //Placeholder value
+            weights[metricID] = 0; //Placeholder value
         }
 
     }
+}
+
+function resetWeights(){
+    var numMetrics = 0
+    for (var wMetric in weights ){ //
+        if(weights.hasOwnProperty(wMetric)){;
+            numMetrics++;
+        }
+    }
+    
+    for (var mWeight in weights ){ //
+        if(weights.hasOwnProperty(mWeight)){;
+            weights[mWeight] = 100/numMetrics;
+        }
+    }
+    return 100/numMetrics;
 }
 
 function calcAggr(rowID){

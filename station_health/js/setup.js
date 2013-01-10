@@ -75,7 +75,7 @@ function getSetupData(type){
                 initializeDataGrid(dataGrid);
                 clearDataTable(dataGrid); //Clears 1.01 values before populating with proper values
                 populateGrid(dataGrid);
-                bindDatatableActions(dataGrid)
+                bindDatatableActions(dataGrid);
             }
         );
     }
@@ -122,14 +122,16 @@ function getSetupData(type){
                 initializeDataGrid(dataGrid);
                 clearDataTable(dataGrid); //Clears 1.01 values before populating with real values
                 populateGrid(dataGrid);
-                bindDatatableActions(dataGrid)
+                bindDatatableActions(dataGrid);
             }
         );
 
     }
 
 }
-
+$(document).ajaxStop(function(){
+        resetWeights();
+    });
 function formatTableTools(button, icon){
     $(button).removeClass('DTTT_button');
     $(button).button({icons: {primary: icon}});
