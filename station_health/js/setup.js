@@ -131,6 +131,7 @@ function getSetupData(type){
 }
 $(document).ajaxStop(function(){
         resetWeights();
+        processAllAggr();
     });
 function formatTableTools(button, icon){
     $(button).removeClass('DTTT_button');

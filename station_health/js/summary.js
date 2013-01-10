@@ -89,7 +89,7 @@ function populateGrid(datatable){
                                 numCols--;
                                 if(numCols <= 0){
                                     datatable.fnDraw();
-                                    //compute aggregate
+                                    //compute aggregate This is called twice during the first load
                                     processAllAggr();
                                 }
                             }

@@ -64,7 +64,9 @@ function calcAggr(rowID){
             numMetrics++;
         }
     }
-
+    if(weightSum == 0){ //Means either all Metrics are weighted to 0, initial load, or no weighted metric data exists
+        return 0
+    }
     for (var metric in percents[rowID] ){ //
         if(percents[rowID].hasOwnProperty(metric)){
             //Doesn't need to be multiplied by 100 because the weight already is
