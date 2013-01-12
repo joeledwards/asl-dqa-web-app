@@ -37,7 +37,7 @@ function buildGrid(){
             metrics.push(header);
         }
     }
-    metricsSorted = metrics.sort();
+    metricsSorted = metrics.sort(naturalSort);
     for( var i = 0; i<metricsSorted.length; i++){
         $gridhead.append('<th id="'+mapMNametoMID[metricsSorted[i]]+'">'+metricsSorted[i]+'</th>');
     }
