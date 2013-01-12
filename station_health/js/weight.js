@@ -86,7 +86,26 @@ function processAllAggr(){
             var cell = document.getElementById("a_"+rowID);
             if(cell){
                 var pos = dataGrid.fnGetPosition(cell);
-                dataGrid.fnUpdate(parseFloat(parseFloat(calcAggr(rowID)).toFixed(2)), pos[0], pos[2], false, false );
+                var aggrVal = parseFloat(parseFloat(calcAggr(rowID)).toFixed(2));
+                setAggregateClass(cell, aggrVal);
+                dataGrid.fnUpdate(aggrVal, pos[0], pos[2], false, false );
             }
     }
+}
+
+function setAggregateClass(cell, value){
+    var jcell = $(cell);
+    jcell.removeClass('aggrGreen');
+    jcell.removeClass('aggrYellow');
+    jcell.removeClass('aggrOrange');
+    jcell.removeClass('aggrRed');
+
+    if (value >= 90)
+        jcell.addClass('aggrGreen');
+    else if (value >= 80)
+        jcell.addClass('aggrYellow');
+    else if (value >= 70)
+        jcell.addClass('aggrOrange');
+    else
+        jcell.addClass('aggrRed');
 }

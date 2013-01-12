@@ -2,6 +2,26 @@
 .ddl {position: relative; z-index:9001;}
 .ltd {color:blue;}
 .ltd:hover {text-decoration:underline;}
+
+.aggrRed {
+    background-color: #F77;
+    font-weight: bold;
+}
+
+.aggrOrange {
+    background-color: #F93;
+    font-weight: bold;
+}
+
+.aggrYellow {
+    background-color: #FF6;
+    font-weight: bold;
+}
+
+.aggrGreen {
+    background-color: #9F9;
+    font-weight: bold;
+}
 /*
 thead {
     width:100% !important;
