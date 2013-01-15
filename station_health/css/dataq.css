@@ -1,7 +1,11 @@
 
 .ddl {position: relative; z-index:9001;}
 .ltd {color:blue;}
-.ltd:hover {text-decoration:underline;}
+.ltd:hover {
+    text-decoration:underline;
+    cursor: hand;
+    cursor: pointer;
+}
 
 .aggrRed {
     background-color: #F77 !important;
