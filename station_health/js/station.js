@@ -53,7 +53,7 @@ function buildGrid(){
             }
             //Add Aggregate column
             $row.append('<td id="a_'+channel+'">1.01</td>');
-        
+
             $("#grid tbody").append($row);
         }
     }

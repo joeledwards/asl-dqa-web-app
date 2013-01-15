@@ -31,7 +31,7 @@ function clearDataTable(datatable){
                 if(String($(this).attr("id")).charAt(0) == "a"){
                     datatable.fnUpdate(parseFloat(0), pos[0],pos[2], false, false);
                 }
-            
+
             });
     }
 }

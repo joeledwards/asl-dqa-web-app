@@ -1,9 +1,9 @@
 /*
-utils.js
-Author: James Holland jholland@usgs.gov
-utils.js contains generic functions that are not tied to a specific project.
-License: Public Domain
-*/
+ utils.js
+ Author: James Holland jholland@usgs.gov
+ utils.js contains generic functions that are not tied to a specific project.
+ License: Public Domain
+ */
 
 function prepad(input, size, padder) {
     var output = input+"";
@@ -24,6 +24,6 @@ function getQueryString(key) {
 }
 
 function parseDate(datein, delimiter){
-            var datea = datein.split(""+delimiter);
-            return new Date(datea[0],(datea[1]-1),datea[2]);
+    var datea = datein.split(""+delimiter);
+    return new Date(datea[0],(datea[1]-1),datea[2]);
 }
