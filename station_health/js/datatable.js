@@ -26,6 +26,7 @@ function clearDataTable(datatable){
         $(rows[i]).find("td").each(function(){
                 var pos = datatable.fnGetPosition(this);
                 if(String($(this).attr("id")).charAt(0) == "d"){ //only clear data cells 
+                    $(this).removeClass("ltd");
                     datatable.fnUpdate("", pos[0], pos[2], false, false); 
                 }
                 if(String($(this).attr("id")).charAt(0) == "a"){
