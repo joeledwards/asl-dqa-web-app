@@ -36,12 +36,12 @@ function createDialog(id){
     //If we do try to implement this, there is a bug. When the last dialog is closed, the first disapears, but doesn't get removed. Same with Second to last and second.
     if($("#dia"+pid).length) //If dialog exists, close it.
         $("#dia"+pid).dialog("close");
-    getPlotData(ids, pid);
-    $('#html').append(plotTemplate(pid, title));
+    getPlotData(ids, pid, title);
 }
 
-function bindPlot(pid){
-    if (plotdata[pid].length > 0){ //Check if data was returned
+function bindPlot(pid, title){
+    if (plotdata[pid].length > 0){ //Check if data was returned, if none was returned don't plot anything.
+        $('#html').append(plotTemplate(pid, title));
         plots[pid] = $.jqplot('plot'+pid, [plotdata[pid]], {
                 //title: title,  //Title is on the dialog window
                 cursor: {
@@ -82,13 +82,10 @@ function bindPlot(pid){
                 plots[pid].replot( { resetAxes: true } );
             });
     }
-    else { //TODO:Make it so the dialog doesn't pop up or is closed already
-        $('#dia'+pid).text('No data available');
-    }
 
 }
 
-function getPlotData(ids, pid){
+function getPlotData(ids, pid, title){
     var daterange = getQueryDates();
     if (pageType == "station"){
         $.get("/cgi-bin/metrics.py", 
@@ -97,7 +94,7 @@ function getPlotData(ids, pid){
                 parsePlotReturn(data, pid);
             }
         ).done(function(){
-                bindPlot(pid);
+                bindPlot(pid, title);
             });
 
     }
@@ -108,7 +105,7 @@ function getPlotData(ids, pid){
                 parsePlotReturn(data, pid);
             }
         ).done(function(){
-                bindPlot(pid);
+                bindPlot(pid, title);
             });
     }
 }
