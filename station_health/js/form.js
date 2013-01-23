@@ -94,11 +94,6 @@ function bindFormActions(type){
                 clearDataTable(dataGrid);
                 populateGrid(dataGrid);
             });
-        $('#btnSummary').on('click',function(){
-                window.location = 'summary.html?'
-                +'&sdate='+getStartDate('simple')
-                +'&edate='+getEndDate('simple');
-            });
     }
 
     $("#btnToggleDate").on('click',function(){
