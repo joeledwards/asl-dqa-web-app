@@ -1,9 +1,9 @@
 /*
- setup.js
- Author: James Holland jholland@usgs.gov
- Setup.js contains the base objects and  calls for creating a menu, grid, and plotting.
- License: Public Domain
- */
+setup.js
+Author: James Holland jholland@usgs.gov
+Setup.js contains the base objects and  calls for creating a menu, grid, and plotting.
+License: Public Domain
+*/
 
 //Mappings
 var mapTIDtoGIDs = {}; //TID = Group type ID, GID = Group ID
@@ -42,36 +42,36 @@ function getSetupData(type){
 
                 buildGrid();
                 dataGrid = $('#grid').dataTable( {
-                        "bJQueryUI":true
-                        ,"bPaginate":false
-                        //        ,"sScrollY":"300px"
-                        ,"sScrollY": (window.innerHeight - 220)+"px"
-                        // ,"sScrollYInner": "110%"
-                        ,"sScrollX": "100%"
-                        //,"sScrollXInner": "5200px"
-                        ,"bScrollCollapse": true
-                        ,"sDom": 'TC<"clear">lfrtip'
-                        ,"oTableTools": {
-                            "aButtons": [ 
-                                {
-                                    "sExtends":"copy",
-                                    "fnInit": function(node){formatTableTools(node, 'ui-icon-clipboard');}
-                                },
-                                {
-                                    "sExtends":"print",
-                                    "fnInit": function(node){formatTableTools(node, 'ui-icon-print');}
-                                },
-                                {
-                                    "sExtends":"csv",
-                                    "fnInit": function(node){formatTableTools(node, 'ui-icon-calculator');}
-                                },
-                                {
-                                    "sExtends":"pdf",
-                                    "fnInit": function(node){formatTableTools(node, 'ui-icon-copy');}
-                                }
-                            ]
-                        }
-                    });
+                    "bJQueryUI":true
+                    ,"bPaginate":false
+                    //        ,"sScrollY":"300px"
+                    ,"sScrollY": (window.innerHeight - 220)+"px"
+                    // ,"sScrollYInner": "110%"
+                    ,"sScrollX": "100%"
+                    //,"sScrollXInner": "5200px"
+                    ,"bScrollCollapse": true
+                    ,"sDom": 'TC<"clear">lfrtip'
+                    ,"oTableTools": {
+                        "aButtons": [ 
+                            {
+                                "sExtends":"copy",
+                                "fnInit": function(node){formatTableTools(node, 'ui-icon-clipboard');}
+                            },
+                            {
+                                "sExtends":"print",
+                                "fnInit": function(node){formatTableTools(node, 'ui-icon-print');}
+                            },
+                            {
+                                "sExtends":"csv",
+                                "fnInit": function(node){formatTableTools(node, 'ui-icon-calculator');}
+                            },
+                            {
+                                "sExtends":"pdf",
+                                "fnInit": function(node){formatTableTools(node, 'ui-icon-copy');}
+                            }
+                        ]
+                    }
+                });
                 initializeDataGrid(dataGrid);
                 clearDataTable(dataGrid); //Clears 1.01 values before populating with proper values
                 populateGrid(dataGrid);
@@ -89,36 +89,36 @@ function getSetupData(type){
                 buildGrid();
                 dataGrid = $('#grid').dataTable( {
 
-                        "bJQueryUI":true
-                        ,"bPaginate":false
-                        //        ,"sScrollY":"300px"
-                        ,"sScrollY": (window.innerHeight - 220)+"px"
-                        // ,"sScrollYInner": "110%"
-                        ,"sScrollX": "100%"
-                        //,"sScrollXInner": "5200px"
-                        ,"bScrollCollapse": true
-                        ,"sDom": 'TC<"clear">lfrtip'
-                        ,"oTableTools": {
-                            "aButtons": [ 
-                                {
-                                    "sExtends":"copy",
-                                    "fnInit": function(node){formatTableTools(node, 'ui-icon-clipboard');}
-                                },
-                                {
-                                    "sExtends":"print",
-                                    "fnInit": function(node){formatTableTools(node, 'ui-icon-print');}
-                                },
-                                {
-                                    "sExtends":"csv",
-                                    "fnInit": function(node){formatTableTools(node, 'ui-icon-calculator');}
-                                },
-                                {
-                                    "sExtends":"pdf",
-                                    "fnInit": function(node){formatTableTools(node, 'ui-icon-copy');}
-                                }
-                            ]
-                        }
-                    });
+                    "bJQueryUI":true
+                    ,"bPaginate":false
+                    //        ,"sScrollY":"300px"
+                    ,"sScrollY": (window.innerHeight - 220)+"px"
+                    // ,"sScrollYInner": "110%"
+                    ,"sScrollX": "100%"
+                    //,"sScrollXInner": "5200px"
+                    ,"bScrollCollapse": true
+                    ,"sDom": 'TC<"clear">lfrtip'
+                    ,"oTableTools": {
+                        "aButtons": [ 
+                            {
+                                "sExtends":"copy",
+                                "fnInit": function(node){formatTableTools(node, 'ui-icon-clipboard');}
+                            },
+                            {
+                                "sExtends":"print",
+                                "fnInit": function(node){formatTableTools(node, 'ui-icon-print');}
+                            },
+                            {
+                                "sExtends":"csv",
+                                "fnInit": function(node){formatTableTools(node, 'ui-icon-calculator');}
+                            },
+                            {
+                                "sExtends":"pdf",
+                                "fnInit": function(node){formatTableTools(node, 'ui-icon-copy');}
+                            }
+                        ]
+                    }
+                });
                 initializeDataGrid(dataGrid);
                 clearDataTable(dataGrid); //Clears 1.01 values before populating with real values
                 populateGrid(dataGrid);
@@ -130,9 +130,9 @@ function getSetupData(type){
 
 }
 $(document).ajaxStop(function(){
-        resetWeights();
-        processAllAggr();
-    });
+    resetWeights();
+    processAllAggr();
+});
 function formatTableTools(button, icon){
     $(button).removeClass('DTTT_button');
     $(button).button({icons: {primary: icon}});
@@ -184,53 +184,53 @@ function parseSetupResponse(response, params){
     for (var i =0; i< rows.length; i++){
         var parts = rows[i].split(',');  //Typical return like Type, TypeID, Values
         switch(parts[0]){
-        case 'D': //D, year, month
-            if (parts.length != 3) {
-                continue;
-            }
-            var year = parseInt(parts[1]);
-            var month = parseInt(parts[2]);
-            addMonthYear(year,month);
-            if ((params.setYear == undefined) || (year > params.setYear)) {
-                params.setYear = year;
-            }
-            break;
-        case 'T': //T, GroupTypeID, GroupTypeName (Network, Country, etc), Groups associated with Type
-            mapTNametoTID[parts[2]] = parts[1]; //Allows lookup by TName
-            mapTIDtoTName[parts[1]] = parts[2];
-            if (mapTIDtoGIDs[parts[1]] == undefined){
-                mapTIDtoGIDs[parts[1]] = new Array();
-            }
-            for (var t = 3; t<parts.length; t++){
-                mapTIDtoGIDs[parts[1]].push( parts[t]);
-            }
-            break;
-        case 'G': //G, GroupID, GroupName (IU, CU, Asia, etc), GroupTypeID
-            mapGIDtoGName[parts[1]] = parts[2];
-            break;
-        case 'S': //S, StationID, NetworkID, StationName, groupIDs
-            mapSIDtoSName[parts[1]] = parts[3];
-            mapSIDtoNID[parts[1]] = parts[2];
-            for(var t=4; t<parts.length; t++){
-                if(mapGIDtoSIDs[parts[t]] == undefined){
-                    mapGIDtoSIDs[parts[t]] = new Array();
+            case 'D': //D, year, month
+                if (parts.length != 3) {
+                    continue;
                 }
-                mapGIDtoSIDs[parts[t]].push(parts[1]);
-                if(mapSIDtoGIDs[parts[1]] == undefined){
-                    mapSIDtoGIDs[parts[1]] = new Array();
+                var year = parseInt(parts[1]);
+                var month = parseInt(parts[2]);
+                addMonthYear(year,month);
+                if ((params.setYear == undefined) || (year > params.setYear)) {
+                    params.setYear = year;
                 }
-                mapSIDtoGIDs[parts[1]].push(parts[t]);
-            }
-            break;
-        case 'C': //C, ChannelID, ChannelName, LocationName, StationID
-            mapCIDtoCName[parts[1]] = parts[2];
-            mapCNametoCID[parts[2]] = parts[1];
-            mapCIDtoLoc[parts[1]] = parts[3];
-            break;
-        case 'M': //M, MetricID, MetricName
-            mapMIDtoMName[parts[1]]=parts[2];
-            mapMNametoMID[parts[2]]=parts[1];
-            break;
+                break;
+            case 'T': //T, GroupTypeID, GroupTypeName (Network, Country, etc), Groups associated with Type
+                mapTNametoTID[parts[2]] = parts[1]; //Allows lookup by TName
+                mapTIDtoTName[parts[1]] = parts[2];
+                if (mapTIDtoGIDs[parts[1]] == undefined){
+                    mapTIDtoGIDs[parts[1]] = new Array();
+                }
+                for (var t = 3; t<parts.length; t++){
+                    mapTIDtoGIDs[parts[1]].push( parts[t]);
+                }
+                break;
+            case 'G': //G, GroupID, GroupName (IU, CU, Asia, etc), GroupTypeID
+                mapGIDtoGName[parts[1]] = parts[2];
+                break;
+            case 'S': //S, StationID, NetworkID, StationName, groupIDs
+                mapSIDtoSName[parts[1]] = parts[3];
+                mapSIDtoNID[parts[1]] = parts[2];
+                for(var t=4; t<parts.length; t++){
+                    if(mapGIDtoSIDs[parts[t]] == undefined){
+                        mapGIDtoSIDs[parts[t]] = new Array();
+                    }
+                    mapGIDtoSIDs[parts[t]].push(parts[1]);
+                    if(mapSIDtoGIDs[parts[1]] == undefined){
+                        mapSIDtoGIDs[parts[1]] = new Array();
+                    }
+                    mapSIDtoGIDs[parts[1]].push(parts[t]);
+                }
+                break;
+            case 'C': //C, ChannelID, ChannelName, LocationName, StationID
+                mapCIDtoCName[parts[1]] = parts[2];
+                mapCNametoCID[parts[2]] = parts[1];
+                mapCIDtoLoc[parts[1]] = parts[3];
+                break;
+            case 'M': //M, MetricID, MetricName
+                mapMIDtoMName[parts[1]]=parts[2];
+                mapMNametoMID[parts[2]]=parts[1];
+                break;
         }
     }
 }
