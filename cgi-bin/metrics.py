@@ -14,7 +14,7 @@ import cgitb
 cgitb.enable()
 
 sys.path.insert(0, "/dataq/asl_project/pytools")
-import MetricDatabase
+import Database
 
 queries = {
     "dates" : """
@@ -51,7 +51,7 @@ SELECT fnsclGetGroupTypes()
 
 #database_conString = 'localhost,dev,asldev,dataq_dev,5433'
 database_conString = '136.177.121.210,dev,asldev,dataq_dev,5432'
-database = MetricDatabase.MetricDatabase(database_conString)
+database = Database.Database(database_conString)
 
 def error(message=None):
     if message is None:
