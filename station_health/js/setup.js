@@ -26,8 +26,55 @@ var plots = {};
 var plotdata = {};
 var pageType = undefined; //Allows rest of functions to check page type without passing type around. It is only changed in getSetupData.
 
+$(document).ready(function(){
+    //Detect which type of page we are loading. If a stationID was passed in the query string it is station.
+    var stationID;
+    if (stationID = getQueryString("station")){
+        pageType = "station";
+    }
+    else {
+        pageType = "summary";
+    }
 
-function getSetupData(type){
+    getSetupData();
+});
+
+$(document).ajaxStop(function(){
+    //resetWeights();
+    //processAllAggr();
+});
+
+function getSetupData(){
+    /*
+    setupParams is an object that contains parameters that need
+    to be passed between functions. Since functions can't return
+    multiple items or pointers, setupParams is passed by reference.
+    */
+    var setupParams = {
+        setYear:undefined //Is set to max year and month if no query string dates are provided.
+    };
+
+    if (pageType == "station"){
+        var station = getQueryString("station");
+        $.get("/cgi-bin/metrics.py", 
+            {cmd: "groups_dates_stations_metrics_channels", param: "station."+station},
+            function(data){
+                parseSetupResponse(data, setupParams);
+            }
+        ); 
+    }
+    else if (pageType == "summary"){
+        $.get("/cgi-bin/metrics.py", 
+            {cmd: "groups_dates_stations_metrics"},
+            function(data){
+                parseSetupResponse(data, setupParams);
+            }
+        );
+    }
+    
+}
+
+function oldgetSetupData(type){
     pageType = type;
     var setupParams = {
         setYear:undefined //Set to max year and month if not a station query
@@ -129,10 +176,6 @@ function getSetupData(type){
     }
 
 }
-$(document).ajaxStop(function(){
-    resetWeights();
-    processAllAggr();
-});
 function formatTableTools(button, icon){
     $(button).removeClass('DTTT_button');
     $(button).button({icons: {primary: icon}});

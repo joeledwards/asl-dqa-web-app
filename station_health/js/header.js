@@ -16,6 +16,6 @@ function setupHeader(){
             window.location = "dataq.html?&sdate="+getStartDate("simple")+"&edate="+getEndDate("simple");
         });
 
-        header.append("<span class='dataqHeader'>TESTY"+mapSIDtoSName[getQueryString("station")]+"</span>");
+        header.append("<span class='dataqHeader'>"+mapSIDtoSName[getQueryString("station")]+"</span>");
     }
 }
