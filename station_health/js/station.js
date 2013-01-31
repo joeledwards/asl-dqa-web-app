@@ -49,11 +49,11 @@ function buildGrid(){
                 +'<td>'+mapCIDtoCName[channel]+'</a></td></tr>');
             //Adding 1.01 causes datatables to automatically set the column types to numeric
             for( var i = 0; i<metricsSorted.length; i++){
-                $row.append('<td id="d_'+mapMNametoMID[metricsSorted[i]]+'_'+channel+'" class="ltd">1.01</td>');
+                $row.append('<td id="d_'+mapMNametoMID[metricsSorted[i]]+'_'+channel+'">1.01</td>');
             }
             //Add Aggregate column
             $row.append('<td id="a_'+channel+'">1.01</td>');
-        
+
             $("#grid tbody").append($row);
         }
     }

@@ -215,6 +215,7 @@ function parseDataReturn(data,mid, pDatatable){
             var cell = document.getElementById("d_"+mid+"_"+row[0]);
             if(cell){
                 var pos = pDatatable.fnGetPosition(cell);
+                $("#d_"+mid+"_"+row[0]).addClass("ltd");
                 //Double parseFloat() drops excess 0's
                 pDatatable.fnUpdate(parseFloat(parseFloat(row[1]).toFixed(2)), pos[0], pos[2], false, false );
             }

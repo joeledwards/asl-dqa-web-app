@@ -49,11 +49,11 @@ function buildGrid(){
                 +'<td>,'+mapSIDtoGIDs[station]+',</td></tr>');
             //Adding 1.01 causes datatables to automatically set the column types to numeric
             for( var i = 0; i<metricsSorted.length; i++){
-                $row.append('<td id="d_'+mapMNametoMID[metricsSorted[i]]+'_'+station+'" class="ltd">1.01</td>');
+                $row.append('<td id="d_'+mapMNametoMID[metricsSorted[i]]+'_'+station+'">1.01</td>');
             }
             //Append aggregate cell here
             $row.append('<td id="a_'+station+'">1.01</td>');
-            
+
             $("#grid tbody").append($row);
         }
     }
