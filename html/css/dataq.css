@@ -1,4 +1,6 @@
 
+body{font-size:10px;}
+
 .ddl {position: relative; z-index:9001;}
 .ltd {color:blue;}
 .ltd:hover {
@@ -31,18 +33,26 @@
 
 /*Header Classes*/
 .headerMain {
+    font-size: 12px;
     width:100%;
     overflow:hidden;
     display:inline-block;
-    vertical-align:top:
+    vertical-align:top;
     position:relative;
 }
 
-/*.headerTitle {
-    margin-left: auto;
-    margin-right: auto;
-    width: 70%;
-}*/
+.headerTitle {
+    position: relative;
+    left:5px;
+    font-size: 20px;
+    vertical-align: middle;
+}
+
+.headerDateRange {
+
+    font-size: 16px;
+    vertical-align: middle;
+}
 
 button:hover {
     text-decoration:underline;

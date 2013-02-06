@@ -60,7 +60,7 @@ function getSetupData(){
             {cmd: "groups_dates_stations_metrics_channels", param: "station."+station},
             function(data){
                 parseSetupResponse(data, setupParams);
-                setupHeader();
+                setupPage();
             }
         ); 
     }
@@ -69,11 +69,16 @@ function getSetupData(){
             {cmd: "groups_dates_stations_metrics"},
             function(data){
                 parseSetupResponse(data, setupParams);
-                setupHeader();
+                setupPage();
             }
         );
     }
     
+}
+
+function setupPage(){
+    setupHeader();
+    setupTabs();
 }
 
 function oldgetSetupData(type){
