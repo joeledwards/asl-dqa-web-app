@@ -7,6 +7,8 @@
     cursor: pointer;
 }
 
+/*Aggregate Classes*/
+
 .aggrRed {
     background-color: #F77 !important;
     font-weight: bold;
@@ -27,11 +29,31 @@
     font-weight: bold;
 }
 
-.dataqHeader {
+/*Header Classes*/
+.headerMain {
+    width:100%;
+    overflow:hidden;
+    display:inline-block;
+    vertical-align:top:
+    position:relative;
+}
+
+/*.headerTitle {
     margin-left: auto;
     margin-right: auto;
     width: 70%;
+}*/
+
+button:hover {
+    text-decoration:underline;
+    cursor: hand;
+    cursor: pointer;
 }
+
+.right {
+    float:right
+}
+
 /*
 thead {
 width:100% !important;
