@@ -27,3 +27,11 @@ function parseDate(datein, delimiter){
     var datea = datein.split(""+delimiter);
     return new Date(datea[0],(datea[1]-1),datea[2]);
 }
+
+function getDayofYear(datein, delimiter){
+    var datea = datein.split(""+delimiter);
+    var jDate = new Date(datea[0],(datea[1]-1),datea[2]);
+    var dayOne = new Date(datea[0], 0);
+    return ""+datea[0]+delimiter+((jDate.valueOf()-dayOne.valueOf())/1000/60/60/24 + 1);
+    
+}
