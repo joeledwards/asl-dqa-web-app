@@ -79,6 +79,10 @@ function getSetupData(){
 function setupPage(){
     setupHeader();
     setupTabs();
+
+
+    //Make all buttons jqueryui buttons
+    $("button").button();
 }
 
 function oldgetSetupData(type){

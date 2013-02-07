@@ -7,18 +7,51 @@ License: Public Domain
 
 //setupDateTab is passed the jquery object to append needed objects to.
 function setupDateTab(jTabs) {
-    var dateTab = $("<span id='tDate'></span>");
-    dateTab.append(createDateRangeSpan("tab","Custom Date Range"));
+    var dateTab = $("<div id='tDate'></div>");
+    
+    //Custom Date Range
+    dateTab.append("<h3>Date Range</h3>");
+    var dateRangeDiv = $("<div></div>");
+    dateRangeDiv.append(createDateRangeSpan("tab"));
+    dateTab.append(dateRangeDiv);
+
+    //Custom Day of Year Range
+    dateTab.append("<h3>Day-of-Year Range</h3>");
+    var dayYearDiv = $("<div></div>");
+    dayYearDiv.append(createDayYearRangeSpan());
+    dateTab.append(dayYearDiv);
+
+    //Year Month Combos
+    dateTab.append("<h3>Year-Month</h3>");
+    var yearMonthDiv = $("<div></div>");
+    dateTab.append(yearMonthDiv);
+    
+    //Finalize and bind to tab control
     jTabs.append(dateTab);
     jTabs.tabs("add", "#tDate", "Dates");
+    
+    
+    //Bind controls as appropriate jqueryui controls
+    $("#tDate").accordion();
     bindDateRangeSpan("tab");
 }
 
-function createDateRangeSpan(id, label){
-    var dateSpan = $("<span id='dateRang"+id+"e' class='ui-widget'></span>");
-    if(label != undefined){
-    dateSpan.append("<h class='tabSubHeader'>"+label+"</h><br/>");
-        }
+function createDayYearRangeSpan(){
+    var dayYearSpan = $("<span class='ui-widget'></span>");
+    dayYearSpan.append(
+        "<label for='dpStartDayYear'>  From</label>"+
+            "<input type='text' id='dpStartDayYear' name='dpStartDayYear' />"
+    );
+    dayYearSpan.append(
+        "<label for='dpEndDayYear'>  To</label>"+
+            "<input type='text' id='dpEndDayYear' name='dpEndDayYear' />"
+    );
+    return dayYearSpan;
+}
+
+//Called in header.js and setupDateTab()
+function createDateRangeSpan(id){
+    var dateSpan = $("<span id='dateRange"+id+"' class='ui-widget'></span>");
     dateSpan.append(
         "<label for='dpStartDate"+id+"'>  From</label>"+
             "<input type='text' id='dpStartDate"+id+"' name='dpStartDate"+id+"' class='ddl'/>"
@@ -30,6 +63,7 @@ function createDateRangeSpan(id, label){
     return dateSpan;
 }
 
+//Called in header.js and setupDateTab()
 function bindDateRangeSpan(id){
     //Make startDate and endDate datepickers
     $("#dpStartDate"+id).datepicker({

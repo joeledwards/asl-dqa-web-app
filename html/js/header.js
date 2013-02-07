@@ -40,15 +40,12 @@ function setupHeader(){
     
     rightSide.append(createDateRangeSpan("header"));
     rightSide.append(
-        "<button type='button' id='btnRefresh'>Refresh</button>"
+        "<button type='button' id='btnRefresh'>Update</button>"
     );
     header.append(rightSide);
     $("#btnRefresh").on("click",function(){
-        clearDataTable(dataGrid);
-        populateGrid(dataGrid);
+        refreshGrid();
     });
-    //Make all buttons jqueryui buttons
-    $("button").button();
     //Adds the actual jqueryui datepicker controls and theme
     bindDateRangeSpan("header");
 }
