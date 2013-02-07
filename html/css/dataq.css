@@ -54,6 +54,13 @@ body{font-size:10px;}
     vertical-align: middle;
 }
 
+/*Tab classes*/
+.tabSubHeader {
+    font-size: 12px;
+}
+
+
+/*Generic Classes*/
 button:hover {
     text-decoration:underline;
     cursor: hand;
@@ -63,6 +70,8 @@ button:hover {
 .right {
     float:right
 }
+
+
 
 /*
 thead {

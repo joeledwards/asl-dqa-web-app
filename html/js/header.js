@@ -37,18 +37,8 @@ function setupHeader(){
     }
     //Adding span for dateRange now, but the dates and their controls will be added in the dateselection code.
     var rightSide = $("<span class='right'></span>");
-    var dateSpan = $("<span id='headerDateRange' class='ui-widget'></span>");
-
-    dateSpan.append(
-        "<label for='dpStartDate'>  From</label>"+
-            "<input type='text' id='dpStartDate' name='dpStartDate' class='ddl'/>"
-    );
-    dateSpan.append(
-        "<label for='dpEndDate'>  To</label>"+
-            "<input type='text' id='dpEndDate' name='dpEndDate' class='ddl'/>"
-    );
     
-    rightSide.append(dateSpan);
+    rightSide.append(createDateRangeSpan("header"));
     rightSide.append(
         "<button type='button' id='btnRefresh'>Refresh</button>"
     );
@@ -58,5 +48,7 @@ function setupHeader(){
         populateGrid(dataGrid);
     });
     //Make all buttons jqueryui buttons
-    $("button").button()
+    $("button").button();
+    //Adds the actual jqueryui datepicker controls and theme
+    bindDateRangeSpan("header");
 }
