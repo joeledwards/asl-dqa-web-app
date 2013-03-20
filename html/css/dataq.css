@@ -71,6 +71,13 @@ button:hover {
     float:right
 }
 
+tr.even {
+    background-color: #F0F7FE;
+}
+
+tr.odd {
+    background-color: white;
+}
 
 
 /*
