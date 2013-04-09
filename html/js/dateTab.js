@@ -87,19 +87,41 @@ function bindDateRangeSpan(id){
 }
 
 function selectStartDate(newStartDate){
+    //Update date pickers
     $("[id^=dpStartDate]").each(function(){
         $(this).val(newStartDate);
     });
     $("[id^=dpEndDate]").each(function(){
         $(this).datepicker("option", "minDate", newStartDate);
     });
+
+    //Update Year-Day
+    $("#dpStartDayYear").val(datetoYearDay(newStartDate, "-"));
 }
 
 function selectEndDate(newEndDate){
+    //Update date pickers
     $("[id^=dpEndDate]").each(function(){
         $(this).val(newEndDate);
     });
     $("[id^=dpStartDate]").each(function(){
         $(this).datepicker("option", "maxDate", newEndDate);
     });
+    //Update Year-Day
+    $("#dpEndDayYear").val(datetoYearDay(newEndDate, "-"));
 }
+
+function datetoYearDay(strdate, delimiter){
+    var date = new Date(strdate.split(delimiter));
+    var dayOne = new Date(date.getFullYear(), 0, 1); //creates Jan 1st
+    var dayDiff = Math.round((date.getTime() - dayOne.getTime())/86400000)+1;  //86400000 is 1000*60*60*24 it converts the millisecond difference to days.
+    return ""+date.getFullYear()+delimiter+dayDiff;
+}
+
+function yearDaytoDate(yearDay, delimiter){
+    var ydSplit = yearDay.split(delimiter);
+    var date = new Date(new Date(ydSplit[0], 0).setDate(ydSplit[1])); //Creates date with correct year, but with 0th day
+    return ""+date.getFullYear()+delimiter+(date.getMonth()+1)+delimiter+date.getDate();
+}
+
+
