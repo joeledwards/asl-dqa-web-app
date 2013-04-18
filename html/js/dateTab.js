@@ -15,12 +15,6 @@ function setupDateTab(jTabs) {
     dateRangeDiv.append(createDateRangeSpan("tab"));
     dateTab.append(dateRangeDiv);
 
-    //Custom Day of Year Range
-    dateTab.append("<h3>Day-of-Year Range</h3>");
-    var dayYearDiv = $("<div></div>");
-    dayYearDiv.append(createDayYearRangeSpan());
-    dateTab.append(dayYearDiv);
-
     //Year Month Combos
     dateTab.append("<h3>Year-Month</h3>");
     var yearMonthDiv = $("<div></div>");
@@ -36,18 +30,6 @@ function setupDateTab(jTabs) {
     bindDateRangeSpan("tab");
 }
 
-function createDayYearRangeSpan(){
-    var dayYearSpan = $("<span class='ui-widget'></span>");
-    dayYearSpan.append(
-        "<label for='dpStartDayYear'>  From</label>"+
-            "<input type='text' id='dpStartDayYear' name='dpStartDayYear' />"
-    );
-    dayYearSpan.append(
-        "<label for='dpEndDayYear'>  To</label>"+
-            "<input type='text' id='dpEndDayYear' name='dpEndDayYear' />"
-    );
-    return dayYearSpan;
-}
 
 //Called in header.js and setupDateTab()
 function createDateRangeSpan(id){
@@ -60,6 +42,16 @@ function createDateRangeSpan(id){
         "<label for='dpEndDate"+id+"'>  To</label>"+
             "<input type='text' id='dpEndDate"+id+"' name='dpEndDate"+id+"' class='ddl'/>"
     );
+
+    //if (id =="tab"){
+    dateSpan.append(
+        "<label for='dpFormat"+id+"'>     Date Format:   </label>"+
+            "<select id='dpFormat"+id+"'>"+
+            "   <option value='yy-mm-dd'>Date: YYYY-MM-DD</option>"+
+            "   <option value='yy-oo'>Ordinal date: YYYY-DDD</option>"+
+            "</select>"
+            );
+      //      }
     return dateSpan;
 }
 
@@ -96,7 +88,6 @@ function selectStartDate(newStartDate){
     });
 
     //Update Year-Day
-    $("#dpStartDayYear").val(datetoYearDay(newStartDate, "-"));
 }
 
 function selectEndDate(newEndDate){
@@ -108,7 +99,6 @@ function selectEndDate(newEndDate){
         $(this).datepicker("option", "maxDate", newEndDate);
     });
     //Update Year-Day
-    $("#dpEndDayYear").val(datetoYearDay(newEndDate, "-"));
 }
 
 function datetoYearDay(strdate, delimiter){
