@@ -12,5 +12,5 @@ function setupTabs() {
     jtab.tabs({
         collapsible: true
     });
-    setupDateTab(jtab);
+    //setupDateTab(jtab);
 }
