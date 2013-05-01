@@ -4,7 +4,7 @@ Author: James Holland jholland@usgs.gov
 dateTab.js contains functions related to the date tab.
 License: Public Domain
 */
-
+/* No longer in use Remove after no one requests year-month
 //setupDateTab is passed the jquery object to append needed objects to.
 function setupDateTab(jTabs) {
     var dateTab = $("<div id='tDate'></div>");
@@ -29,7 +29,7 @@ function setupDateTab(jTabs) {
     $("#tDate").accordion();
     bindDateRangeSpan("tab");
 }
-
+*/
 
 //Called in header.js and setupDateTab()
 function createDateRangeSpan(id){
@@ -76,29 +76,57 @@ function bindDateRangeSpan(id){
                 selectEndDate(selectedDate);
             }
         });
+    $("#dpFormat"+id).change(function(){
+            $("#dpStartDate"+id).datepicker("option", "dateFormat", $(this).val());
+            $("#dpEndDate"+id).datepicker("option", "dateFormat", $(this).val());
+            });
+
+}
+
+function setupFirstDate(firstDate){
+    $("[id^=dpStartDate]").each(function(){
+            $(this).datepicker("option", "minDate", firstDate);
+            });
+}
+
+function setupLastDate(lastDate){
+    $("[id^=dpEndDate]").each(function(){
+            $(this).datepicker("option", "maxDate", lastDate);
+            });
+    var firstDate = lastDate.split("-");
+    setStartDate(firstDate[0]+"-"+firstDate[1]+"-01");
+    setEndDate(lastDate);
+}
+
+function setStartDate(newStartDate){
+    $("[id^=dpStartDate]").each(function(){
+            $(this).val(newStartDate);
+            });
+    $("[id^=dpEndDate]").each(function(){
+            $(this).datepicker("option", "minDate", newStartDate);
+            });
+}
+
+function setEndDate(newEndDate){
+    $("[id^=dpEndDate]").each(function(){
+            $(this).val(newEndDate);
+            });
+    $("[id^=dpStartDate]").each(function(){
+            $(this).datepicker("option", "maxDate", newEndDate);
+            });
 }
 
 function selectStartDate(newStartDate){
-    //Update date pickers
-    $("[id^=dpStartDate]").each(function(){
-        $(this).val(newStartDate);
-    });
     $("[id^=dpEndDate]").each(function(){
         $(this).datepicker("option", "minDate", newStartDate);
     });
 
-    //Update Year-Day
 }
 
 function selectEndDate(newEndDate){
-    //Update date pickers
-    $("[id^=dpEndDate]").each(function(){
-        $(this).val(newEndDate);
-    });
     $("[id^=dpStartDate]").each(function(){
         $(this).datepicker("option", "maxDate", newEndDate);
     });
-    //Update Year-Day
 }
 
 function datetoYearDay(strdate, delimiter){

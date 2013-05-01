@@ -35,7 +35,7 @@ $(document).ready(function(){
     else {
         pageType = "summary";
     }
-
+setupPage();
     getSetupData();
 });
 
@@ -60,7 +60,6 @@ function getSetupData(){
             {cmd: "groups_dates_stations_metrics_channels", param: "station."+station},
             function(data){
                 parseSetupResponse(data, setupParams);
-                setupPage();
             }
         ); 
     }
@@ -69,7 +68,6 @@ function getSetupData(){
             {cmd: "groups_dates_stations_metrics"},
             function(data){
                 parseSetupResponse(data, setupParams);
-                setupPage();
             }
         );
     }
@@ -239,16 +237,17 @@ function parseSetupResponse(response, params){
     for (var i =0; i< rows.length; i++){
         var parts = rows[i].split(',');  //Typical return like Type, TypeID, Values
         switch(parts[0]){
-            case 'D': //D, year, month
-                if (parts.length != 3) {
+            case 'DE': //DE, YYYY-MM-DD End date
+                if (parts.length != 2) {
                     continue;
                 }
-                var year = parseInt(parts[1]);
-                var month = parseInt(parts[2]);
-                addMonthYear(year,month);
-                if ((params.setYear == undefined) || (year > params.setYear)) {
-                    params.setYear = year;
+                setupLastDate(parts[1]);
+                break;
+            case 'DS': //DS YYYY-MM-DD  start Date
+                if (parts.length != 2) {
+                    continue;
                 }
+                setupFirstDate(parts[1]);
                 break;
             case 'T': //T, GroupTypeID, GroupTypeName (Network, Country, etc), Groups associated with Type
                 mapTNametoTID[parts[2]] = parts[1]; //Allows lookup by TName
