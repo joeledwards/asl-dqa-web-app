@@ -4,51 +4,25 @@
  dateselector.js contains functions and objects connected to only the date controls
  License: Public Domain
  */
-var mapYearstoMonths = {}; //Available months for each year
-var mapMonthtoNum = {
-    1 : "January",
-    2 : "February",
-    3 : "March",
-    4 : "April",
-    5 : "May",
-    6 : "June",
-    7 : "July",
-    8 : "August",
-    9 : "September",
-    10 : "October",
-    11 : "November",
-    12 : "December",
-    "January"   :  1,
-    "February"  :  2,
-    "March"     :  3,
-    "April"     :  4,
-    "May"       :  5,
-    "June"      :  6,
-    "July"      :  7,
-    "August"    :  8,
-    "September" :  9,
-    "October"   : 10,
-    "November"  : 11,
-    "December"  : 12
-};
 
-//Max and Min dates for datepickers
-var dpMaxDate = undefined;
-var dpMinDate = undefined;
+function datetoYearDay(strdate, delimiter){
+    var date = new Date(strdate.split(delimiter));
+    var dayOne = new Date(date.getFullYear(), 0, 1); //creates Jan 1st
+    var dayDiff = Math.round((date.getTime() - dayOne.getTime())/86400000)+1;  //86400000 is 1000*60*60*24 it converts the millisecond difference to days.
+    return ""+date.getFullYear()+delimiter+dayDiff;
+}
 
-function initDates(year){
+function yearDaytoDate(yearDay, delimiter){
+    var ydSplit = yearDay.split(delimiter);
+    var date = new Date(new Date(ydSplit[0], 0).setDate(ydSplit[1])); //Creates date with correct year, but with 0th day
+    return ""+date.getFullYear()+delimiter+(date.getMonth()+1)+delimiter+date.getDate();
+}
+
+
+function initDates(){
     if(getQueryString("sdate") != undefined && getQueryString("edate") != undefined){
         $("#dpStartDate").val(getQueryString("sdate"));
         $("#dpEndDate").val(getQueryString("edate"));
-        //Toggle so date range is showing
-        $("#spanYearMonth").toggle();
-        $("#spanDateRange").toggle();
-    }
-    else{
-        $("#ddlYear").val(year);
-        yearSelected();
-        yearMonthToStartDate();
-        yearMonthToEndDate();
     }
     //Set Minimums and maximums
     $("#dpStartDate").datepicker("option", "minDate", dpMinDate);
@@ -96,7 +70,9 @@ function getEndDate(complex){
         return $("#dpEndDate").val();
 }
 
-function yearMonthToStartDate(){
+
+//Year Month functions. Delete once sure no longer needed.
+/*function yearMonthToStartDate(){
     var startDate = new Date($("#ddlYear").val(), parseInt($("#ddlMonth").val()-1),1);
 
     $("#dpStartDate").val(
@@ -161,3 +137,7 @@ function yearSelected()
         month_list.val(last);
     }
 }
+
+*/
+
+
