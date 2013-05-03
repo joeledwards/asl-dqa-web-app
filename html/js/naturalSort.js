@@ -1,8 +1,8 @@
 /*
- * Natural Sort algorithm for Javascript - Version 0.7 - Released under MIT license
- * Author: Jim Palmer (based on chunking idea from Dave Koelle)
- * https://github.com/overset/javascript-natural-sort
- */
+* Natural Sort algorithm for Javascript - Version 0.7 - Released under MIT license
+* Author: Jim Palmer (based on chunking idea from Dave Koelle)
+* https://github.com/overset/javascript-natural-sort
+*/
 function naturalSort (a, b) {
     var re = /(^-?[0-9]+(\.?[0-9]*)[df]?e?[0-9]?$|^0x[0-9a-f]+$|[0-9]+)/gi,
     sre = /(^[ ]*|[ ]*$)/g,

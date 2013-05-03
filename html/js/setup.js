@@ -35,7 +35,7 @@ $(document).ready(function(){
     else {
         pageType = "summary";
     }
-setupPage();
+    setupPage();
     getSetupData();
 });
 
@@ -71,7 +71,7 @@ function getSetupData(){
             }
         );
     }
-    
+
 }
 
 function setupPage(){

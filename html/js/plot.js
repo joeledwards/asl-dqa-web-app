@@ -1,17 +1,17 @@
 /*
- plot.js
- Author: James Holland jholland@usgs.gov
- plot.js contains functions for creating plot windows and actual plotting
- License: Public Domain
- */
+plot.js
+Author: James Holland jholland@usgs.gov
+plot.js contains functions for creating plot windows and actual plotting
+License: Public Domain
+*/
 
 function plotTemplate(id, title){
     var dialog = $("<div id='dia"+id+"' title='"+title+"'></div>").dialog({
-            width: 500,
-            close: function(event, ui){
-                $("#dia"+id).remove();
-            }
-        });
+        width: 500,
+        close: function(event, ui){
+            $("#dia"+id).remove();
+        }
+    });
     var plotTarget = $("<div id='plot"+id+"'></div>");
 
     dialog.append(plotTarget);
@@ -28,7 +28,7 @@ function createDialog(id){
     if (pageType == "summary")
         title = mapSIDtoSName[ids[2]]+" "+mapMIDtoMName[ids[1]];
     else if (pageType == "station")
-    title = mapCIDtoCName[ids[2]]+" "+mapMIDtoMName[ids[1]];
+        title = mapCIDtoCName[ids[2]]+" "+mapMIDtoMName[ids[1]];
     else
         title = "ERROR page type not defined";
 
@@ -43,44 +43,44 @@ function bindPlot(pid, title){
     if (plotdata[pid].length > 0){ //Check if data was returned, if none was returned don't plot anything.
         $('#html').append(plotTemplate(pid, title));
         plots[pid] = $.jqplot('plot'+pid, [plotdata[pid]], {
-                //title: title,  //Title is on the dialog window
-                cursor: {
-                    show: true,
-                    zoom: true,
-                    showTooltip: false
-                },
+            //title: title,  //Title is on the dialog window
+            cursor: {
+                show: true,
+                zoom: true,
+                showTooltip: false
+            },
 
-                highlighter: {
-                    show: true,
-                    sizeAdjust: 7.5
-                },
-                axes: {
-                    xaxis: {
-                        autoscale:true,
-                        min: (getStartDate('object')+1),
-                        max: (getEndDate('object')+1),
-                        tickOptions:{
-                            formatString:'%b %#d, %y',
-                            fontSize: '10pt'
-                        },
-                        renderer: $.jqplot.DateAxisRenderer
+            highlighter: {
+                show: true,
+                sizeAdjust: 7.5
+            },
+            axes: {
+                xaxis: {
+                    autoscale:true,
+                    min: (getStartDate('object')+1),
+                    max: (getEndDate('object')+1),
+                    tickOptions:{
+                        formatString:'%b %#d, %y',
+                        fontSize: '10pt'
                     },
-                    yaxis: {
-                        tickOptions:{
-                            fontSize: '10pt'
-                        },
-                        pad: 1.01
-                    }
+                    renderer: $.jqplot.DateAxisRenderer
+                },
+                yaxis: {
+                    tickOptions:{
+                        fontSize: '10pt'
+                    },
+                    pad: 1.01
                 }
-            });
+            }
+        });
 
         //Bind the zoom out button
         $("#btn"+pid).click(function () {
-                plots[$(this).val()].resetZoom();
-            });
+            plots[$(this).val()].resetZoom();
+        });
         $('#dia'+pid).bind('dialogresize', function(event, ui) {
-                plots[pid].replot( { resetAxes: true } );
-            });
+            plots[pid].replot( { resetAxes: true } );
+        });
     }
 
 }
@@ -94,8 +94,8 @@ function getPlotData(ids, pid, title){
                 parsePlotReturn(data, pid);
             }
         ).done(function(){
-                bindPlot(pid, title);
-            });
+            bindPlot(pid, title);
+        });
 
     }
     else if (pageType == "summary"){
@@ -105,8 +105,8 @@ function getPlotData(ids, pid, title){
                 parsePlotReturn(data, pid);
             }
         ).done(function(){
-                bindPlot(pid, title);
-            });
+            bindPlot(pid, title);
+        });
     }
 }
 
