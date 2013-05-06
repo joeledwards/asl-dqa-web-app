@@ -45,21 +45,48 @@ $(document).ajaxStop(function(){
 });
 
 function getSetupData(){
-    /*
-    setupParams is an object that contains parameters that need
-    to be passed between functions. Since functions can't return
-    multiple items or pointers, setupParams is passed by reference.
-    */
-    var setupParams = {
-        setYear:undefined //Is set to max year and month if no query string dates are provided.
-    };
-
     if (pageType == "station"){
         var station = getQueryString("station");
         $.get("/cgi-bin/metrics.py", 
             {cmd: "groups_dates_stations_metrics_channels", param: "station."+station},
             function(data){
                 parseSetupResponse(data, setupParams);
+                buildTable();
+                dataGrid = $('#grid').dataTable( {
+                    "bJQueryUI":true
+                    ,"bPaginate":false
+                    //        ,"sScrollY":"300px"
+                    ,"sScrollY": (window.innerHeight - 220)+"px"
+                    // ,"sScrollYInner": "110%"
+                    ,"sScrollX": "100%"
+                    //,"sScrollXInner": "5200px"
+                    ,"bScrollCollapse": true
+                    ,"sDom": 'TC<"clear">lfrtip'
+                    ,"oTableTools": {
+                        "aButtons": [ 
+                            {
+                                "sExtends":"copy",
+                                "fnInit": function(node){formatTableTools(node, 'ui-icon-clipboard');}
+                            },
+                            {
+                                "sExtends":"print",
+                                "fnInit": function(node){formatTableTools(node, 'ui-icon-print');}
+                            },
+                            {
+                                "sExtends":"csv",
+                                "fnInit": function(node){formatTableTools(node, 'ui-icon-calculator');}
+                            },
+                            {
+                                "sExtends":"pdf",
+                                "fnInit": function(node){formatTableTools(node, 'ui-icon-copy');}
+                            }
+                        ]
+                    }
+                });
+                initializeDataGrid(dataGrid);
+                clearDataTable(dataGrid); //Clears 1.01 values before populating with proper values
+                populateGrid(dataGrid);
+                bindDatatableActions(dataGrid);
             }
         ); 
     }
@@ -67,7 +94,44 @@ function getSetupData(){
         $.get("/cgi-bin/metrics.py", 
             {cmd: "groups_dates_stations_metrics"},
             function(data){
-                parseSetupResponse(data, setupParams);
+                populateGroups();
+                buildTable();
+                dataGrid = $('#grid').dataTable( {
+
+                    "bJQueryUI":true
+                    ,"bPaginate":false
+                    //        ,"sScrollY":"300px"
+                    ,"sScrollY": (window.innerHeight - 220)+"px"
+                    // ,"sScrollYInner": "110%"
+                    ,"sScrollX": "100%"
+                    //,"sScrollXInner": "5200px"
+                    ,"bScrollCollapse": true
+                    ,"sDom": 'TC<"clear">lfrtip'
+                    ,"oTableTools": {
+                        "aButtons": [ 
+                            {
+                                "sExtends":"copy",
+                                "fnInit": function(node){formatTableTools(node, 'ui-icon-clipboard');}
+                            },
+                            {
+                                "sExtends":"print",
+                                "fnInit": function(node){formatTableTools(node, 'ui-icon-print');}
+                            },
+                            {
+                                "sExtends":"csv",
+                                "fnInit": function(node){formatTableTools(node, 'ui-icon-calculator');}
+                            },
+                            {
+                                "sExtends":"pdf",
+                                "fnInit": function(node){formatTableTools(node, 'ui-icon-copy');}
+                            }
+                        ]
+                    }
+                });
+                initializeDataGrid(dataGrid);
+                clearDataTable(dataGrid); //Clears 1.01 values before populating with real values
+                populateGrid(dataGrid);
+                bindDatatableActions(dataGrid);
             }
         );
     }
@@ -93,9 +157,6 @@ function oldgetSetupData(type){
         $.get("/cgi-bin/metrics.py", 
             {cmd: "groups_dates_stations_metrics_channels", param: "station."+station},
             function(data){
-                parseSetupResponse(data, setupParams);
-                initDates(setupParams.setYear);
-
                 buildGrid();
                 dataGrid = $('#grid').dataTable( {
                     "bJQueryUI":true
@@ -232,7 +293,7 @@ function parseDataReturn(data,mid, pDatatable){
     }
 }
 
-function parseSetupResponse(response, params){
+function parseSetupResponse(response){
     var rows = response.split(/\n/);
     for (var i =0; i< rows.length; i++){
         var parts = rows[i].split(',');  //Typical return like Type, TypeID, Values
