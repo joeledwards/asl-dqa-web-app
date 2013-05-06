@@ -5,6 +5,9 @@ datatable.js contains functions functions for the datatable found on both summar
 License: Public Domain
 */
 
+var dTable; //DataTable object used throughout
+var numCols = 0; //Used to track number of columns currently being updated.
+
 function bindDatatableActions(datatable) {
     datatable.find('tbody td').click(function(){
         var id = $(this).attr('id');
@@ -40,7 +43,7 @@ function buildTable(){
     var dataGrid = document.getElementById("grid");
     var metricsSorted = new Array();
     var metrics = new Array();
-    var $gridhead = $("#grid thead tr");
+    var gridhead = $("#grid thead tr");
         for(header in mapMNametoMID) {
             if(mapMNametoMID.hasOwnProperty(header)) {
                 metrics.push(header);
@@ -49,38 +52,38 @@ function buildTable(){
         metricsSorted = metrics.sort(naturalSort);
     if(pageType =="summary"){
 
-        $gridhead.append('<th id="network">Network</th>');
-        $gridhead.append('<th id="Station">Station</th>');
-        $gridhead.append('<th id="groups">Groups</th>');
+        gridhead.append('<th id="network">Network</th>');
+        gridhead.append('<th id="Station">Station</th>');
+        gridhead.append('<th id="groups">Groups</th>');
         for( var i = 0; i<metricsSorted.length; i++){
-            $gridhead. append('<th id="'+mapMNametoMID[metricsSorted[i]]+'">'+metricsSorted[i]+'</th>');
+            gridhead. append('<th id="'+mapMNametoMID[metricsSorted[i]]+'">'+metricsSorted[i]+'</th>');
         }
-        $gridhead.append('<th id="aggregate">Aggregate</th>');
+        gridhead.append('<th id="aggregate">Aggregate</th>');
 
         for(station in mapSIDtoNID){
             if(mapSIDtoNID.hasOwnProperty(station)){
-                var $row = $('<tr id = "'+station+'"><td>'+mapGIDtoGName[mapSIDtoNID[station]]+'</td>'
+                var row = $('<tr id = "'+station+'"><td>'+mapGIDtoGName[mapSIDtoNID[station]]+'</td>'
                     +'<td id="l_'+station+'" class="ltd">'+mapSIDtoSName[station]+'</td>'
                 +'<td>,'+mapSIDtoGIDs[station]+',</td></tr>');
                 //Adding 1.01 causes datatables to automatically set the column types to numeric
                 for( var i = 0; i<metricsSorted.length; i++){
-                    $row.append('<td id="d_'+mapMNametoMID[metricsSorted[i]]+'_'+station+'">1.01</td>');
+                    row.append('<td id="d_'+mapMNametoMID[metricsSorted[i]]+'_'+station+'">1.01</td>');
                 }
                 //Append aggregate cell here
-                $row.append('<td id="a_'+station+'">1.01</td>');
+                row.append('<td id="a_'+station+'">1.01</td>');
 
-                $("#grid tbody").append($row);
+                $("#grid tbody").append(row);
             }
         }
 
     }
     else if(pageType == "station"){
-        $gridhead.append('<th id="location">Location</th>');
-        $gridhead.append('<th id="channel">Channel</th>');
+        gridhead.append('<th id="location">Location</th>');
+        gridhead.append('<th id="channel">Channel</th>');
         for( var i = 0; i<metricsSorted.length; i++){
-            $gridhead.append('<th id="'+mapMNametoMID[metricsSorted[i]]+'">'+metricsSorted[i]+'</th>');
+            gridhead.append('<th id="'+mapMNametoMID[metricsSorted[i]]+'">'+metricsSorted[i]+'</th>');
         }
-        $gridhead.append('<th id="aggregate">Aggregate</th>');
+        gridhead.append('<th id="aggregate">Aggregate</th>');
 
         for(channel in mapCIDtoCName){
             if(mapCIDtoCName.hasOwnProperty(channel)){
@@ -88,13 +91,16 @@ function buildTable(){
                 +'<td>'+mapCIDtoCName[channel]+'</a></td></tr>');
                 //Adding 1.01 causes datatables to automatically set the column types to numeric
                 for( var i = 0; i<metricsSorted.length; i++){
-                    $row.append('<td id="d_'+mapMNametoMID[metricsSorted[i]]+'_'+channel+'">1.01</td>');
+                    row.append('<td id="d_'+mapMNametoMID[metricsSorted[i]]+'_'+channel+'">1.01</td>');
                 }
                 //Add Aggregate column
-                $row.append('<td id="a_'+channel+'">1.01</td>');
+                row.append('<td id="a_'+channel+'">1.01</td>');
 
-                $("#grid tbody").append($row);
+                $("#grid tbody").append(row);
             }
         }
     }
+}
+
+function initializeTable(){
 }
