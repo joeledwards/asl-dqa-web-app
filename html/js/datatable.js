@@ -44,12 +44,12 @@ function buildTable(){
     var metricsSorted = new Array();
     var metrics = new Array();
     var gridhead = $("#grid thead tr");
-        for(header in mapMNametoMID) {
-            if(mapMNametoMID.hasOwnProperty(header)) {
-                metrics.push(header);
-            }
+    for(header in mapMNametoMID) {
+        if(mapMNametoMID.hasOwnProperty(header)) {
+            metrics.push(header);
         }
-        metricsSorted = metrics.sort(naturalSort);
+    }
+    metricsSorted = metrics.sort(naturalSort);
     if(pageType =="summary"){
 
         gridhead.append('<th id="network">Network</th>');
@@ -103,4 +103,5 @@ function buildTable(){
 }
 
 function initializeTable(){
+
 }
