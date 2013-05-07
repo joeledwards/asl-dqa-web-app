@@ -8,8 +8,8 @@ License: Public Domain
 var dTable; //DataTable object used throughout
 var numCols = 0; //Used to track number of columns currently being updated.
 
-function bindDatatableActions(datatable) {
-    datatable.find('tbody td').click(function(){
+function bindTableActions() {
+    dTable.find('tbody td').click(function(){
         var id = $(this).attr('id');
         if(id != undefined){
             if(id != undefined && id.charAt(0) == 'd')
@@ -23,16 +23,16 @@ function bindDatatableActions(datatable) {
     });
 }
 
-function clearDataTable(datatable){
-    var rows = datatable.fnGetNodes();
+function clearTable(){
+    var rows = dTable.fnGetNodes();
     for( var i = 0; i<rows.length; i++){
         $(rows[i]).find("td").each(function(){
-            var pos = datatable.fnGetPosition(this);
+            var pos = dTable.fnGetPosition(this);
             if(String($(this).attr("id")).charAt(0) == "d"){ //only clear data cells 
-                datatable.fnUpdate("", pos[0], pos[2], false, false); 
+                dTable.fnUpdate("", pos[0], pos[2], false, false); 
             }
             if(String($(this).attr("id")).charAt(0) == "a"){
-                datatable.fnUpdate(parseFloat(0), pos[0],pos[2], false, false);
+                dTable.fnUpdate(parseFloat(0), pos[0],pos[2], false, false);
             }
 
         });
@@ -102,6 +102,42 @@ function buildTable(){
     }
 }
 
+//Basic initialization and setup for datatable
 function initializeTable(){
 
+    dTable = $('#grid').dataTable( {
+        "bJQueryUI":true
+        ,"bPaginate":false
+        //        ,"sScrollY":"300px"
+        ,"sScrollY": (window.innerHeight - 220)+"px"
+        // ,"sScrollYInner": "110%"
+        ,"sScrollX": "100%"
+        //,"sScrollXInner": "5200px"
+        ,"bScrollCollapse": true
+        //,"sDom": 'TC<"clear">lfrtip'
+        /*,"oTableTools": {
+            "aButtons": [ 
+            {
+            "sExtends":"copy",
+            "fnInit": function(node){formatTableTools(node, 'ui-icon-clipboard');}
+            },
+            {
+            "sExtends":"print",
+            "fnInit": function(node){formatTableTools(node, 'ui-icon-print');}
+            },
+            {
+            "sExtends":"csv",
+            "fnInit": function(node){formatTableTools(node, 'ui-icon-calculator');}
+            },
+            {
+            "sExtends":"pdf",
+            "fnInit": function(node){formatTableTools(node, 'ui-icon-copy');}
+            }
+            ]
+            }*/
+    });
+    if (pageType == "summary"){
+        dTable.fnSetColumnVis(2, false);
+    }
+    dTable.fnSort([[0,'asc'],[1,'asc']]);
 }

@@ -48,43 +48,12 @@ function getSetupData(){
         $.get("/cgi-bin/metrics.py", 
             {cmd: "groups_dates_stations_metrics_channels", param: "station."+station},
             function(data){
-                parseSetupResponse(data, setupParams);
+                parseSetupResponse(data);
                 buildTable();
-                dataGrid = $('#grid').dataTable( {
-                    "bJQueryUI":true
-                    ,"bPaginate":false
-                    //        ,"sScrollY":"300px"
-                    ,"sScrollY": (window.innerHeight - 220)+"px"
-                    // ,"sScrollYInner": "110%"
-                    ,"sScrollX": "100%"
-                    //,"sScrollXInner": "5200px"
-                    ,"bScrollCollapse": true
-                    ,"sDom": 'TC<"clear">lfrtip'
-                    ,"oTableTools": {
-                        "aButtons": [ 
-                            {
-                                "sExtends":"copy",
-                                "fnInit": function(node){formatTableTools(node, 'ui-icon-clipboard');}
-                            },
-                            {
-                                "sExtends":"print",
-                                "fnInit": function(node){formatTableTools(node, 'ui-icon-print');}
-                            },
-                            {
-                                "sExtends":"csv",
-                                "fnInit": function(node){formatTableTools(node, 'ui-icon-calculator');}
-                            },
-                            {
-                                "sExtends":"pdf",
-                                "fnInit": function(node){formatTableTools(node, 'ui-icon-copy');}
-                            }
-                        ]
-                    }
-                });
-                initializeDataGrid(dataGrid);
-                clearDataTable(dataGrid); //Clears 1.01 values before populating with proper values
-                populateGrid(dataGrid);
-                bindDatatableActions(dataGrid);
+                initializeTable();
+                clearTable(); //Clears 1.01 values before populating with proper values
+                fillTable();
+                bindTableActions();
             }
         ); 
     }
@@ -92,44 +61,13 @@ function getSetupData(){
         $.get("/cgi-bin/metrics.py", 
             {cmd: "groups_dates_stations_metrics"},
             function(data){
-                populateGroups();
+                parseSetupResponse(data);
+                //populateGroups(); //We need to implement tabbing for this now
                 buildTable();
-                dataGrid = $('#grid').dataTable( {
-
-                    "bJQueryUI":true
-                    ,"bPaginate":false
-                    //        ,"sScrollY":"300px"
-                    ,"sScrollY": (window.innerHeight - 220)+"px"
-                    // ,"sScrollYInner": "110%"
-                    ,"sScrollX": "100%"
-                    //,"sScrollXInner": "5200px"
-                    ,"bScrollCollapse": true
-                    ,"sDom": 'TC<"clear">lfrtip'
-                    ,"oTableTools": {
-                        "aButtons": [ 
-                            {
-                                "sExtends":"copy",
-                                "fnInit": function(node){formatTableTools(node, 'ui-icon-clipboard');}
-                            },
-                            {
-                                "sExtends":"print",
-                                "fnInit": function(node){formatTableTools(node, 'ui-icon-print');}
-                            },
-                            {
-                                "sExtends":"csv",
-                                "fnInit": function(node){formatTableTools(node, 'ui-icon-calculator');}
-                            },
-                            {
-                                "sExtends":"pdf",
-                                "fnInit": function(node){formatTableTools(node, 'ui-icon-copy');}
-                            }
-                        ]
-                    }
-                });
-                initializeDataGrid(dataGrid);
-                clearDataTable(dataGrid); //Clears 1.01 values before populating with real values
-                populateGrid(dataGrid);
-                bindDatatableActions(dataGrid);
+                initializeTable();
+                clearTable(); //Clears 1.01 values before populating with real values
+                fillTable();
+                bindTableActions();
             }
         );
     }
@@ -145,105 +83,6 @@ function setupPage(){
     $("button").button();
 }
 
-function oldgetSetupData(type){
-    pageType = type;
-    var setupParams = {
-        setYear:undefined //Set to max year and month if not a station query
-    };
-    if (pageType == "station"){
-        var station = getQueryString("station");
-        $.get("/cgi-bin/metrics.py", 
-            {cmd: "groups_dates_stations_metrics_channels", param: "station."+station},
-            function(data){
-                buildGrid();
-                dataGrid = $('#grid').dataTable( {
-                    "bJQueryUI":true
-                    ,"bPaginate":false
-                    //        ,"sScrollY":"300px"
-                    ,"sScrollY": (window.innerHeight - 220)+"px"
-                    // ,"sScrollYInner": "110%"
-                    ,"sScrollX": "100%"
-                    //,"sScrollXInner": "5200px"
-                    ,"bScrollCollapse": true
-                    ,"sDom": 'TC<"clear">lfrtip'
-                    ,"oTableTools": {
-                        "aButtons": [ 
-                            {
-                                "sExtends":"copy",
-                                "fnInit": function(node){formatTableTools(node, 'ui-icon-clipboard');}
-                            },
-                            {
-                                "sExtends":"print",
-                                "fnInit": function(node){formatTableTools(node, 'ui-icon-print');}
-                            },
-                            {
-                                "sExtends":"csv",
-                                "fnInit": function(node){formatTableTools(node, 'ui-icon-calculator');}
-                            },
-                            {
-                                "sExtends":"pdf",
-                                "fnInit": function(node){formatTableTools(node, 'ui-icon-copy');}
-                            }
-                        ]
-                    }
-                });
-                initializeDataGrid(dataGrid);
-                clearDataTable(dataGrid); //Clears 1.01 values before populating with proper values
-                populateGrid(dataGrid);
-                bindDatatableActions(dataGrid);
-            }
-        );
-    }
-    else if (pageType == "summary"){
-        $.get("/cgi-bin/metrics.py", 
-            {cmd: "groups_dates_stations_metrics"},
-            function(data){
-                parseSetupResponse(data, setupParams);
-                initDates(setupParams.setYear);
-                populateGroups();
-                buildGrid();
-                dataGrid = $('#grid').dataTable( {
-
-                    "bJQueryUI":true
-                    ,"bPaginate":false
-                    //        ,"sScrollY":"300px"
-                    ,"sScrollY": (window.innerHeight - 220)+"px"
-                    // ,"sScrollYInner": "110%"
-                    ,"sScrollX": "100%"
-                    //,"sScrollXInner": "5200px"
-                    ,"bScrollCollapse": true
-                    ,"sDom": 'TC<"clear">lfrtip'
-                    ,"oTableTools": {
-                        "aButtons": [ 
-                            {
-                                "sExtends":"copy",
-                                "fnInit": function(node){formatTableTools(node, 'ui-icon-clipboard');}
-                            },
-                            {
-                                "sExtends":"print",
-                                "fnInit": function(node){formatTableTools(node, 'ui-icon-print');}
-                            },
-                            {
-                                "sExtends":"csv",
-                                "fnInit": function(node){formatTableTools(node, 'ui-icon-calculator');}
-                            },
-                            {
-                                "sExtends":"pdf",
-                                "fnInit": function(node){formatTableTools(node, 'ui-icon-copy');}
-                            }
-                        ]
-                    }
-                });
-                initializeDataGrid(dataGrid);
-                clearDataTable(dataGrid); //Clears 1.01 values before populating with real values
-                populateGrid(dataGrid);
-                bindDatatableActions(dataGrid);
-            }
-        );
-
-    }
-
-}
 function formatTableTools(button, icon){
     $(button).removeClass('DTTT_button');
     $(button).button({icons: {primary: icon}});
