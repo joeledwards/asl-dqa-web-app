@@ -141,3 +141,9 @@ function initializeTable(){
     }
     dTable.fnSort([[0,'asc'],[1,'asc']]);
 }
+
+function formatTableTools(button, icon){
+    $(button).removeClass('DTTT_button');
+    $(button).button({icons: {primary: icon}});
+    $('.DTTT_container').buttonset();
+}

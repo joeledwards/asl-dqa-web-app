@@ -83,11 +83,6 @@ function setupPage(){
     $("button").button();
 }
 
-function formatTableTools(button, icon){
-    $(button).removeClass('DTTT_button');
-    $(button).button({icons: {primary: icon}});
-    $('.DTTT_container').buttonset();
-}
 
 function populateGroups(){
     var groupList = document.getElementById("ddlGroup");
