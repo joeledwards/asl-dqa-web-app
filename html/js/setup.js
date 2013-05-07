@@ -107,23 +107,6 @@ function populateGroups(){
     }
 }
 
-function parseDataReturn(data,mid, pDatatable){
-    var rows = new Array();
-    rows = data.split("\n");
-    for(var i = 0; i <rows.length; i++){
-        row = rows[i].split(","); //stationID/channelID, value, percentage
-        if(row[0] && row[1] && mid){ //Check if id, value, and metricID exist
-            addPercent(row[0], mid, row[2]);
-            var cell = document.getElementById("d_"+mid+"_"+row[0]);
-            if(cell){
-                var pos = pDatatable.fnGetPosition(cell);
-                $("#d_"+mid+"_"+row[0]).addClass("ltd");
-                //Double parseFloat() drops excess 0's
-                pDatatable.fnUpdate(parseFloat(parseFloat(row[1]).toFixed(2)), pos[0], pos[2], false, false );
-            }
-        }
-    }
-}
 
 function parseSetupResponse(response){
     var rows = response.split(/\n/);

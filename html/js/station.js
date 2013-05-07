@@ -24,50 +24,6 @@ function filterGroups(datatable){
 
 }
 
-
-function buildGrid(){
-    var dataGrid = document.getElementById("grid");
-    var metricsSorted = new Array();
-    var metrics = new Array();
-    var $gridhead = $("#grid thead tr");
-    $gridhead.append('<th id="location">Location</th>');
-    $gridhead.append('<th id="channel">Channel</th>');
-    for(header in mapMNametoMID) {
-        if(mapMNametoMID.hasOwnProperty(header)) {
-            metrics.push(header);
-        }
-    }
-    metricsSorted = metrics.sort(naturalSort);
-    for( var i = 0; i<metricsSorted.length; i++){
-        $gridhead.append('<th id="'+mapMNametoMID[metricsSorted[i]]+'">'+metricsSorted[i]+'</th>');
-    }
-    $gridhead.append('<th id="aggregate">Aggregate</th>');
-
-    for(channel in mapCIDtoCName){
-        if(mapCIDtoCName.hasOwnProperty(channel)){
-            var $row = $('<tr id = "'+channel+'"><td>'+mapCIDtoLoc[channel]+'</td>'
-                +'<td>'+mapCIDtoCName[channel]+'</a></td></tr>');
-            //Adding 1.01 causes datatables to automatically set the column types to numeric
-            for( var i = 0; i<metricsSorted.length; i++){
-                $row.append('<td id="d_'+mapMNametoMID[metricsSorted[i]]+'_'+channel+'">1.01</td>');
-            }
-            //Add Aggregate column
-            $row.append('<td id="a_'+channel+'">1.01</td>');
-
-            $("#grid tbody").append($row);
-        }
-    }
-
-}
-
-
-function initializeDataGrid(datatable){
-
-    //Hide group Column
-    //datatable.fnSetColumnVis(2, false);
-    datatable.fnSort([[0,'asc'],[1,'asc']]);
-}
-
 function populateGrid(datatable){
     numCols = 0;
     var dates = getQueryDates();
