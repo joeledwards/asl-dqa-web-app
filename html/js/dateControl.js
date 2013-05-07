@@ -142,4 +142,41 @@ function yearDaytoDate(yearDay, delimiter){
     return ""+date.getFullYear()+delimiter+(date.getMonth()+1)+delimiter+date.getDate();
 }
 
+function getQueryDates(){
+    var startDate = getStartDate('object'); 
+    var endDate = getEndDate('object');
+    var dates = getStartDate('query')+"."+getEndDate('query');
+    return dates;
+}
 
+function getStartDate(complex){
+    if (complex == 'simple')
+        return $("[id^=dpStartDate]").first().val();
+    else if (complex == 'object')
+        return $("[id^=dpStartDate]").first().datepicker("getDate");
+    else if (complex == 'query'){
+        var odate = $("[id^=dpStartDate]").first().datepicker("getDate");
+        return ""
+        +odate.getUTCFullYear()
+        +prepad((odate.getUTCMonth()+1),2,"0")
+        +prepad(odate.getUTCDate(),2,"0");
+    }
+    else
+        return $("#dpStartDate").val();
+}
+
+function getEndDate(complex){
+    if (complex == 'simple')
+        return $("[id^=dpEndDate]").first().val();
+    else if (complex == 'object')
+        return $("[id^=dpEndDate]").first().datepicker("getDate");
+    else if (complex == 'query'){
+        var odate = $("[id^=dpEndDate]").first().datepicker("getDate");
+        return "" 
+        +odate.getUTCFullYear()
+        +prepad((odate.getUTCMonth()+1),2,"0")
+        +prepad(odate.getUTCDate(),2,"0");
+    }
+    else
+        return $("#dpEndDate").val();
+}
