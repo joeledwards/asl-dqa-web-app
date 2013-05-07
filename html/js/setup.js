@@ -38,8 +38,8 @@ $(document).ready(function(){
 });
 
 $(document).ajaxStop(function(){
-    //resetWeights();
-    //processAllAggr();
+    resetWeights();
+    processAllAggr();
 });
 
 function getSetupData(){

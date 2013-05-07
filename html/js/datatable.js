@@ -203,3 +203,21 @@ function fillTable(){
         });
     }
 }
+
+function parseDataReturn(data,mid){
+    var rows = new Array();
+    rows = data.split("\n");
+    for(var i = 0; i <rows.length; i++){
+        row = rows[i].split(","); //stationID/channelID, value, percentage
+        if(row[0] && row[1] && mid){ //Check if id, value, and metricID exist
+            addPercent(row[0], mid, row[2]);
+            var cell = document.getElementById("d_"+mid+"_"+row[0]);
+            if(cell){
+                var pos = dTable.fnGetPosition(cell);
+                $("#d_"+mid+"_"+row[0]).addClass("ltd");
+                //Double parseFloat() drops excess 0's
+                dTable.fnUpdate(parseFloat(parseFloat(row[1]).toFixed(2)), pos[0], pos[2], false, false );
+            }
+        }
+    }
+}
