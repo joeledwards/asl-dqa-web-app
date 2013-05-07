@@ -79,16 +79,16 @@ function calcAggr(rowID){
 }
 
 function processAllAggr(){
-    var rows = dataGrid.fnGetNodes();
+    var rows = dTable.fnGetNodes();
     for(var i = 0; i<rows.length; i++){
         var rowID = $(rows[i]).attr("id");
 
         var cell = document.getElementById("a_"+rowID);
         if(cell){
-            var pos = dataGrid.fnGetPosition(cell);
+            var pos = dTable.fnGetPosition(cell);
             var aggrVal = parseFloat(parseFloat(calcAggr(rowID)).toFixed(2));
             setAggregateClass(cell, aggrVal);
-            dataGrid.fnUpdate(aggrVal, pos[0], pos[2], false, false );
+            dTable.fnUpdate(aggrVal, pos[0], pos[2], false, false );
         }
     }
 }
