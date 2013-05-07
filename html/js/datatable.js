@@ -147,3 +147,59 @@ function formatTableTools(button, icon){
     $(button).button({icons: {primary: icon}});
     $('.DTTT_container').buttonset();
 }
+
+function fillTable(){
+        numCols = 0;
+        var rowIDs = new String(); //Will contain a list of delimited channel/station IDs EG 20-21-22-35
+        rowIDs = "";
+        var dates = getQueryDates();
+        var visibleRows = $('tbody tr', dTable.fnSettings().nTable);
+        $.each(visibleRows, function(c){
+            rowIDs= rowIDs+"-"+$(visibleRows[c]).closest('tr').attr('id');
+            // alert(dataGrid.fnGetData(visibleRows[c])[0]);
+        });
+        rowIDs = rowIDs.substr(1); //trims initial "-" from the string
+    if (pageType == "summary"){
+        $.each(dTable.fnSettings().aoColumns, function(c){
+            if(dTable.fnSettings().aoColumns[c].bVisible == true){
+                if(mapMNametoMID[dTable.fnSettings().aoColumns[c].sTitle]){
+                    numCols++; 
+                    var metricID = mapMNametoMID[dTable.fnSettings().aoColumns[c].sTitle];
+                    $.get("/cgi-bin/metrics.py", {cmd: "stationgrid", param: "station."+rowIDs+
+                        "_metric."+metricID+"_dates."+dates},
+                    function(data){
+                        parseDataReturn(data, metricID);
+                        numCols--;
+                        if(numCols <= 0){
+                            dTable.fnDraw();
+                            //compute aggregate This is called twice during the first load
+                            processAllAggr();
+                        }
+                    }
+                    );
+                }
+            }
+        });
+    }
+    else if (pageType == "station"){
+        $.each(dTable.fnSettings().aoColumns, function(c){
+            if(dTable.fnSettings().aoColumns[c].bVisible == true){
+                if(mapMNametoMID[dTable.fnSettings().aoColumns[c].sTitle]){
+                    numCols++; 
+                    var metricID = mapMNametoMID[dTable.fnSettings().aoColumns[c].sTitle];
+                    $.get("/cgi-bin/metrics.py", {cmd: "channelgrid", param: "channel."+rowIDs+
+                        "_metric."+metricID+"_dates."+dates},
+                    function(data){
+                        parseDataReturn(data, metricID);
+                        numCols--;
+                        if(numCols <= 0){
+                            processAllAggr();
+                            dTable.fnDraw();
+                        }
+                    }
+                    );
+                }
+            }
+        });
+    }
+}
