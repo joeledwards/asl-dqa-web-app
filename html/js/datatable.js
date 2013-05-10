@@ -15,7 +15,7 @@ function bindTableActions() {
             if(id != undefined && id.charAt(0) == 'd')
                 createDialog(id);
             else if(id.charAt(0) == 'l'){
-                window.location = 'station.html?station='+id.split('_')[1]
+                window.location = 'dataq.html?station='+id.split('_')[1]
                 +'&sdate='+getStartDate('simple')
                 +'&edate='+getEndDate('simple');
             }
@@ -87,7 +87,7 @@ function buildTable(){
 
         for(channel in mapCIDtoCName){
             if(mapCIDtoCName.hasOwnProperty(channel)){
-                var $row = $('<tr id = "'+channel+'"><td>'+mapCIDtoLoc[channel]+'</td>'
+                var row = $('<tr id = "'+channel+'"><td>'+mapCIDtoLoc[channel]+'</td>'
                 +'<td>'+mapCIDtoCName[channel]+'</a></td></tr>');
                 //Adding 1.01 causes datatables to automatically set the column types to numeric
                 for( var i = 0; i<metricsSorted.length; i++){
