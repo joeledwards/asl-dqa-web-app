@@ -15,7 +15,6 @@ function setupHeader(){
         alert("Legend is not done yet");
     });
     if(pageType == "station"){
-        var stationID = getQueryString("station");
         header.append(
             "<button type='button' id='btnSummary'>Summary</button>"
         );
@@ -24,11 +23,7 @@ function setupHeader(){
         });
 
         header.append(
-            "<span class='headerTitle'>"
-            +mapGIDtoGName[mapSIDtoNID[stationID]]
-            +"-"
-            +mapSIDtoSName[stationID]
-            +"</span>"
+            "<span id='spnTitle' class='headerTitle'></span>"
         );
     }
     else if(pageType == "summary"){
@@ -48,4 +43,10 @@ function setupHeader(){
     });
     //Adds the actual jqueryui datepicker controls and theme
     bindDateRangeSpan("header");
+}
+
+//Must be called after setup data is parsed to get the station name
+function setStationTitle(){
+    var stationID = getQueryString("station");
+    $("#spnTitle").text(mapGIDtoGName[mapSIDtoNID[stationID]]+"-"+mapSIDtoSName[stationID]);
 }
