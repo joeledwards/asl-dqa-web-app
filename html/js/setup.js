@@ -49,7 +49,7 @@ function getSetupData(){
             {cmd: "groups_dates_stations_metrics_channels", param: "station."+station},
             function(data){
                 parseSetupResponse(data);
-                setStationTitle(); //Sets the Title in the header like so "IU-ANMO"
+                setStationTitle(); //Sets the Title in the header like so "IU-ANMO" and changes document title to "DQA IU-ANMO"
                 buildTable();
                 initializeTable();
                 clearTable(); //Clears 1.01 values before populating with proper values
