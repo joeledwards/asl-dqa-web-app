@@ -171,9 +171,8 @@ function fillTable(){
                         parseDataReturn(data, metricID);
                         numCols--;
                         if(numCols <= 0){
+                            processAllAggr();//compute aggregate This is called twice during the first load
                             dTable.fnDraw();
-                            //compute aggregate This is called twice during the first load
-                            processAllAggr();
                         }
                     }
                     );
@@ -193,7 +192,7 @@ function fillTable(){
                         parseDataReturn(data, metricID);
                         numCols--;
                         if(numCols <= 0){
-                            processAllAggr();
+                            processAllAggr();//compute aggregate This is called twice during the first load
                             dTable.fnDraw();
                         }
                     }
