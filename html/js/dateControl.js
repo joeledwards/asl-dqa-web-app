@@ -89,12 +89,23 @@ function setupFirstDate(firstDate){
     });
 }
 
+//Sets max date and initializes date controls to either the most recent month or date passed in url params
 function setupLastDate(lastDate){
     $("[id^=dpEndDate]").each(function(){
         $(this).datepicker("option", "maxDate", lastDate);
     });
-    var firstDate = lastDate.split("-");
-    setStartDate(firstDate[0]+"-"+firstDate[1]+"-01");
+    var startDate;
+    if(startDate = getQueryString("sdate")){
+        setStartDate(startDate);
+    }
+    else{
+        var firstDate = lastDate.split("-");
+        setStartDate(firstDate[0]+"-"+firstDate[1]+"-01");
+    }
+    var qsEndDate;
+    if(qsEndDate = getQueryString("edate")){
+        lastDate = qsEndDate;
+        }
     setEndDate(lastDate);
 }
 
@@ -129,18 +140,6 @@ function selectEndDate(newEndDate){
     });
 }
 
-function datetoYearDay(strdate, delimiter){
-    var date = new Date(strdate.split(delimiter));
-    var dayOne = new Date(date.getFullYear(), 0, 1); //creates Jan 1st
-    var dayDiff = Math.round((date.getTime() - dayOne.getTime())/86400000)+1;  //86400000 is 1000*60*60*24 it converts the millisecond difference to days.
-    return ""+date.getFullYear()+delimiter+dayDiff;
-}
-
-function yearDaytoDate(yearDay, delimiter){
-    var ydSplit = yearDay.split(delimiter);
-    var date = new Date(new Date(ydSplit[0], 0).setDate(ydSplit[1])); //Creates date with correct year, but with 0th day
-    return ""+date.getFullYear()+delimiter+(date.getMonth()+1)+delimiter+date.getDate();
-}
 
 function getQueryDates(){
     var startDate = getStartDate('object'); 
