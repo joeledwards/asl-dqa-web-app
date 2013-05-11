@@ -1,7 +1,7 @@
 /*
 datatable.js
 Author: James Holland jholland@usgs.gov
-datatable.js contains functions functions for the datatable found on both summary and station pages 
+datatable.js contains functions functions for the datatable found on both summary and station modes.
 License: Public Domain
 */
 
@@ -62,9 +62,11 @@ function buildTable(){
 
         for(station in mapSIDtoNID){
             if(mapSIDtoNID.hasOwnProperty(station)){
-                var row = $('<tr id = "'+station+'"><td>'+mapGIDtoGName[mapSIDtoNID[station]]+'</td>'
+                var row = $(
+                    '<tr id = "'+station+'"><td>'+mapGIDtoGName[mapSIDtoNID[station]]+'</td>'
                     +'<td id="l_'+station+'" class="ltd">'+mapSIDtoSName[station]+'</td>'
-                +'<td>,'+mapSIDtoGIDs[station]+',</td></tr>');
+                    +'<td>,'+mapSIDtoGIDs[station]+',</td></tr>'
+                );
                 //Adding 1.01 causes datatables to automatically set the column types to numeric
                 for( var i = 0; i<metricsSorted.length; i++){
                     row.append('<td id="d_'+mapMNametoMID[metricsSorted[i]]+'_'+station+'">1.01</td>');
@@ -87,8 +89,10 @@ function buildTable(){
 
         for(channel in mapCIDtoCName){
             if(mapCIDtoCName.hasOwnProperty(channel)){
-                var row = $('<tr id = "'+channel+'"><td>'+mapCIDtoLoc[channel]+'</td>'
-                +'<td>'+mapCIDtoCName[channel]+'</a></td></tr>');
+                var row = $(
+                    '<tr id = "'+channel+'"><td>'+mapCIDtoLoc[channel]+'</td>'
+                    +'<td>'+mapCIDtoCName[channel]+'</a></td></tr>'
+                );
                 //Adding 1.01 causes datatables to automatically set the column types to numeric
                 for( var i = 0; i<metricsSorted.length; i++){
                     row.append('<td id="d_'+mapMNametoMID[metricsSorted[i]]+'_'+channel+'">1.01</td>');
@@ -148,17 +152,18 @@ function formatTableTools(button, icon){
     $('.DTTT_container').buttonset();
 }
 
+//fillTable() queries the CGI for data, parses it with parseDataReturn(), then calls processAllAggr().
+//It uses global variable numCols to track how many columns have been updated.
 function fillTable(){
-        numCols = 0;
-        var rowIDs = new String(); //Will contain a list of delimited channel/station IDs EG 20-21-22-35
-        rowIDs = "";
-        var dates = getQueryDates();
-        var visibleRows = $('tbody tr', dTable.fnSettings().nTable);
-        $.each(visibleRows, function(c){
-            rowIDs= rowIDs+"-"+$(visibleRows[c]).closest('tr').attr('id');
-            // alert(dataGrid.fnGetData(visibleRows[c])[0]);
-        });
-        rowIDs = rowIDs.substr(1); //trims initial "-" from the string
+    numCols = 0;
+    var rowIDs = new String(); //Will contain a list of delimited channel/station IDs EG 20-21-22-35
+    rowIDs = "";
+    var dates = getQueryDates();
+    var visibleRows = $('tbody tr', dTable.fnSettings().nTable);
+    $.each(visibleRows, function(c){
+        rowIDs= rowIDs+"-"+$(visibleRows[c]).closest('tr').attr('id');
+    });
+    rowIDs = rowIDs.substr(1); //trims initial "-" from the string
     if (pageType == "summary"){
         $.each(dTable.fnSettings().aoColumns, function(c){
             if(dTable.fnSettings().aoColumns[c].bVisible == true){
@@ -221,6 +226,7 @@ function parseDataReturn(data,mid){
     }
 }
 
+//Called in by btnRefresh created in header.js.  Calling refresh will clear and repull data on a built table.
 function refreshTable(){
     clearTable();
     fillTable();
