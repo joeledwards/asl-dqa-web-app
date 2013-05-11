@@ -39,7 +39,7 @@ function setupHeader(){
     );
     header.append(rightSide);
     $("#btnRefresh").on("click",function(){
-        refreshGrid();
+        refreshTable();
     });
     //Adds the actual jqueryui datepicker controls and theme
     bindDateRangeSpan("header");

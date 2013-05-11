@@ -221,3 +221,10 @@ function parseDataReturn(data,mid){
         }
     }
 }
+
+function refreshTable(){
+    clearTable();
+    fillTable();
+}
+
+
