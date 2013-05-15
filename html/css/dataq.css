@@ -1,5 +1,5 @@
 
-/*body{font-size:10px;}*/
+/*body{font-size:11px;}*/
 
 .ddl {position: relative; z-index:9001;}
 .ltd {color:blue;}
@@ -49,16 +49,22 @@
 }
 
 .headerDateRange {
-
     font-size: 16px;
     vertical-align: middle;
 }
 
 /*Tab classes*/
+#tabs {
+    font-size: 12px;
+}
 .tabSubHeader {
     font-size: 12px;
 }
 
+/*Datatable classes*/
+#grid {
+    font-size: 14px;
+}
 
 /*Generic Classes*/
 button:hover {
@@ -79,47 +85,3 @@ tr.odd {
     background-color: white;
 }
 
-
-/*
-thead {
-width:100% !important;
-height:100% !important;
-}
-
-#header {
-width:100% !important;
-height:100% !important;
-}
-
-div.dataTables_scrollHead {
-width:100% !important;
-height:100% !important;
-}
-
-div.dataTables_scrollHeadInner {
-width:100% !important;
-height:100% !important;
-}
-table.dataTable {
-width:100% !important;
-height:100% !important;
-}
-
-/* Makes the sort icon orient the correct way*/
-/*span.DataTables_sort_icon {
--webkit-transform:rotate(90deg);
--moz-transform:rotate(90deg);
-filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
-}
-ddiv.DataTables_sort_wrapper {
--webkit-transform:rotate(-90deg);
--moz-transform:rotate(-90deg);
-filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
-/* -o-transform:rotate(-90deg);*/
-/*}
-th {
--webkit-transform:rotate(-90deg);
--moz-transform:rotate(-90deg);
-filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
-/* -o-transform:rotate(-90deg);
-}*/
