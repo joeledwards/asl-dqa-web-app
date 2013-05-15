@@ -12,5 +12,7 @@ function setupTabs() {
     jtab.tabs({
         collapsible: true
     });
-    //setupDateTab(jtab);
+    setupWeightTab(jtab);
+    jtab.tabs( "option", "selected", -1);  //Have to select -1 so that the tabs are collapsed.
+
 }
