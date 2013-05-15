@@ -34,12 +34,16 @@ $(document).ready(function(){
         pageType = "summary";
     }
     getSetupData();
-    setupPage();
+    setupHeader();
 });
 
 $(document).ajaxStop(function(){
+    $(this).unbind("ajaxStop"); //Prevents ajaxStop from being called in the future. We only need it on initial load.
     resetWeights();
     processAllAggr();
+    setupTabs();
+    //Make all buttons jqueryui buttons
+    $("button").button();
 });
 
 function getSetupData(){
@@ -74,16 +78,6 @@ function getSetupData(){
     }
 
 }
-
-function setupPage(){
-    setupHeader();
-    setupTabs();
-
-
-    //Make all buttons jqueryui buttons
-    $("button").button();
-}
-
 
 function populateGroups(){
     var groupList = document.getElementById("ddlGroup");
