@@ -14,5 +14,5 @@ function setupTabs() {
     });
     setupWeightTab(jtab);
     jtab.tabs( "option", "selected", -1);  //Have to select -1 so that the tabs are collapsed.
-
+    jtab.removeClass("ui-widget-content"); //Removes the white border from around the tabs
 }
