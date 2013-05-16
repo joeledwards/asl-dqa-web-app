@@ -21,6 +21,42 @@ metric1ID = ...
 */
 var weights = {}; //Contains available metrics and weight setting (.50) 
 
+function setupWeightTab(jTab){
+    var wTab = $("<div id='tWeight'></div>");
+
+    for (var wMetric in weights ){
+        if(weights.hasOwnProperty(wMetric)){;
+            wTab.append(""+mapMIDtoMName[wMetric]+"<span></span><br/>");
+        }
+    }
+    
+    jTab.append(wTab);
+    jTab.tabs("add", "#tWeight", "Weights");
+}
+function setupDateTab(jTabs) {
+    var dateTab = $("<div id='tDate'></div>");
+
+    //Custom DVate Range
+    dateTab.append("<h3>Date Range</h3>");
+    var dateRangeDiv = $("<div></div>");
+    dateRangeDiv.append(createDateRangeSpan("tab"));
+    dateTab.append(dateRangeDiv);
+
+    //Year Month Combos
+    dateTab.append("<h3>Year-Month</h3>");
+    var yearMonthDiv = $("<div></div>");
+    dateTab.append(yearMonthDiv);
+
+    //Finalize and bind to tab control
+    jTabs.append(dateTab);
+    jTabs.tabs("add", "#tDate", "Dates");
+
+
+    //Bind controls as appropriate jqueryui controls
+    $("#tDate").accordion();
+    bindDateRangeSpan("tab");
+}
+
 function addPercent(rowID, metricID, value){
     if(!isNaN(row[2])){ //Uncomputable values are sent as "n"
         /* Overlaps in percents could occur if both station 
@@ -38,15 +74,15 @@ function addPercent(rowID, metricID, value){
 }
 
 function resetWeights(){
-    var numMetrics = 0
-    for (var wMetric in weights ){ //
+    var numMetrics = 0;
+    for (var wMetric in weights ){
         if(weights.hasOwnProperty(wMetric)){;
             numMetrics++;
         }
     }
 
-    for (var mWeight in weights ){ //
-        if(weights.hasOwnProperty(mWeight)){;
+    for (var mWeight in weights ){
+        if(weights.hasOwnProperty(mWeight)){
             weights[mWeight] = 100/numMetrics;
         }
     }
@@ -65,7 +101,7 @@ function calcAggr(rowID){
         }
     }
     if(weightSum == 0){ //Means either all Metrics are weighted to 0, initial load, or no weighted metric data exists
-        return 0
+        return 0;
     }
     for (var metric in percents[rowID] ){ //
         if(percents[rowID].hasOwnProperty(metric)){
