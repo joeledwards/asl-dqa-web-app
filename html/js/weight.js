@@ -26,7 +26,7 @@ function setupWeightTab(jTab){
 
     for (var wMetric in weights ){
         if(weights.hasOwnProperty(wMetric)){;
-            wTab.append(""+mapMIDtoMName[wMetric]+"<span></span><br/>");
+            wTab.append(""+mapMIDtoMName[wMetric]+"<span id='slider"+wMetric+"'></span><br/>");
         }
     }
     
