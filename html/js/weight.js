@@ -25,11 +25,20 @@ function setupWeightTab(jTab){
     var wTab = $("<div id='tWeight'></div>");
 
     for (var wMetric in weights ){
-        if(weights.hasOwnProperty(wMetric)){;
-            wTab.append(""+mapMIDtoMName[wMetric]+"<span id='slider"+wMetric+"'></span><br/>");
+        if(weights.hasOwnProperty(wMetric)){
+            var jSlider = $("<span id='slider"+wMetric+"' style=\"width: 260px !important; margin: 15px;\"></span>").slider({
+                value: 50,
+                range: "min",
+                animate: true,
+                orientation: "horizontal"
+                });
+
+            wTab.append(""+mapMIDtoMName[wMetric]);
+            wTab.append(jSlider);
+            wTab.append("<br/>");
         }
     }
-    
+
     jTab.append(wTab);
     jTab.tabs("add", "#tWeight", "Weights");
 }
@@ -76,7 +85,7 @@ function addPercent(rowID, metricID, value){
 function resetWeights(){
     var numMetrics = 0;
     for (var wMetric in weights ){
-        if(weights.hasOwnProperty(wMetric)){;
+        if(weights.hasOwnProperty(wMetric)){
             numMetrics++;
         }
     }
